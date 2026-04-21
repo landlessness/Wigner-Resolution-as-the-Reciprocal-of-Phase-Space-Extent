@@ -13,7 +13,6 @@ Icon?
 *.synctex.gz
 *.fdb_latemk
 *.fls
-*.pdf
 *.gz
 
 ## --- Bibliography & Indexing ---
