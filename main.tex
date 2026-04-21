@@ -41,21 +41,56 @@
 
 \maketitle
 
-\section{The Quantum of Action}
-
-\begin{figure}[t!]
+\begin{figure}[b!]
     \centering
     \includegraphics[width=\linewidth]{figures/quantum_of_action.pdf}
-\caption{\textbf{The quantum of action} (schematic, 1D case). In symplectic geometry, the statistical Heisenberg limit, $\sigma_q \sigma_p \ge \hbar/2$, is characterized by classical semi-axes $\Delta q = \sqrt{2}\sigma_q$ and $\Delta p = \sqrt{2}\sigma_p$, establishing the relation $\pi \Delta q \Delta p \ge h/2$. In phase space, this defines the classical action area, $A \ge h/2$. The interior contains a conjugate pair of symplectic quantum blobs, $a_q = h/2$ and $a_p = h/2$, summing to the quantum of action, $h$. Specifically, $a_q$ is squeezed by the reciprocal boundary $\delta q = \hbar / \Delta p$ with an area of $\pi \delta q \Delta p = h/2$, while $a_p$ is constrained by the boundary $\delta p = \hbar / \Delta q$ with an area of $\pi \Delta q \delta p = h/2$. Together, these centered orthogonal ellipses enclose an interior ellipse with a quantum action area $a \le h/2$, given by $a = \pi \delta q \delta p = \pi \hbar^2/(\Delta q \Delta p)$. This inverse scaling geometrically enforces the correspondence principle: as the classical action area $A \ge h/2$ increases, the symplectic blobs $a_q$ and $a_p$ compress along their conjugate axes, shrinking the enclosed quantum action area $a$ (see Fig.~\ref{fig:qho_grid}). This symplectic hierarchy yields the quantum-classical relations $a = (\pi \hbar)^2 / A$ and $a \le h/2 \le A$.}
+\caption{\textbf{The symplectic quantum of action} (schematic, 1D case). In symplectic geometry, the statistical Heisenberg limit, $\sigma_q \sigma_p \ge \hbar/2$, is characterized by classical semi-axes $\Delta q = \sqrt{2}\sigma_q$ and $\Delta p = \sqrt{2}\sigma_p$, establishing the relation $\pi \Delta q \Delta p \ge h/2$. In phase space, this defines the classical action area, $A \ge h/2$. The interior contains a conjugate pair of symplectic quantum blobs, $a_q = h/2$ and $a_p = h/2$, summing to the symplectic quantum of action, $h$. Specifically, $a_q$ is squeezed by the reciprocal boundary $\delta q = \hbar / \Delta p$ with an area of $\pi \delta q \Delta p = h/2$, while $a_p$ is constrained by the boundary $\delta p = \hbar / \Delta q$ with an area of $\pi \Delta q \delta p = h/2$. Together, these centered orthogonal ellipses enclose an interior ellipse with a quantum action area $a \le h/2$, given by $a = \pi \delta q \delta p = \pi \hbar^2/(\Delta q \Delta p)$. This inverse scaling geometrically enforces the correspondence principle: as the classical action area $A \ge h/2$ increases, the symplectic blobs $a_q$ and $a_p$ compress along their conjugate axes, shrinking the enclosed quantum action area $a$ (see Fig.~\ref{fig:qho_grid}). This symplectic hierarchy yields the quantum-classical relations $a = (\pi \hbar)^2 / A$ and $a \le h/2 \le A$.}
 \label{fig:quantum_of_action}
 \end{figure}
 
-\begin{figure}[t!]
+\begin{figure}[b!]
     \centering
     \includegraphics[width=\linewidth]{figures/qho_grid.pdf}
 \caption{\textbf{Berry semiclassical quantum harmonic oscillator}.}
 \label{fig:qho_grid}
 \end{figure}
+
+\section{The Symplectic Quantum of Action}
+
+In symplectic geometry, the statistical Heisenberg limit, $\sigma_q \sigma_p \ge \hbar/2$, is defined by the classical semi-axes $\Delta q = \sqrt{2}\sigma_q$ and $\Delta p = \sqrt{2}\sigma_p$. In phase space, this establishes the classical action area:
+$$A = \pi \Delta q \Delta p \ge \frac{h}{2}$$
+
+The interior of this space is not empty but structured by a conjugate pair of symplectic quantum blobs, $a_q$ and $a_p$. We explicitly define the symplectic quantum of action as the sum of this conjugate pair:
+$$\text{Quantum of Action} = \text{Conjugate Pair of Blobs}$$
+$$h = a_q + a_p$$
+These bounding areas are squeezed by their reciprocal axes, $\delta q = \hbar / \Delta p$ and $\delta p = \hbar / \Delta q$, such that their areas are invariantly:
+$$a_q = \pi \delta q \Delta p = \frac{h}{2}$$
+$$a_p = \pi \Delta q \delta p = \frac{h}{2}$$
+
+The intersection of these orthogonal ellipses encloses a central geometric area, $a$. Here, the classical action $A$ acts as a macroscopic resource: the momentum spread $\Delta p$ funds the microscopic spatial resolution $\delta q$, and vice versa. As $A$ increases, this symplectic exchange compresses the quantum blobs, shrinking $a$ to geometrically enforce the correspondence principle:
+$$a = \pi \delta q \delta p = \frac{(\pi \hbar)^2}{A}$$
+While the blobs uphold the invariant quantum floor ($h/2$), the vanishing interior $a \le h/2 \le A$ demonstrates the suppression of quantum interference in the macroscopic limit (see Fig.~\ref{fig:qho_grid}, left column).
+
+\section{Semiclassical Singularities}
+
+While the WKB approximation successfully captures the phase of highly excited states, its spatial probability density fails fundamentally at the classical turning points. The classical probability density $P_{\text{cl}}(q)$ is inversely proportional to the classical momentum $p(q)$:
+$$P_{\text{cl}}(q) = \frac{N}{p(q)} = \frac{N}{\sqrt{2m(E - V(q))}}$$
+
+At the turning points where $E = V(q)$, the momentum vanishes ($p \to 0$). Consequently, the classical density exhibits a non-physical caustic divergence:
+$$P_{\text{cl}}(q) \to \infty$$
+This singularity represents a breakdown of the semiclassical model, requiring a mechanism to bridge the classical boundaries with finite quantum observables.
+
+\section{Symplectic Resolution}
+
+To resolve these singularities, we deploy the symplectic quantum of action, $h = a_q + a_p$, as a Symplectic Kernel. Rather than relying on standard wave equations, we map the classical density to a physically realizable quantum distribution by convolving the classical skeleton with the spatial footprint of the squeezed state. 
+
+Recalling that the spatial resolution is bounded by the reciprocal momentum, $\delta q = h / (2\pi \Delta p)$, we define the Symplectic Kernel as the normalized Gaussian profile of the quantum blob $a_q$. Substituting for $\delta q$, we reveal Planck's quantum of action, $h$, explicitly regulating the distribution:
+$$K(q) = \frac{2\sqrt{\pi} \Delta p}{h} \exp\left( - \left( \frac{2\pi \Delta p \, q}{h} \right)^2 \right)$$
+
+The true physical density, $P_{\text{qm}}(q)$, is obtained through the convolution of the divergent classical density with this Symplectic Kernel:
+$$P_{\text{qm}}(q) = (P_{\text{cl}} * K)(q) = \int_{-\infty}^{\infty} P_{\text{cl}}(q') K(q - q') \, dq'$$
+
+Because the classical singularity goes as $1/\sqrt{q}$, it is mathematically integrable. Sweeping the Symplectic Kernel across the phase space strictly bounds the divergence; the presence of $h$ in the denominator of the kernel structurally prevents classical collapse, naturally resolving the infinite caustics into a smooth, finite, $\mathcal{C}^\infty$ distribution.
 
 \bibliography{apssamp}
 
