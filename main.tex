@@ -48,28 +48,25 @@
 \label{fig:quantum_of_action}
 \end{figure}
 
-\begin{figure}[b!]
-    \centering
-    \includegraphics[width=\linewidth]{figures/qho_grid.pdf}
-\caption{\textbf{Berry semiclassical quantum harmonic oscillator}.}
-\label{fig:qho_grid}
-\end{figure}
-
 \section{The Symplectic Quantum of Action}
 
-In symplectic geometry, the statistical Heisenberg limit, $\sigma_q \sigma_p \ge \hbar/2$, is defined by the classical semi-axes $\Delta q = \sqrt{2}\sigma_q$ and $\Delta p = \sqrt{2}\sigma_p$. In phase space, this establishes the classical action area:
-$$A = \pi \Delta q \Delta p \ge \frac{h}{2}$$
+De Gosson \cite{degosson2009} geometrically characterizes the statistical Heisenberg limit, $\sigma_q \sigma_p \ge \hbar/2$, via classical semi-axes $\Delta q = \sqrt{2}\sigma_q$ and $\Delta p = \sqrt{2}\sigma_p$, establishing the macroscopic action area:
+$$A = \pi \Delta q \Delta p \ge \frac{h}{2}.$$
 
-The interior of this space is not empty but structured by a conjugate pair of symplectic quantum blobs, $a_q$ and $a_p$. We explicitly define the symplectic quantum of action as the sum of this conjugate pair:
-$$\text{Quantum of Action} = \text{Conjugate Pair of Blobs}$$
-$$h = a_q + a_p$$
-These bounding areas are squeezed by their reciprocal axes, $\delta q = \hbar / \Delta p$ and $\delta p = \hbar / \Delta q$, such that their areas are invariantly:
-$$a_q = \pi \delta q \Delta p = \frac{h}{2}$$
-$$a_p = \pi \Delta q \delta p = \frac{h}{2}$$
+The interior of this Hamiltonian boundary is structured by Zurek's reciprocal phase space scales \cite{zurek2001}. Rooted in quantum metrology \cite{caves1981}, spatial resolution is funded by the conjugate momentum spread, $\delta q = \hbar / \Delta p$, and vice versa, $\delta p = \hbar / \Delta q$. 
 
-The intersection of these orthogonal ellipses encloses a central geometric area, $a$. Here, the classical action $A$ acts as a macroscopic resource: the momentum spread $\Delta p$ funds the microscopic spatial resolution $\delta q$, and vice versa. As $A$ increases, this symplectic exchange compresses the quantum blobs, shrinking $a$ to geometrically enforce the correspondence principle:
-$$a = \pi \delta q \delta p = \frac{(\pi \hbar)^2}{A}$$
-While the blobs uphold the invariant quantum floor ($h/2$), the vanishing interior $a \le h/2 \le A$ demonstrates the suppression of quantum interference in the macroscopic limit (see Fig.~\ref{fig:qho_grid}, left column).
+Expressed as phase space areas, these metrological bounds form a pair of centered, orthogonal ellipses:
+$$ a_q = \pi \delta q \Delta p = \frac{h}{2} \quad \text{and} \quad a_p = \pi \Delta q \delta p = \frac{h}{2}. $$ 
+These are precisely a conjugate pair of de Gosson's minimum-uncertainty quantum blobs.
+
+We therefore identify the quantum of action (see Fig.~\ref{fig:quantum_of_action}) as the sum of this conjugate pair:
+$$h = a_q + a_p.$$
+This reframes Planck's constant from an indivisible cell of phase space into a dynamic, symplectic form.
+
+The intersection of these orthogonal blobs encloses an ellipse of area $ a = \pi \delta q \delta p $, where $ a \le h/2 \le A $. In the ground state, this hierarchy degenerates into a perfect circle where $A = a_q = a_p = a = h/2$ (see Fig.~\ref{fig:qho_grid}, left column, top row). As $A$ increases, this symplectic exchange compresses the quantum blobs under the topological constraint of Gromov's non-squeezing theorem \cite{gromov1985}, shrinking $a$ and geometrically enforcing the correspondence principle:
+$$a = \frac{(\pi \hbar)^2}{A}.$$
+
+While each blob upholds the invariant quantum floor ($h/2$), the squeezing via classical action $A$ collapses the orthogonal blobs $a_q$ and $a_p$ into fine crosshairs and the interior phase-space support $a$ into a point (see Fig.~\ref{fig:qho_grid}, left column, bottom row), forbidding macroscopic uncertainty.
 
 \section{Semiclassical Singularities}
 
@@ -92,6 +89,13 @@ $$P_{\text{qm}}(q) = (P_{\text{cl}} * K)(q) = \int_{-\infty}^{\infty} P_{\text{c
 
 Because the classical singularity goes as $1/\sqrt{q}$, it is mathematically integrable. Sweeping the Symplectic Kernel across the phase space strictly bounds the divergence; the presence of $h$ in the denominator of the kernel structurally prevents classical collapse, naturally resolving the infinite caustics into a smooth, finite, $\mathcal{C}^\infty$ distribution.
 
-\bibliography{apssamp}
+\begin{figure}[b!]
+    \centering
+    \includegraphics[width=\linewidth]{figures/qho_grid.pdf}
+\caption{\textbf{Berry semiclassical quantum harmonic oscillator}.}
+\label{fig:qho_grid}
+\end{figure}
+
+\bibliography{main}
 
 \end{document}
