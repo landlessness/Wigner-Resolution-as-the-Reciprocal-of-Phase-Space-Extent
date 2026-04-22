@@ -151,6 +151,7 @@ plot_qho_grid <- function(dt_meta, style = c("manuscript", "readme"),
     dt_density[, density := aligned_density]
     dt_density[, density := density / (sum(density) * step_size)]
     dt_density[, cdf := cumsum(density) * step_size]
+    dt_density[, raw_density := raw_geometric_density]
 
     # Geometric Outlines
     df_circles <- data.frame(x0 = 0, y0 = 0, r_A = Delta_q, r_a = delta_q)
@@ -159,15 +160,11 @@ plot_qho_grid <- function(dt_meta, style = c("manuscript", "readme"),
     # Column 1: Geometric Action Landscape & Apparatus
     p_ell <- ggplot(dt_wigner2d, aes(x=q, y=p)) +
       geom_circle(data = df_circles, aes(x0=x0, y0=y0, r=r_A), inherit.aes=FALSE, fill="white", color=NA) +
-
-      # Polarity Reversed: 0 is white, positives are black, negatives are dark gray.
       geom_raster(aes(fill = w_plot), interpolate = TRUE) +
       scale_fill_gradient2(low = "gray40", mid = "white", high = "black", midpoint = 0, limits=c(-1, 1), guide="none") +
-
       geom_circle(data = df_circles, aes(x0=x0, y0=y0, r=r_A), inherit.aes=FALSE, color="black", linetype="solid", linewidth=0.3) +
       geom_ellipse(data = df_cigars, aes(x0=x0, y0=y0, a=aq_a, b=aq_b, angle=0), inherit.aes=FALSE, color="black", linetype="solid", linewidth=0.5) +
       geom_ellipse(data = df_cigars, aes(x0=x0, y0=y0, a=ap_a, b=ap_b, angle=0), inherit.aes=FALSE, color="black", linetype="solid", linewidth=0.5) +
-      # Changed inner circle to solid line
       geom_circle(data = df_circles, aes(x0=x0, y0=y0, r=r_a), inherit.aes=FALSE, color="black", linetype="solid", linewidth=0.3) +
       coord_fixed(xlim=c(-plot_lim_x, plot_lim_x), ylim=c(-plot_lim_x, plot_lim_x), expand=FALSE) +
       scale_x_continuous(breaks = custom_breaks, labels = label_format) +
@@ -186,10 +183,33 @@ plot_qho_grid <- function(dt_meta, style = c("manuscript", "readme"),
       labs(x = ax_x_stair, y = ax_y_stair)
 
     # Column 3: Symplectic Distribution
-    y_lim_den <- max(dt_density$density) * 1.15
-    p_den <- ggplot(dt_density, aes(x=q, y=density)) +
-      geom_ribbon(aes(ymin=0, ymax=density), fill="gray85", color=NA) +
-      geom_path(color="black", linewidth=0.4) +
+    y_lim_den <- max(dt_density$density) * 1.5
+    clip_y <- y_lim_den * 0.88
+
+    # Isolate the three geometric paths heading toward the turning point asymptotes
+    dt_left   <- dt_density[q < -Delta_q & raw_density <= clip_y]
+    dt_center <- dt_density[q > -Delta_q & q < Delta_q & raw_density <= clip_y]
+    dt_right  <- dt_density[q > Delta_q & raw_density <= clip_y]
+
+    p_den <- ggplot() +
+      # Base fill for the smoothed density
+      geom_ribbon(data=dt_density, aes(x=q, ymin=0, ymax=density), fill="gray85", color=NA) +
+
+      # Raw WKB Density with organic tangential arrows and TIGHT dash pattern ("22")
+      geom_path(data=dt_left, aes(x=q, y=raw_density), linetype="22", color="gray40", linewidth=0.5,
+                arrow = arrow(length = unit(0.12, "cm"), ends = "last", type="closed")) +
+      geom_path(data=dt_center, aes(x=q, y=raw_density), linetype="22", color="gray40", linewidth=0.5,
+                arrow = arrow(length = unit(0.12, "cm"), ends = "both", type="closed")) +
+      geom_path(data=dt_right, aes(x=q, y=raw_density), linetype="22", color="gray40", linewidth=0.5,
+                arrow = arrow(length = unit(0.12, "cm"), ends = "first", type="closed")) +
+
+      # Infinity labels centered above the classical turning points
+      annotate("text", x = -Delta_q, y = clip_y * 1.08, label = "infinity", parse = TRUE, color = "gray30", size = 4.5) +
+      annotate("text", x = Delta_q, y = clip_y * 1.08, label = "infinity", parse = TRUE, color = "gray30", size = 4.5) +
+
+      # Final convolved Symplectic Density line (Solid)
+      geom_path(data=dt_density, aes(x=q, y=density), color="black", linewidth=0.4) +
+
       coord_cartesian(xlim=c(-plot_lim_x, plot_lim_x), ylim=c(0, y_lim_den), expand=FALSE) +
       scale_x_continuous(breaks = custom_breaks, labels = label_format) +
       theme_bw(base_family=base_font) +
@@ -221,7 +241,6 @@ plot_qho_grid <- function(dt_meta, style = c("manuscript", "readme"),
     plot_list <- c(plot_list, list(p_label, p_ell, p_stair, p_den))
   }
 
-  # Adjusted widths since the row label takes up less space now
   final_plot <- wrap_plots(plot_list, ncol = 4, widths = c(0.25, 1, 1, 1))
   return(final_plot)
 }
