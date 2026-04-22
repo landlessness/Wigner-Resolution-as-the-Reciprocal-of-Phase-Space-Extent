@@ -162,7 +162,7 @@ plot_qho_grid <- function(dt_meta, style = c("manuscript", "readme"),
     p_ell <- ggplot(dt_wigner2d, aes(x=q, y=p)) +
       geom_circle(data = df_circles, aes(x0=x0, y0=y0, r=r_A), inherit.aes=FALSE, fill="white", color=NA) +
       geom_raster(aes(fill = w_plot), interpolate = TRUE) +
-      scale_fill_gradient2(low = "gray40", mid = "white", high = "black", midpoint = 0, limits=c(-1, 1), guide="none") +
+      scale_fill_gradient2(low = "gray10", mid = "white", high = "gray40", midpoint = 0, limits=c(-1, 1), guide="none") +
       geom_circle(data = df_circles, aes(x0=x0, y0=y0, r=r_A), inherit.aes=FALSE, color="black", linetype="solid", linewidth=0.3) +
       geom_ellipse(data = df_cigars, aes(x0=x0, y0=y0, a=aq_a, b=aq_b, angle=0), inherit.aes=FALSE, color="black", linetype="solid", linewidth=0.5) +
       geom_ellipse(data = df_cigars, aes(x0=x0, y0=y0, a=ap_a, b=ap_b, angle=0), inherit.aes=FALSE, color="black", linetype="solid", linewidth=0.5) +
