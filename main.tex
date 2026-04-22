@@ -46,7 +46,7 @@ We identify Planck’s quantum of action not as a static cell in phase space, bu
 
 Semiclassical mechanics maps classical orbits to oscillating quantum states. Yet it fails at physical boundaries, predicting infinite probability caustics at classical turning points. 
 
-This failure stems from the assumption of infinite kinematic action. To achieve spatial localization at a turning point, the conjugate momentum variance must diverge to infinity. This geometric extreme demands an infinite amount of action. 
+This failure stems from the assumption of infinite kinematic action. To achieve spatial localization at a turning point, the conjugate momentum must diverge to infinity. This geometric extreme demands an infinite amount of action.
 
 Physical systems do not possess infinite action. They are governed by the finite classical action $A$ and the invariant quantum of action $h$. Here, we treat $h$ not as a rigid phase-space cell, but as a dynamic symplectic geometry. By kinematically bounding the spatial resolution to the finite action of the system, we forbid this geometric collapse, resolving the infinite caustics into finite probability amplitudes.
 
@@ -59,14 +59,15 @@ Physical systems do not possess infinite action. They are governed by the finite
 \label{fig:quantum_of_action}
 \end{figure}
 
-De Gosson \cite{degosson2009} geometrically characterizes the statistical Heisenberg limit, $\sigma_q \sigma_p \ge \hbar/2$, via semi-axes $\Delta q = \sqrt{2}\sigma_q$ and $\Delta p = \sqrt{2}\sigma_p$, establishing the classical action area:
+De Gosson \cite{degosson2009} translates the statistical Heisenberg limit, $\sigma_q \sigma_p \ge \hbar/2$, into classical semi-axes $\Delta q = \sqrt{2}\sigma_q$ and $\Delta p = \sqrt{2}\sigma_p$. This maps the statistical limit to the classical action area:
 $$A = \pi \Delta q \Delta p \ge \frac{h}{2}.$$
+With this equivalence established, we discard the statistical interpretation; hereafter, $\Delta q$ and $\Delta p$ serve as classical kinematic boundaries that define the geometric area $h/2$.
 
-The interior of this Hamiltonian boundary is structured by Zurek's reciprocal phase space scales \cite{zurek2001}. Rooted in quantum metrology \cite{caves1981, meekhof1996}, spatial resolution is funded by the conjugate momentum spread, $\delta q = \hbar / \Delta p$, and vice versa, $\delta p = \hbar / \Delta q$. 
+The interior of this Hamiltonian boundary is structured by Zurek's reciprocal phase space scales \cite{zurek2001}. Rooted in quantum metrology \cite{caves1981, meekhof1996}, spatial resolution is governed by the conjugate momentum boundary, $\delta q = \hbar / \Delta p$, and vice versa, $\delta p = \hbar / \Delta q$. 
 
 Expressed as phase space areas, these metrological bounds form a pair of centered, orthogonal ellipses:
-$$ a_q = \pi \delta q \Delta p = \frac{h}{2} \quad \text{and} \quad a_p = \pi \Delta q \delta p = \frac{h}{2}. $$ 
-These form a conjugate pair of de Gosson's minimum-uncertainty quantum blobs.
+$$a_q = \pi \delta q \Delta p = \frac{h}{2} \quad \text{and} \quad a_p = \pi \Delta q \delta p = \frac{h}{2}.$$
+These constitute a conjugate pair of de Gosson's irreducible quantum blobs.
 
 We therefore identify Planck's constant as the sum of this conjugate pair:
 $$h = a_q + a_p.$$
@@ -93,7 +94,7 @@ Confined by these boundaries, the WKB approximation traps the projected spatial 
 \begin{figure}[t!]
     \centering
     \includegraphics[width=\linewidth]{figures/qho_grid.pdf}
-\caption{\textbf{Harmonic oscillator: symplectic resolution of semiclassical singularities.} \textit{Left:} The symplectic quantum of action centered on the 2D phase-space distribution. At low action, $A$, the invariant quantum area $h/2$ dominates. As action increases, these fundamental uncertainty bounds squeeze into precise crosshairs, converging toward classical phase-space trajectories. \textit{Center:} Cumulative spatial probability. As the macroscopic action grows, discrete quantum steps smooth into a continuous classical distribution. \textit{Right:} The resolved spatial probability density $P_h(q)$ (filled curve) compared against the raw semiclassical WKB density $P_{\text{WKB}}(q)$ (dashed curve). The system's finite action geometrically resolves the semiclassical singularities. The WKB approximation assumes infinite spatial resolution, predicting infinite caustics at the turning points (dashed arrows). However, achieving spatial localization ($\delta q \to 0$) kinematically demands infinite conjugate momentum variance ($\Delta p \to \infty$). Because sustaining a singularity requires infinite action, the finite quantum of action ($h$) bounds the spatial resolution. This symplectic constraint prevents kinematic collapse, resolving the divergent caustics into finite-amplitude quantum states.}
+\caption{\textbf{Harmonic oscillator: symplectic resolution of semiclassical singularities.} \textit{Left:} The symplectic quantum of action centered on the 2D phase-space distribution. At the limit, $A = h/2$, the classical bounds match the invariant quantum area, forming a  circle. As macroscopic action $A$ increases, the expanding classical boundaries squeeze the invariant $h/2$ areas into precise crosshairs, converging toward classical trajectories. \textit{Center:} Cumulative spatial probability. As the macroscopic action grows, discrete quantum steps smooth into a continuous classical distribution. \textit{Right:} The resolved spatial probability density $P_h(q)$ (filled curve) compared against the raw semiclassical WKB density $P_{\text{WKB}}(q)$ (dashed curve). The system's finite action geometrically resolves the semiclassical singularities. The WKB approximation assumes infinite spatial resolution, predicting infinite caustics at the turning points (dashed arrows). However, achieving spatial localization ($\delta q \to 0$) kinematically demands infinite conjugate momentum ($\Delta p \to \infty$). Because sustaining a singularity requires infinite action, the finite quantum of action ($h$) bounds the spatial resolution. This symplectic constraint prevents kinematic collapse, resolving the divergent caustics into finite-amplitude quantum states.}
 \label{fig:qho_grid}
 \end{figure}
 
@@ -109,7 +110,7 @@ $$P_h(q) = (P_{\text{WKB}} * K_h)(q) = \int_{-\infty}^{\infty} P_{\text{WKB}}(q'
 
 Whereas the Husimi distribution \cite{husimi1940} applies a rigid $\hbar/2$ coarse-graining, the symplectic kernel $K_h$ is squeezed by the macroscopic boundaries $\Delta q$ and $\Delta p$, binding the spatial resolution $\delta q = \hbar/\Delta p$ and conserving the quantum of action. This spatial blur extends past classical turning points, yielding quantum tunneling. As macroscopic momentum grows, the resolution tightens. The evanescent tails shrink, geometrically enforcing the correspondence principle.
 
-Although the semiclassical density diverges at the turning points, the singularity scales as $1/\sqrt{q}$, meaning the localized probability mass remains finite. Sustaining an infinite spatial density requires the conjugate momentum variance to diverge to infinity---a geometric extreme that demands infinite action.
+Although the semiclassical density diverges at the turning points, the singularity scales as $1/\sqrt{q}$, meaning the localized probability mass remains finite. Sustaining an infinite spatial density requires the conjugate momentum boundary to diverge to infinity---a geometric extreme that demands infinite action.
 
 Because the available action is limited by the symplectic quantum of action $h$, this infinite collapse is forbidden. Integrating the semiclassical singularities against the symplectic kernel $K_h$ distributes the finite probability mass across the $\delta q$ width of the quantum blob. The presence of $h$ prevents the kinematic collapse, transforming the non-physical caustics into finite, observable probability amplitudes.
 
