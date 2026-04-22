@@ -32,6 +32,7 @@
 \title{Symplectic Resolution of Semiclassical Singularities}
 
 \begin{abstract}
+We identify Planck’s quantum of action not as a static cell in phase space, but as a dynamic symplectic form. This conjugate geometry resolves semiclassical singularities and topological failures, replacing divergent caustics and unphysical saddles with finite quantum densities.
 \end{abstract}
 
 \author{Brian S. Mulloy\orcidlink{0000-0002-1803-3172}}
@@ -44,7 +45,7 @@
 \begin{figure}[b!]
     \centering
     \includegraphics[width=\linewidth]{figures/quantum_of_action.pdf}
-\caption{\textbf{The symplectic quantum of action} (schematic, 1D case). In symplectic geometry, the statistical Heisenberg limit, $\sigma_q \sigma_p \ge \hbar/2$, is characterized by classical semi-axes $\Delta q = \sqrt{2}\sigma_q$ and $\Delta p = \sqrt{2}\sigma_p$, establishing the relation $\pi \Delta q \Delta p \ge h/2$. In phase space, this defines the classical action area, $A \ge h/2$. The interior contains a conjugate pair of symplectic quantum blobs, $a_q = h/2$ and $a_p = h/2$, summing to the symplectic quantum of action, $h$. Specifically, $a_q$ is squeezed by the reciprocal boundary $\delta q = \hbar / \Delta p$ with an area of $\pi \delta q \Delta p = h/2$, while $a_p$ is constrained by the boundary $\delta p = \hbar / \Delta q$ with an area of $\pi \Delta q \delta p = h/2$. Together, these centered orthogonal ellipses enclose an interior ellipse with a quantum action area $a \le h/2$, given by $a = \pi \delta q \delta p = \pi \hbar^2/(\Delta q \Delta p)$. This inverse scaling geometrically enforces the correspondence principle: as the classical action area $A \ge h/2$ increases, the symplectic blobs $a_q$ and $a_p$ compress along their conjugate axes, shrinking the enclosed quantum action area $a$ (see Fig.~\ref{fig:qho_grid}). This symplectic hierarchy yields the quantum-classical relations $a = (\pi \hbar)^2 / A$ and $a \le h/2 \le A$.}
+\caption{\textbf{The symplectic quantum of action} (schematic, 1D case). In symplectic geometry, the statistical Heisenberg limit, $\sigma_q \sigma_p \ge \hbar/2$, is characterized by classical semi-axes $\Delta q = \sqrt{2}\sigma_q$ and $\Delta p = \sqrt{2}\sigma_p$, establishing the relation $\pi \Delta q \Delta p \ge h/2$. In phase space, this defines the classical action area, $A \ge h/2$. The interior contains a conjugate pair of symplectic quantum blobs, $a_q = h/2$ and $a_p = h/2$, summing to the quantum of action, $h = a_q + a_p$. Specifically, $a_q$ is squeezed by the reciprocal boundary $\delta q = \hbar / \Delta p$ with an area of $\pi \delta q \Delta p = h/2$, while $a_p$ is squeezed by the boundary $\delta p = \hbar / \Delta q$ with an area of $\pi \Delta q \delta p = h/2$. Together, these centered orthogonal ellipses enclose an interior ellipse with a quantum action area $a \le h/2$, given by $a = \pi \delta q \delta p = \pi \hbar^2/(\Delta q \Delta p)$. This inverse scaling geometrically enforces the correspondence principle: as the classical action area $A \ge h/2$ increases, the symplectic blobs $a_q$ and $a_p$ compress along their conjugate axes, shrinking the enclosed quantum action area $a$ (see Fig.~\ref{fig:qho_grid}). This symplectic hierarchy yields the quantum-classical relations $a = (\pi \hbar)^2 / A$ and $a \le h/2 \le A$.}
 \label{fig:quantum_of_action}
 \end{figure}
 
@@ -70,12 +71,23 @@ While each blob upholds the invariant quantum floor ($h/2$), the squeezing via c
 
 \section{Semiclassical Singularities}
 
-While the semiclassical WKB approximation \cite{heller2018} successfully bridges classical orbits with discrete quantum states, its spatial probability density fails at the classical boundaries. The classical spatial probability density $P_{\text{cl}}(q)$ is inversely proportional to the classical momentum $p(q)$:
-$$P_{\text{cl}}(q) \propto \frac{1}{p(q)} = \frac{1}{\sqrt{2m(E - V(q))}}.$$
+While the semiclassical WKB approximation \cite{heller2018} successfully bridges classical orbits with discrete quantum states, its spatial probability density fails at the physical boundaries. The classical spatial probability density $P_{\text{cl}}(q)$ is inversely proportional to the classical momentum $p(q)$:
+\begin{equation}
+P_{\text{cl}}(q) \propto \frac{1}{p(q)} = \frac{1}{\sqrt{2m(E - V(q))}}.
+\end{equation}
 
-At the turning points where $E = V(q)$, the momentum vanishes ($p \to 0$). Consequently, the projection onto the coordinate axis exhibits a caustic divergence:
-$$P_{\text{cl}}(q) \to \infty.$$
-This singularity represents a breakdown of the 1D semiclassical approximation, requiring a mechanism to bridge the classical boundaries with finite quantum observables.
+At the turning points where $E = V(q)$, the momentum vanishes ($p \to 0$), and the projection onto the coordinate axis exhibits a caustic divergence:
+\begin{equation}
+\lim_{q \to q_t} P_{\text{cl}}(q) = \infty.
+\end{equation}
+
+Furthermore, the approximation suffers a qualitative failure in the ground-state limit. While the exact quantum density $|\psi_0(q)|^2$ is a central Gaussian maximum, the classical density $P_{\text{cl}}(q)$ exhibits a local minimum at the potential center. For the harmonic oscillator, the second derivative is positive at the origin:
+\begin{equation}
+\left. \frac{d^2 P_{\text{cl}}}{dq^2} \right|_{q=0} = \frac{m\omega^2}{2E} P_{\text{cl}}(0) > 0.
+\end{equation}
+
+This resulting unphysical ``saddle'' represents a fundamental breakdown of the 1D semiclassical approximation. Bridging these classical boundaries with finite quantum observables requires a mechanism that accounts for the irreducible symplectic area of the state.
+
 
 \section{Symplectic Resolution}
 
@@ -91,14 +103,18 @@ Although the classical density diverges at the turning points, the singularity s
 
 Because the available action is strictly limited to the finite quantum $h$, this infinite collapse is physically forbidden. Integrating the semiclassical singularities against the symplectic kernel $K_h$ distributes the finite probability mass across the $\delta q$ width of the quantum blob. The explicit presence of $h$ structurally prevents the kinematic collapse, transforming the non-physical caustics into finite, observable probability amplitudes.
 
-\section{Semiclassical Phase Space of the Harmonic Oscillator}
-
-\begin{figure}[t!]
+\begin{figure}[b!]
     \centering
     \includegraphics[width=\linewidth]{figures/qho_grid.pdf}
 \caption{\textbf{Kinematic resolution of the quantum harmonic oscillator.} \textbf{Left:} The 2D geometric Wigner landscape mapped via Berry's chord construction \cite{berry1977}. The classical action boundary $A$ (outer circle) expands with the macroscopic limit, while the conjugate symplectic quantum blobs (inner orthogonal ellipses) squeeze into narrow crosshairs, maintaining an invariant area of $h/2$. \textbf{Center:} The cumulative probability distribution obtained via the integration of the Symplectic Kernel, illustrating a smooth, divergence-free quantization mapping. \textbf{Right:} The resulting spatial probability density $P_{\text{qm}}(q)$. Integration over the $\delta q$ width of the symplectic crosshair suppresses the $p \to 0$ divergence at the classical turning points, transforming the infinite WKB caustics into finite, bounded amplitude peaks via phase-space geometry.}
 \label{fig:qho_grid}
 \end{figure}
+
+\section{The Harmonic Oscillator}
+
+\subsection{Introspect Least Action of Berry}
+
+Each chord implies that the system is using less than the available action. Can we setup this up analytically and computationally as a way to show that insofar as this approach resembles quantum phenomena that it is the principle of least action at work?
 
 We demonstrate this geometric resolution via the harmonic oscillator (see Fig.~\ref{fig:qho_grid}). Following Berry's formulation of semiclassical mechanics \cite{berry1977}, the 2D Wigner phase-space distribution is governed by the geometric area of chords cutting across the classical action boundary. For any phase-space point $(q,p)$ interior to the classical trajectory, the amplitude is determined by constructing a straight chord bisected by $(q,p)$ with endpoints resting on the energy contour. The semiclassical Wigner distribution oscillates according to the geometric phase-space area $A_{\text{chord}}(q,p)$ bounded between this chord and the classical trajectory:
 $$W(q,p) \propto \cos\left( \frac{A_{\text{chord}}(q,p)}{\hbar} - \frac{\pi}{4} \right).$$
