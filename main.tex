@@ -70,31 +70,42 @@ While each blob upholds the invariant quantum floor ($h/2$), the squeezing via c
 
 \section{Semiclassical Singularities}
 
-While the WKB approximation successfully captures the phase of highly excited states, its spatial probability density fails fundamentally at the classical turning points. The classical probability density $P_{\text{cl}}(q)$ is inversely proportional to the classical momentum $p(q)$:
-$$P_{\text{cl}}(q) = \frac{N}{p(q)} = \frac{N}{\sqrt{2m(E - V(q))}}$$
+While the semiclassical WKB approximation \cite{heller2018} successfully bridges classical orbits with discrete quantum states, its spatial probability density fails at the classical boundaries. The classical spatial probability density $P_{\text{cl}}(q)$ is inversely proportional to the classical momentum $p(q)$:
+$$P_{\text{cl}}(q) \propto \frac{1}{p(q)} = \frac{1}{\sqrt{2m(E - V(q))}}.$$
 
-At the turning points where $E = V(q)$, the momentum vanishes ($p \to 0$). Consequently, the classical density exhibits a non-physical caustic divergence:
-$$P_{\text{cl}}(q) \to \infty$$
-This singularity represents a breakdown of the semiclassical model, requiring a mechanism to bridge the classical boundaries with finite quantum observables.
+At the turning points where $E = V(q)$, the momentum vanishes ($p \to 0$). Consequently, the projection onto the coordinate axis exhibits a caustic divergence:
+$$P_{\text{cl}}(q) \to \infty.$$
+This singularity represents a breakdown of the 1D semiclassical approximation, requiring a mechanism to bridge the classical boundaries with finite quantum observables.
 
 \section{Symplectic Resolution}
 
-To resolve these singularities, we deploy the symplectic quantum of action, $h = a_q + a_p$, as a Symplectic Kernel. Rather than relying on standard wave equations, we map the classical density to a physically realizable quantum distribution by convolving the classical skeleton with the spatial footprint of the squeezed state. 
+To resolve these singularities, we deploy the symplectic quantum of action, $h = a_q + a_p$, as a symplectic kernel $K_h$. We map the divergent 1D projection $P_{\text{cl}}(q)$ to a physically realizable quantum distribution $P_{\text{qm}}(q)$ by convolving it with the conjugate phase-space support $\delta q$ of the quantum blob $a_q$.
 
-Recalling that the spatial resolution is bounded by the reciprocal momentum, $\delta q = h / (2\pi \Delta p)$, we define the Symplectic Kernel as the normalized Gaussian profile of the quantum blob $a_q$. Substituting for $\delta q$, we reveal Planck's quantum of action, $h$, explicitly regulating the distribution:
-$$K(q) = \frac{2\sqrt{\pi} \Delta p}{h} \exp\left( - \left( \frac{2\pi \Delta p \, q}{h} \right)^2 \right)$$
+Because the spatial resolution $\delta q$ is bounded by the reciprocal momentum, $\delta q = h / (2\pi \Delta p)$, we define the symplectic kernel $K_h$ as the normalized Gaussian profile of this geometric area. Substituting for $\delta q$ reveals Planck's quantum of action, $h$, explicitly regulating the distribution:
+$$K_h(q) = \frac{2\sqrt{\pi} \Delta p}{h} \exp\left( - \left( \frac{2\pi \Delta p \, q}{h} \right)^2 \right).$$
 
-The true physical density, $P_{\text{qm}}(q)$, is obtained through the convolution of the divergent classical density with this Symplectic Kernel:
-$$P_{\text{qm}}(q) = (P_{\text{cl}} * K)(q) = \int_{-\infty}^{\infty} P_{\text{cl}}(q') K(q - q') \, dq'$$
+The physical density $P_{\text{qm}}(q)$ is obtained through the convolution of the classical density $P_{\text{cl}}(q)$ with this symplectic kernel $K_h$:
+$$P_{\text{qm}}(q) = (P_{\text{cl}} * K_h)(q) = \int_{-\infty}^{\infty} P_{\text{cl}}(q') K_h(q - q') \, dq'.$$
 
-Because the classical singularity goes as $1/\sqrt{q}$, it is mathematically integrable. Sweeping the Symplectic Kernel across the phase space strictly bounds the divergence; the presence of $h$ in the denominator of the kernel structurally prevents classical collapse, naturally resolving the infinite caustics into a smooth, finite, $\mathcal{C}^\infty$ distribution.
+Although the classical density diverges at the turning points, the singularity scales as $1/\sqrt{q}$, meaning the localized probability mass remains finite. Kinematically, sustaining an infinite spatial density requires compressing the conjugate momentum width to zero—a geometric collapse that demands infinite action. 
 
-\begin{figure}[b!]
+Because the available action is strictly limited to the finite quantum $h$, this infinite collapse is physically forbidden. Integrating the semiclassical singularities against the symplectic kernel $K_h$ distributes the finite probability mass across the $\delta q$ width of the quantum blob. The explicit presence of $h$ structurally prevents the kinematic collapse, transforming the non-physical caustics into finite, observable probability amplitudes.
+
+\section{Semiclassical Phase Space of the Harmonic Oscillator}
+
+\begin{figure}[t!]
     \centering
     \includegraphics[width=\linewidth]{figures/qho_grid.pdf}
-\caption{\textbf{Berry semiclassical quantum harmonic oscillator}.}
+\caption{\textbf{Kinematic resolution of the quantum harmonic oscillator.} \textbf{Left:} The 2D geometric Wigner landscape mapped via Berry's chord construction \cite{berry1977}. The classical action boundary $A$ (outer circle) expands with the macroscopic limit, while the conjugate symplectic quantum blobs (inner orthogonal ellipses) squeeze into narrow crosshairs, maintaining an invariant area of $h/2$. \textbf{Center:} The cumulative probability distribution obtained via the integration of the Symplectic Kernel, illustrating a smooth, divergence-free quantization mapping. \textbf{Right:} The resulting spatial probability density $P_{\text{qm}}(q)$. Integration over the $\delta q$ width of the symplectic crosshair suppresses the $p \to 0$ divergence at the classical turning points, transforming the infinite WKB caustics into finite, bounded amplitude peaks via phase-space geometry.}
 \label{fig:qho_grid}
 \end{figure}
+
+We demonstrate this geometric resolution via the harmonic oscillator (see Fig.~\ref{fig:qho_grid}). Following Berry's formulation of semiclassical mechanics \cite{berry1977}, the 2D Wigner phase-space distribution is governed by the geometric area of chords cutting across the classical action boundary. For any phase-space point $(q,p)$ interior to the classical trajectory, the amplitude is determined by constructing a straight chord bisected by $(q,p)$ with endpoints resting on the energy contour. The semiclassical Wigner distribution oscillates according to the geometric phase-space area $A_{\text{chord}}(q,p)$ bounded between this chord and the classical trajectory:
+$$W(q,p) \propto \cos\left( \frac{A_{\text{chord}}(q,p)}{\hbar} - \frac{\pi}{4} \right).$$
+
+Classical caustics emerge as geometric artifacts when this 2D distribution is projected onto the 1D spatial axis, an operation that implicitly treats the classical boundary as a perfectly sharp 1D curve.
+
+Rather than applying Airy functions over the turning points to smooth the mathematics, we execute a 2D symplectic projection. The raw geometric density is integrated against the spatial width $\delta q$ of the symplectic crosshair. Because a physical state cannot be localized to a 1D trajectory without requiring infinite conjugate momentum variance, it maintains an irreducible symplectic area ($a_q = h/2$). This inherent phase-space dispersion forbids the spatial projection from reaching zero width. The $\delta q$ scale of the symplectic kernel $K_h$ prevents the momentum support from collapsing, bounding the caustic divergence and yielding the finite probability amplitudes characteristic of discrete quantum states.
 
 \bibliography{main}
 
