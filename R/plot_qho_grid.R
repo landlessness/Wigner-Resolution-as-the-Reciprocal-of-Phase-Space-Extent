@@ -38,13 +38,14 @@ plot_qho_grid <- function(dt_meta, style = c("manuscript", "readme"),
   num_rows <- nrow(dt_meta)
   is_ms <- style == "manuscript"
 
+
   # Axis Labels
   ax_x_ell <- if(is_ms) expression("Position, " * italic(q)/italic(q)[0]) else "Position, q/q_0"
   ax_y_ell <- if(is_ms) expression("Momentum, " * italic(p)/italic(p)[0]) else "Momentum, p/p_0"
   ax_x_stair <- if(is_ms) expression("Position, " * italic(q)/italic(q)[0]) else "Position, q/q_0"
   ax_y_stair <- "Cumulative Probability"
   ax_x_den <- if(is_ms) expression("Position, " * italic(q)/italic(q)[0]) else "Position, q/q_0"
-  ax_y_den <- "Probability Density P(q)"
+  ax_y_den <- if(is_ms) expression("Symplectic Density, " * italic(P)[italic(h)](italic(q))) else "Symplectic Density P_h(q)"
 
   # --- 1. PURE GEOMETRIC FUNCTIONS (No Schrödinger Wave Equations) ---
 
@@ -221,7 +222,7 @@ plot_qho_grid <- function(dt_meta, style = c("manuscript", "readme"),
       p_label <- p_label + labs(title = " ") + theme(plot.title=element_text(size=11, hjust=0.5, face="plain"))
       p_ell   <- p_ell   + labs(title = "Quantum of Action") + theme(plot.title=element_text(size=11, hjust=0.5, face=ifelse(is_ms, "plain", "bold")))
       p_stair <- p_stair + labs(title = "Quantization Map") + theme(plot.title=element_text(size=11, hjust=0.5, face=ifelse(is_ms, "plain", "bold")))
-      p_den   <- p_den   + labs(title = "Symplectic Distribution") + theme(plot.title=element_text(size=11, hjust=0.5, face=ifelse(is_ms, "plain", "bold")))
+      p_den   <- p_den   + labs(title = "Symplectic Density") + theme(plot.title=element_text(size=11, hjust=0.5, face=ifelse(is_ms, "plain", "bold")))
     }
 
     # Hide X-axis titles on all but the bottom row
