@@ -44,11 +44,11 @@ We identify phase space cells not as static action areas, but as dynamic symplec
 
 \section{Introduction}
 
-Semiclassical mechanics maps classical orbits to oscillating quantum states. Yet it fails at physical boundaries, predicting infinite probability caustics at classical turning points. 
+Phase-space representations bridge quantum dynamics and classical trajectories. However, mapping quantum states onto classical phase space introduces two pathologies. In the exact regime, the Wigner-Weyl distribution exhibits unphysical negative probabilities to reflect quantum interference \cite{wigner_key}. Conversely, semiclassical mechanics fails at physical boundaries, predicting infinite probability caustics at classical turning points \cite{semiclassical_key}.
 
-This failure stems from the assumption of infinite kinematic action. To achieve spatial localization at a turning point, the conjugate momentum must diverge to infinity. This extreme demands an infinite amount of action.
+This semiclassical failure stems from assuming an infinitely sharp classical boundary. Enforcing an exact position forces the conjugate momentum to unphysically diverge—an artifact demanding infinite action. The standard resolution to both this divergence and Wigner negativity is applying a fixed Gaussian smoothing kernel to yield the positive Husimi $Q$-function \cite{husimi_key}. While this transform eliminates negativity and bounds the caustics, it introduces a trade-off: the fixed-scale blur smears the distribution, destroying sharp classical correspondence and generating artifactual probability tails distinct from true quantum tunneling.
 
-Physical systems do not possess infinite action. They are governed by the finite classical action $A$ and the invariant quantum of action $h$. Here, we treat $h$ not as a rigid phase-space cell, but as a dynamic symplectic geometry. By bounding the phase-space resolution to the finite action of the system, we forbid these semiclassical singularities, resolving the infinite caustics into finite probability amplitudes.
+Physical systems, however, do not possess infinite action; they are governed by the finite classical action $A$ and the invariant quantum of action $h$. Drawing on Gromov's non-squeezing theorem and the symplectic quantum blob \cite{degosson_key}, we treat phase-space cells not as rigid constants, but as dynamic, squeezable forms. By bounding the phase-space resolution to the system's finite classical action, we filter Wigner negativity and forbid the infinite kinematic action that leads to the semiclassical singularities. Consequently, infinite caustics are resolved into finite, positive probability amplitudes that respect the macroscopic boundary.
 
 \section{The Symplectic Quantum of Action}
 
