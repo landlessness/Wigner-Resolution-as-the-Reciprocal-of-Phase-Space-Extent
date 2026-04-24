@@ -44,46 +44,32 @@ We identify phase space cells not as static action areas, but as dynamic symplec
 
 \section{Introduction}
 
-Phase-space representations bridge quantum dynamics and classical trajectories. However, mapping quantum states onto classical phase space introduces two pathologies. In the exact regime, the Wigner-Weyl distribution exhibits unphysical negative probabilities to reflect quantum interference \cite{wigner_key}. Conversely, semiclassical mechanics fails at physical boundaries, predicting infinite probability caustics at classical turning points \cite{semiclassical_key}.
+Phase-space representations bridge quantum dynamics and classical trajectories, but the mapping introduces two pathologies: the Wigner--Weyl distribution exhibits negative probabilities reflecting quantum interference \cite{wigner1932}, while semiclassical mechanics predicts infinite probability caustics at classical turning points \cite{berry1977,langer1937}.
 
-This semiclassical failure stems from assuming an infinitely sharp classical boundary. Enforcing an exact position forces the conjugate momentum to unphysically diverge—an artifact demanding infinite action. The standard resolution to both this divergence and Wigner negativity is applying a fixed Gaussian smoothing kernel to yield the positive Husimi $Q$-function \cite{husimi_key}. While this transform eliminates negativity and bounds the caustics, it introduces a trade-off: the fixed-scale blur smears the distribution, destroying sharp classical correspondence and generating artifactual probability tails distinct from true quantum tunneling.
+Both pathologies share a common cause: assuming an infinitely sharp classical boundary forces the conjugate momentum to diverge, demanding infinite action. The standard fix applies a fixed Gaussian kernel to yield the Husimi Q-function \cite{husimi1940}, which eliminates negativity and regularizes the caustics but smears the distribution at a fixed scale, obscuring physical features and generating artifactual tails longer than true quantum tunneling.
 
-Physical systems, however, do not possess infinite action; they are governed by the finite classical action $A$ and the invariant quantum of action $h$. Drawing on Gromov's non-squeezing theorem and the symplectic quantum blob \cite{degosson_key}, we treat phase-space cells not as rigid constants, but as dynamic, squeezable forms. By bounding the phase-space resolution to the system's finite classical action, we filter Wigner negativity and forbid the infinite kinematic action that leads to the semiclassical singularities. Consequently, infinite caustics are resolved into finite, positive probability amplitudes that respect the macroscopic boundary.
-
-\section{The Symplectic Quantum of Action}
+Physical systems are governed by finite classical action $A$ and quantum of action $h$. Drawing on Gromov's non-squeezing theorem \cite{gromov1985} and de Gosson's symplectic geometry \cite{degosson2009}, we treat phase-space cells as dynamic symplectic structures squeezed by $A$. This finite boundary filters Wigner negativity and forbids the infinite action underlying semiclassical singularities, replacing divergent caustics with finite, positive densities that retain sharp classical correspondence.
 
 \begin{figure}[t!]
  \centering
  \includegraphics[width=\linewidth]{figures/quantum_of_action.pdf}
-\caption{\textbf{The symplectic quantum of action} (schematic, 1D case). In symplectic geometry, the statistical Heisenberg limit, $\sigma_q \sigma_p \ge \hbar/2$, is characterized by classical semi-axes $\Delta q = \sqrt{2}\sigma_q$ and $\Delta p = \sqrt{2}\sigma_p$, establishing the relation $\pi \Delta q \Delta p \ge h/2$. In phase space, this defines the classical action area, $A \ge h/2$. The interior contains a conjugate pair of symplectic quantum blobs, $a_q = h/2$ and $a_p = h/2$, summing to the quantum of action, $h = a_q + a_p$. Specifically, $a_q$ is squeezed by the reciprocal boundary $\delta q = \hbar / \Delta p$ with an area of $\pi \delta q \Delta p = h/2$, while $a_p$ is squeezed by the boundary $\delta p = \hbar / \Delta q$ with an area of $\pi \Delta q \delta p = h/2$. This inverse scaling enforces the correspondence principle: as the classical action area $A \ge h/2$ increases, the symplectic blobs $a_q$ and $a_p$ compress along their conjugate axes (see Fig.~\ref{fig:qho_grid}, left column).}
+\caption{\textbf{The symplectic quantum of action} (schematic, 1D case). The Heisenberg limit $\sigma_q \sigma_p \ge \hbar/2$ maps onto classical semi-axes $\Delta q = \sqrt{2}\sigma_q$, $\Delta p = \sqrt{2}\sigma_p$, defining the Fermi blob $A = \pi \Delta q \Delta p \ge h/2$. Its interior contains a conjugate pair of quantum blobs, $a_q = \pi\,\delta q\,\Delta p = h/2$ and $a_p = \pi\,\Delta q\,\delta p = h/2$, with reciprocal widths $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$, summing to the quantum of action $h = a_q + a_p$. As $A$ grows, $a_q$ and $a_p$ compress along their conjugate axes, enforcing the correspondence principle (see Fig.~\ref{fig:qho_grid}, left column).}
 \label{fig:quantum_of_action}
 \end{figure}
 
-De Gosson \cite{degosson2009} translates the statistical Heisenberg limit, $\sigma_q \sigma_p \ge \hbar/2$, into classical semi-axes $\Delta q = \sqrt{2}\sigma_q$ and $\Delta p = \sqrt{2}\sigma_p$. This maps the statistical limit to the classical action area:
+\section{Phase-Space Squeezing}
+
+De Gosson maps the Heisenberg limit $\sigma_q \sigma_p \ge \hbar/2$ into semi-axes $\Delta q = \sqrt{2}\sigma_q$, $\Delta p = \sqrt{2}\sigma_p$, projecting the $1\sigma$ contour onto a Fermi blob \cite{degosson2012fermi} with phase-space area
 $$A = \pi \Delta q \Delta p \ge \frac{h}{2}.$$
-With this equivalence established, we discard the statistical interpretation; hereafter, $\Delta q$ and $\Delta p$ serve as classical kinematic boundaries that define the area $h/2$.
+Hereafter, $\Delta q$ and $\Delta p$ are classical kinematic boundaries.
 
-The interior of this Hamiltonian boundary is structured by Zurek's reciprocal phase-space scales \cite{zurek2001}. Rooted in quantum metrology \cite{caves1981, meekhof1996}, spatial resolution is governed by the conjugate momentum boundary, $\delta q = \hbar / \Delta p$, and vice versa, $\delta p = \hbar / \Delta q$. 
+Zurek's reciprocal scales \cite{zurek2001}, rooted in quantum metrology \cite{caves1981,meekhof1996}, partition the blob interior: $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$. These define a conjugate pair of orthogonal quantum blobs \cite{degosson2009},
+$$a_q = \pi\,\delta q\,\Delta p = \frac{h}{2}, \qquad a_p = \pi\,\Delta q\,\delta p = \frac{h}{2},$$
+each carrying the irreducible area $h/2$.
 
-Expressed as phase-space areas, these metrological bounds form a pair of centered, orthogonal ellipses:
-$$a_q = \pi \delta q \Delta p = \frac{h}{2} \quad \text{and} \quad a_p = \pi \Delta q \delta p = \frac{h}{2}.$$
-These constitute a conjugate pair of de Gosson's irreducible quantum blobs.
+De Gosson shows that $A$ must contain both quantum blobs $a_q$ and $a_p$. Holding their areas fixed at $h/2$ while the macroscopic boundaries expand forces reciprocal compression of $\delta q$ and $\delta p$---a topological necessity enforced by Gromov's non-squeezing theorem \cite{gromov1985} (Fig.~\ref{fig:quantum_of_action}).
 
-The symplectic structure of phase space demands that the quantum of 
-action be carried by a conjugate pair. Position resolution and momentum 
-resolution are symplectically dual---not independent. The quantum of 
-action $h$ therefore admits a natural partition into $a_q$ and $a_p$, 
-each irreducible and each carrying $h/2$. This is not a sum of two 
-coincident areas; it is the unique decomposition of $h$ consistent 
-with symplectic conjugacy.
-
-We therefore identify Planck's constant as the sum of this conjugate pair:
-$$h = a_q + a_p.$$
-Geometrically, the quantum of action is a dynamic, symplectic structure (see Fig.~\ref{fig:quantum_of_action}).
-
-In the normalized harmonic ground state, the blobs degenerate into a perfect circle where the classical action meets the quantum floor, $A = a_q = a_p = h/2$ (see Fig.~\ref{fig:qho_grid}, left column, top row). As $A$ increases, this symplectic exchange compresses the quantum blobs under the topological constraint of Gromov's non-squeezing theorem \cite{gromov1985}, shrinking $a_q$ and $a_p$, enforcing the correspondence principle.
-
-While each blob upholds the invariant quantum floor ($h/2$), the squeezing via classical action $A$ collapses the orthogonal blobs $a_q$ and $a_p$ into fine crosshairs (see Fig.~\ref{fig:qho_grid}, left column, bottom row).
+In the normalized harmonic ground state the three blobs coincide: $A = a_q = a_p = h/2$, a perfect circle at the quantum floor (Fig.~\ref{fig:qho_grid}, top-left). As $A$ grows, expanding $\Delta q$, $\Delta p$ stretch $a_q$ and $a_p$ into fine crosshairs (Fig.~\ref{fig:qho_grid}, bottom-left), recovering the precision of the correspondence principle.
 
 \section{Semiclassical Singularities}
 
@@ -102,7 +88,7 @@ Confined by these boundaries, the WKB approximation traps the projected spatial 
 \begin{figure}[t!]
  \centering
  \includegraphics[width=\linewidth]{figures/qho_grid.pdf}
-\caption{\textbf{Harmonic oscillator: symplectic resolution of semiclassical singularities.} \textit{Left:} The symplectic quantum of action centered on the 2D phase-space distribution. At the limit, $A = h/2$, the classical bounds match the invariant quantum area, forming a circle. As classical action $A$ increases, the expanding classical boundaries squeeze the invariant $h/2$ areas into precise crosshairs, converging toward classical trajectories. \textit{Center:} Cumulative spatial probability. As the classical action grows, discrete quantum steps smooth into a continuous classical distribution. \textit{Right:} The resolved spatial probability density $P_h(q)$ (filled curve) compared against the raw semiclassical WKB density $P_{\text{WKB}}(q)$ (dashed curve). The system's finite action resolves the semiclassical singularities. The WKB approximation assumes infinite spatial resolution, predicting infinite caustics at the turning points (dashed arrows). However, achieving spatial localization ($\delta q \to 0$) kinematically demands infinite conjugate momentum ($\Delta p \to \infty$). Because sustaining a singularity requires infinite action, the finite quantum of action ($h$) bounds the phase-space resolution. This symplectic constraint prevents kinematic divergence, resolving the caustics into finite-amplitude quantum states.}
+\caption{\textbf{Harmonic oscillator: symplectic resolution of semiclassical singularities.} Rows show energy eigenstates $n = 0, 2, 4, 6, 48$ (action $A = 1, 3, 5, 7, 49\,A_0$). \textit{Left:} Phase-space distribution with the symplectic quantum of action. At the ground state ($A = h/2$), the classical boundary and quantum blobs coincide in a perfect circle. As $A$ grows, the expanding classical boundaries squeeze $a_q$ and $a_p$ into fine crosshairs, converging toward the classical trajectory. \textit{Center:} Cumulative spatial probability; discrete quantum steps smooth into a continuous classical distribution with increasing $A$. \textit{Right:} Resolved symplectic density $P_h(q)$ (solid) versus raw WKB density $P_\text{WKB}(q)$ (dashed). The WKB caustics ($\infty$, dashed arrows) demand infinite action; the finite classical action bounds the phase-space resolution, replacing divergences with finite-amplitude quantum states.}
 \label{fig:qho_grid}
 \end{figure}
 
