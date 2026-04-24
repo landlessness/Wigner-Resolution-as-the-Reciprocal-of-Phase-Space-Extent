@@ -57,20 +57,6 @@ Physical systems are governed by finite classical action $A$ and quantum of acti
 \label{fig:quantum_of_action}
 \end{figure}
 
-\section{Phase-Space Squeezing}
-
-De Gosson maps the Heisenberg limit $\sigma_q \sigma_p \ge \hbar/2$ into semi-axes $\Delta q = \sqrt{2}\sigma_q$, $\Delta p = \sqrt{2}\sigma_p$, projecting the $1\sigma$ contour onto a Fermi blob \cite{degosson2012fermi} with phase-space area
-$$A = \pi \Delta q \Delta p \ge \frac{h}{2}.$$
-Hereafter, $\Delta q$ and $\Delta p$ are classical kinematic boundaries.
-
-Zurek's reciprocal scales \cite{zurek2001}, rooted in quantum metrology \cite{caves1981,meekhof1996}, partition the blob interior: $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$. These define a conjugate pair of orthogonal quantum blobs \cite{degosson2009},
-$$a_q = \pi\,\delta q\,\Delta p = \frac{h}{2}, \qquad a_p = \pi\,\Delta q\,\delta p = \frac{h}{2},$$
-each carrying the irreducible area $h/2$.
-
-De Gosson shows that $A$ must contain both quantum blobs $a_q$ and $a_p$. Holding their areas fixed at $h/2$ while the macroscopic boundaries $\Delta p$ and $\Delta q$ expand forces reciprocal compression of $\delta q$ and $\delta p$---a topological necessity enforced by Gromov's non-squeezing theorem \cite{gromov1985} (Fig.~\ref{fig:quantum_of_action}).
-
-In the normalized harmonic ground state the three blobs coincide: $A = a_q = a_p = h/2$, a perfect circle at the quantum floor (Fig.~\ref{fig:qho_grid}, top-left). As $A$ grows, expanding $\Delta q$, $\Delta p$ stretch $a_q$ and $a_p$ into fine crosshairs (Fig.~\ref{fig:qho_grid}, bottom-left), recovering the precision of the correspondence principle.
-
 \section{Wigner Negativity and Semiclassical Caustics}
 The Wigner--Weyl distribution furnishes an exact phase-space representation of a quantum state $\psi$,
 $$W(q,p) = \frac{1}{\pi\hbar}\int_{-\infty}^{\infty} \psi^*(q+x)\psi(q-x)\, e^{2ipx/\hbar}\, dx,$$
@@ -89,7 +75,22 @@ Both pathologies share a kinematic root. Wigner negativity arises from interfere
 \label{fig:qho_grid}
 \end{figure}
 
+\section{Phase-Space Squeezing}
+
+De Gosson maps the Heisenberg limit $\sigma_q \sigma_p \ge \hbar/2$ into semi-axes $\Delta q = \sqrt{2}\sigma_q$, $\Delta p = \sqrt{2}\sigma_p$, projecting the $1\sigma$ contour onto a Fermi blob \cite{degosson2012fermi} with phase-space area
+$$A = \pi \Delta q \Delta p \ge \frac{h}{2}.$$
+Hereafter, $\Delta q$ and $\Delta p$ are classical kinematic boundaries.
+
+Zurek's reciprocal scales \cite{zurek2001}, rooted in quantum metrology \cite{caves1981,meekhof1996}, partition the blob interior: $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$. These define a conjugate pair of orthogonal quantum blobs \cite{degosson2009},
+$$a_q = \pi\,\delta q\,\Delta p = \frac{h}{2}, \qquad a_p = \pi\,\Delta q\,\delta p = \frac{h}{2},$$
+each carrying the irreducible area $h/2$.
+
+De Gosson shows that $A$ must contain both quantum blobs $a_q$ and $a_p$. Holding their areas fixed at $h/2$ while the macroscopic boundaries $\Delta p$ and $\Delta q$ expand forces reciprocal compression of $\delta q$ and $\delta p$---a topological necessity enforced by Gromov's non-squeezing theorem \cite{gromov1985} (Fig.~\ref{fig:quantum_of_action}).
+
+In the normalized harmonic ground state the three blobs coincide: $A = a_q = a_p = h/2$, a perfect circle at the quantum floor (Fig.~\ref{fig:qho_grid}, top-left). As $A$ grows, expanding $\Delta q$, $\Delta p$ stretch $a_q$ and $a_p$ into fine crosshairs (Fig.~\ref{fig:qho_grid}, bottom-left), recovering the precision of the correspondence principle.
+
 \section{Resolution via Phase-Space Squeezing}
+
 The classical action $A = \pi \Delta q \Delta p$ sets the phase-space resolution via the reciprocal scales $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$. Following de Gosson \cite{degosson2009, degosson2012fermi}, the minimum-uncertainty blobs $a_q$ and $a_p$ of area $h/2$ consistent with these bounds take the Gaussian form of the conjugate squeezed kernels,
 $$G_{\delta q}(q,p) = \frac{1}{\pi\hbar}\exp\!\left(-\frac{q^2}{\delta q^2} - \frac{p^2}{\Delta p^2}\right),$$
 $$G_{\delta p}(q,p) = \frac{1}{\pi\hbar}\exp\!\left(-\frac{q^2}{\Delta q^2} - \frac{p^2}{\delta p^2}\right),$$
@@ -106,8 +107,6 @@ The squeezed densities $P_{\delta q}$ and $P_{\delta p}$ differ fundamentally fr
 \section{Morse Potential}
 
 \section{Double-Well Potential}
-
-\section{Tunneling}
 
 \section{Discussion}
 
