@@ -226,7 +226,7 @@ plot_qho_wigner_grid <- function(dt_meta, base_font = "") {
         theme(plot.title=element_text(size=11, hjust=0.5))
       p_ell        <- p_ell        + labs(title="Phase Space") +
         theme(plot.title=element_text(size=11, hjust=0.5))
-      p_cross_raw  <- p_cross_raw  + labs(title="Wigner Cross-Section") +
+      p_cross_raw  <- p_cross_raw  + labs(title="Wigner Negativities") +
         theme(plot.title=element_text(size=11, hjust=0.5))
       p_cross_conv <- p_cross_conv + labs(title="Symplectic Cross-Section") +
         theme(plot.title=element_text(size=11, hjust=0.5))

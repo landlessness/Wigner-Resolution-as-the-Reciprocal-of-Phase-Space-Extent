@@ -264,7 +264,7 @@ plot_berry_grid <- function(dt_meta, base_font = "") {
         theme(plot.title=element_text(size=11, hjust=0.5))
       p_ell   <- p_ell   + labs(title="Phase Space") +
         theme(plot.title=element_text(size=11, hjust=0.5))
-      p_raw   <- p_raw   + labs(title="Berry Density") +
+      p_raw   <- p_raw   + labs(title="Semiclassical Caustics") +
         theme(plot.title=element_text(size=11, hjust=0.5))
       p_den   <- p_den   + labs(title="Symplectic Density") +
         theme(plot.title=element_text(size=11, hjust=0.5))
