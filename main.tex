@@ -29,10 +29,10 @@
 
 \begin{document}
 
-\title{Resolving Wigner Negativity and Semiclassical Caustics via Phase-Space Squeezing}
+\title{Resolving Wigner Negativity and Semiclassical Caustics via Finite Classical Action}
 
 \begin{abstract}
-We identify phase space cells not as static action areas, but as dynamic symplectic structures whose geometry is squeezed by the system's classical action. This finite action boundary resolves Wigner negativity and forbids infinite semiclassical caustics. By doing so, divergent turning-point singularities are replaced with finite, positive quantum densities while retaining sharp classical correspondence.
+Wigner negativity and semiclassical caustics both follow from assuming unbounded classical action. Enforcing the finite action of a physical system via symplectic phase-space cells resolves both simultaneously. The resulting densities are provably non-negative and free of turning-point divergences.
 \end{abstract}
 
 \author{Brian S. Mulloy\orcidlink{0000-0002-1803-3172}}
@@ -44,16 +44,18 @@ We identify phase space cells not as static action areas, but as dynamic symplec
 
 \section{Introduction}
 
-Phase-space representations bridge quantum dynamics and classical trajectories, but the mapping introduces two pathologies: the Wigner--Weyl distribution exhibits negative probabilities reflecting quantum interference \cite{wigner1932}, while semiclassical mechanics predicts infinite probability caustics at classical turning points \cite{berry1977,langer1937}.
+Phase-space representations of quantum mechanics bridge classical trajectories and quantum amplitudes, but the mapping introduces two persistent pathologies. The Wigner--Weyl distribution exhibits negative values wherever quantum interference is strong \cite{wigner1932}, while the WKB probability density diverges at classical turning points where the local momentum vanishes \cite{berry1977,langer1937}. These are typically treated as separate inconveniences of separate formalisms.
 
-Both pathologies share a common cause: assuming an infinitely sharp classical boundary forces the conjugate momentum to diverge, demanding infinite action. The standard fix applies a fixed Gaussian kernel to yield the Husimi Q-function \cite{husimi1940}, which eliminates negativity and regularizes the caustics but smears the distribution at a fixed scale, obscuring physical features and generating artifactual tails longer than true quantum tunneling.
+They are not. Both pathologies are kinematic consequences of the same assumption: that classical action is unbounded. Wigner negativity arises from interference on scales below $\hbar/\Delta p$; the WKB caustic arises from demanding $\delta q \to 0$ at the turning point, which forces $\Delta p \to \infty$ and hence infinite classical action. No physical system satisfies this condition.
 
-Physical systems are governed by finite classical action $A$ and quantum of action $h$. Drawing on Gromov's non-squeezing theorem \cite{gromov1985} and de Gosson's symplectic geometry \cite{degosson2009}, we treat phase-space cells as dynamic symplectic structures squeezed by $A$. This finite boundary filters Wigner negativity and forbids the infinite action underlying semiclassical singularities, replacing divergent caustics with finite, positive densities that retain sharp classical correspondence.
+The standard remedy applies a fixed Gaussian kernel to yield the Husimi Q-function \cite{husimi1940}, which suppresses negativity and softens the caustics. But the Husimi kernel is set once by the ground state and carries no knowledge of the system's classical action --- a kernel ignorant of $A$ cannot resolve structure governed by $A$, and introduces artifactual tails broader than true quantum tunneling.
+
+Here we enforce what the physics already demands: a finite classical action $A$ constrains the phase-space resolution to Zurek's reciprocal scales $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$ \cite{zurek2001}. Drawing on de~Gosson's symplectic geometry \cite{degosson2009,degosson2012fermi} and Gromov's non-squeezing theorem \cite{gromov1985}, we construct squeezed Gaussian kernels governed entirely by $A$. These kernels saturate the Heisenberg limit, provably eliminate Wigner negativity by Hudson's theorem \cite{hudson1974}, and bound the momentum support at turning points, replacing WKB divergences with finite-amplitude densities. Finite classical action resolves Wigner negativity and semiclassical caustics.
 
 \begin{figure}[t!]
- \centering
- \includegraphics[width=\linewidth]{figures/quantum_of_action.pdf}
-\caption{\textbf{The symplectic quantum of action} (schematic, 1D case). The Heisenberg limit $\sigma_q \sigma_p \ge \hbar/2$ maps onto classical semi-axes $\Delta q = \sqrt{2}\sigma_q$, $\Delta p = \sqrt{2}\sigma_p$, defining the Fermi blob $A = \pi \Delta q \Delta p \ge h/2$. Its interior contains a conjugate pair of quantum blobs, $a_q = \pi\,\delta q\,\Delta p = h/2$ and $a_p = \pi\,\Delta q\,\delta p = h/2$, with reciprocal widths $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$, summing to the quantum of action $h = a_q + a_p$. As $A$ grows, $a_q$ and $a_p$ compress along their conjugate axes, enforcing the correspondence principle (see Fig.~\ref{fig:qho_grid}, left column).}
+\centering
+\includegraphics[width=\linewidth]{figures/quantum_of_action.pdf}
+\caption{\textbf{The symplectic quantum of action} (schematic, 1D case). The Heisenberg limit $\sigma_q \sigma_p \ge \hbar/2$ maps onto classical semi-axes $\Delta q = \sqrt{2}\sigma_q$, $\Delta p = \sqrt{2}\sigma_p$, projecting the $1\sigma$ contour onto a Fermi blob with phase-space area $A = \pi \Delta q \Delta p \ge h/2$. Its interior contains a conjugate pair of quantum blobs, $a_q = \pi\,\delta q\,\Delta p = h/2$ and $a_p = \pi\,\Delta q\,\delta p = h/2$, summing to the quantum of action $h = a_q + a_p$. Their widths are Zurek's reciprocal scales $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$. As $A$ grows, $a_q$ and $a_p$ compress along their conjugate axes, enforcing the correspondence principle.}
 \label{fig:quantum_of_action}
 \end{figure}
 
@@ -94,7 +96,7 @@ In the normalized harmonic ground state the three blobs coincide: $A = a_q = a_p
 The classical action $A = \pi \Delta q \Delta p$ sets the phase-space resolution via the reciprocal scales $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$. Following de Gosson \cite{degosson2009, degosson2012fermi}, the minimum-uncertainty blobs $a_q$ and $a_p$ of area $h/2$ consistent with these bounds take the Gaussian form of the conjugate squeezed kernels,
 $$G_{\delta q}(q,p) = \frac{1}{\pi\hbar}\exp\!\left(-\frac{q^2}{\delta q^2} - \frac{p^2}{\Delta p^2}\right),$$
 $$G_{\delta p}(q,p) = \frac{1}{\pi\hbar}\exp\!\left(-\frac{q^2}{\Delta q^2} - \frac{p^2}{\delta p^2}\right),$$
-where $G_{\delta q}$ is squeezed in $q$ and spans $\Delta p$, and $G_{\delta p}$ is squeezed in $p$ and spans $\Delta q$. Each kernel carries symplectic area $h/2$, saturating the Heisenberg limit. Although the Wigner function harbors sub-Planckian interference structure at scales $\delta q \times \delta p$ \cite{zurek2001}, these fringes are not symplectically accessible as independent states; the conjugate pair $G_{\delta q}$, $G_{\delta p}$ represents the finest resolution the classical action $A$ can physically support. The conjugate squeezed densities are then
+where $G_{\delta q}$ is squeezed in $q$ and spans $\Delta p$, and $G_{\delta p}$ is squeezed in $p$ and spans $\Delta q$. Each kernel carries symplectic area $h/2$, saturating the Heisenberg limit. The conjugate squeezed densities are then
 $$P_{\delta q} = W * G_{\delta q}, \qquad P_{\delta p} = W * G_{\delta p},$$
 with 1D projections
 $$P_{\delta q}(q) = \int P_{\delta q}(q,p)\, dp, \qquad P_{\delta p}(p) = \int P_{\delta p}(q,p)\, dq.$$
