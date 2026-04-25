@@ -1,5 +1,5 @@
 # ==============================================================================
-# plot_qho_grid.R  —  QHO symplectic density grid, A_0 action units
+# plot_qho_wigner_grid.R  —  QHO symplectic density grid, A_0 action units
 # ==============================================================================
 
 library(here)
@@ -15,7 +15,7 @@ source(here::here("R", "symplectic_tools.R"))
 latex_font  <- "CMU Serif"
 dir_figures <- here::here("figures")
 if (!dir.exists(dir_figures)) dir.create(dir_figures, recursive = TRUE)
-file_output_pdf <- file.path(dir_figures, "qho_grid.pdf")
+file_output_pdf <- file.path(dir_figures, "qho_wigner_grid.pdf")
 
 # --- 2. Data Selection ---
 # Action leads. Quantum number is parenthetical.
@@ -57,7 +57,10 @@ plot_qho_grid <- function(dt_meta, base_font = "") {
 
     ell_lim       <- Delta_q * 1.15
     plot_lim      <- max(Delta_q * 1.15, Delta_q + 2.5)
-    custom_breaks <- c(-round(Delta_q, 1), 0, round(Delta_q, 1))
+    # Breaks at turning points — clamped to ell_lim so they always display
+    break_val     <- round(Delta_q, 1)
+    break_val     <- min(break_val, floor(ell_lim * 10) / 10)
+    custom_breaks <- c(-break_val, 0, break_val)
     label_format  <- function(x) sprintf("%.1f", x)
 
     # Row label
@@ -177,7 +180,7 @@ plot_qho_grid <- function(dt_meta, base_font = "") {
     if (i == 1) {
       p_label <- p_label + labs(title=" ") +
         theme(plot.title=element_text(size=11, hjust=0.5))
-      p_ell   <- p_ell   + labs(title="Quantum of Action") +
+      p_ell   <- p_ell   + labs(title="Phase Space") +
         theme(plot.title=element_text(size=11, hjust=0.5))
       p_stair <- p_stair + labs(title="Quantization Map") +
         theme(plot.title=element_text(size=11, hjust=0.5))
