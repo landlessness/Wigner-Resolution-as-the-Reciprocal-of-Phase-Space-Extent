@@ -213,23 +213,13 @@ plot_berry_grid <- function(dt_meta, base_font = "") {
     dt_center   <- dt_density[q >= -Delta_q & q <= Delta_q &
                                 berry_raw_display <= clip_y]
 
-    # Force ribbon to reach infinity symbols at turning points
-    dt_interior <- dt_density[q >= -Delta_q & q <= Delta_q]
-
-    # Add forced boundary points at exactly +/- Delta_q
-    dt_forced <- rbind(
-      dt_interior,
-      data.table(q = -Delta_q, density = 0,
-                 berry_raw_display = y_lim_den * 0.88),
-      data.table(q =  Delta_q, density = 0,
-                 berry_raw_display = y_lim_den * 0.88)
-    )[order(q)]
+    dt_interior <- copy(dt_density[q >= -Delta_q & q <= Delta_q])
+    dt_interior[, fill_height := pmin(berry_raw_display, y_lim_den * 0.88)]
 
     p_raw <- ggplot() +
       # Ribbon fills from zero to the Berry density — uncapped, reaches infinity symbols
-      geom_ribbon(data=dt_forced,
-                  aes(x=q, ymin=0, ymax=pmin(berry_raw_display, y_lim_den * 0.88)),
-                  fill="gray85", color=NA) +
+      geom_area(data=dt_interior, aes(x=q, y=fill_height),
+                fill="gray85", color=NA) +
       # Line runs full interior with arrows at both turning points
       geom_path(data=dt_center[order(q)], aes(x=q, y=berry_raw_display),
                 color="black", linewidth=0.4,
