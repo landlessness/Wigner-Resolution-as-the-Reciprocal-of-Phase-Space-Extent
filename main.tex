@@ -72,9 +72,16 @@ Both pathologies share a kinematic root. Wigner negativity arises from interfere
 
 \begin{figure}[t!]
 \centering
-\includegraphics[width=\linewidth]{figures/qho_grid.pdf}
-\caption{\textbf{Harmonic oscillator: symplectic density $P_{\delta q}(q)$.} Rows show energy eigenstates with action $A = 1, 3, 5, 7, 49\,A_0$ (quantum numbers $n = 0, 1, 2, 3, 24$). All positions are in units of $q_0$, momenta in units of $p_0$. \textit{Left:} Phase-space Wigner distribution $W_n(q,p)$ with the symplectic quantum of action overlaid. At the ground state ($A = A_0$), the classical boundary and quantum blobs coincide in a perfect circle. As $A$ grows, the expanding classical boundaries squeeze $a_q$ and $a_p$ into fine crosshairs, converging toward the classical trajectory. \textit{Center:} Cumulative spatial probability $\Pr(Q \le q)$; discrete quantum steps smooth into a continuous classical distribution with increasing $A$. \textit{Right:} Symplectic density $P_{\delta q}(q)$ obtained by convolving $W_n$ with the squeezed kernel $G_{\delta q}$ and projecting to position space. The density is provably non-negative by Hudson's theorem and remains finite at the classical turning points $q = \pm\Delta q$.}
-\label{fig:qho_grid}
+\includegraphics[width=\linewidth]{figures/qho_wigner_grid.pdf}
+\caption{\textbf{Wigner negativity resolved.} Rows show harmonic oscillator eigenstates with action $A = 1, 3, 5, 7, 49\,A_0$ (quantum numbers $n = 0, 1, 2, 3, 24$). All positions in units of $q_0$, momenta in units of $p_0$. \textit{Left:} Phase-space Wigner distribution $W_n(q,p)$ with the symplectic quantum of action overlaid. The dashed line marks the $p = 0$ cross-section shown in the adjacent columns. \textit{Center:} Cross-section $W_n(q,0)$; dark shading marks negative values, which grow in extent and depth with increasing $n$. \textit{Right:} Cross-section $P_{\delta q}(q,0)$ of the convolved distribution; negative regions are eliminated by construction, with the kernel width set by the finite classical action $A$. Each row is independently scaled to show shape; amplitudes decrease with $n$ as the distribution spreads over a larger classical region.}
+\label{fig:qho_wigner_grid}
+\end{figure}
+
+\begin{figure}[t!]
+\centering
+\includegraphics[width=\linewidth]{figures/qho_berry_grid.pdf}
+\caption{\textbf{Semiclassical caustics resolved.} Rows show the same harmonic oscillator eigenstates as Fig.~\ref{fig:qho_wigner_grid}, using Berry's semiclassical phase-space approximation \cite{berry1977}. \textit{Left:} Berry's 2D semiclassical distribution with the symplectic quantum of action overlaid. \textit{Center:} Raw Berry density $P_\text{Berry}(q)$; the distribution diverges at the classical turning points $q = \pm\Delta q$ ($\infty$, arrows), a direct manifestation of the semiclassical caustic. \textit{Right:} Convolved symplectic density $P_{\delta q}(q)$; enforcing the finite classical action $A$ via the squeezed kernel $G_{\delta q}$ replaces the divergences with finite-amplitude densities, while preserving the quantum oscillation structure in the interior.}
+\label{fig:qho_berry_grid}
 \end{figure}
 
 \section{The Symplectic Quantum of Action}
@@ -102,6 +109,22 @@ Since each kernel satisfies the symplectic positivity condition $\lambda_{\min}(
 The squeezed densities differ fundamentally from the Husimi Q-function \cite{husimi1940}. Husimi convolves $W$ with a fixed coherent-state kernel set once by the ground state, blind to the system's classical action. The kernels $G_{\delta q}$ and $G_{\delta p}$ are governed entirely by $A$: as $A$ grows they sharpen anisotropically along the classical trajectory, recovering structure the fixed Husimi kernel permanently obscures.
 
 \section{The Harmonic Oscillator}
+
+The quantum harmonic oscillator provides the canonical test of both resolutions. Its Wigner function is known exactly \cite{wigner1932},
+$$W_n(q,p) = \frac{(-1)^n}{\pi} e^{-(q^2+p^2)} L_n\!\left(2(q^2+p^2)\right),$$
+where $L_n$ is the Laguerre polynomial of order $n$ and all quantities are in $q_0, p_0$ units. The Robertson--Schrödinger covariance for eigenstate $|n\rangle$ gives $\sigma_{qq} = \sigma_{pp} = (2n+1)/2$ and $\sigma_{qp} = 0$, yielding classical boundaries $\Delta q = \Delta p = \sqrt{2n+1}$ and reciprocal scales $\delta q = \delta p = 1/\sqrt{2n+1}$, so that $A/A_0 = 2n+1$.
+
+\subsection{Wigner Negativity}
+
+Figure~\ref{fig:qho_wigner_grid} shows the cross-section $W_n(q,0)$ at $p=0$ for five action levels. For $n=0$ the cross-section is a positive Gaussian --- the ground state Wigner function is non-negative everywhere. For $n \ge 1$ the cross-section oscillates and goes negative, with $W_n(0,0) = (-1)^n/\pi$ alternating sign at the origin. The dark-shaded negative regions grow in extent with increasing $n$, reflecting deepening quantum interference.
+
+The convolved cross-section $P_{\delta q}(q,0)$ shown in the right column is everywhere non-negative, confirming Hudson's theorem numerically. The kernel width $\delta q = 1/\sqrt{2n+1}$ shrinks with increasing action, so at $49A_0$ the convolution barely smooths the oscillations while still eliminating all negativity. Each row is independently scaled; the absolute amplitude of $P_{\delta q}(q,0)$ decreases with $n$ as the distribution spreads over the growing classical region.
+
+\subsection{Semiclassical Caustics}
+
+Figure~\ref{fig:qho_berry_grid} shows the same action levels using Berry's semiclassical phase-space approximation \cite{berry1977}. The raw Berry density $P_\text{Berry}(q)$ diverges at both classical turning points $q = \pm\Delta q$ for every eigenstate --- the caustic is present at all action levels and is not regularized by increasing $n$. At $49A_0$ the interior oscillations are dense but the turning-point divergences remain.
+
+The convolved density $P_{\delta q}(q)$ in the right column replaces each divergence with a finite-amplitude peak. The kernel width $\delta q = 1/\sqrt{2n+1}$ provides exactly the resolution needed: coarse at low action where quantum structure dominates, fine at high action where the classical envelope is being recovered. The caustics are resolved without introducing any free parameters --- the kernel is fully determined by the system's classical action.
 
 \section{Morse Potential}
 

@@ -1,5 +1,9 @@
 # ==============================================================================
-# plot_qho_wigner_grid.R  —  QHO symplectic density grid, A_0 action units
+# plot_qho_wigner_grid.R  —  QHO Wigner cross-section grid, A_0 action units
+# Three columns:
+#   Left:   W_n(q,p) heatmap with quantum of action and p=0 slice marker
+#   Center: W_n(q,0) cross-section — oscillates, goes negative
+#   Right:  P_delta_q(q,0) cross-section — non-negative everywhere
 # ==============================================================================
 
 library(here)
@@ -18,7 +22,6 @@ if (!dir.exists(dir_figures)) dir.create(dir_figures, recursive = TRUE)
 file_output_pdf <- file.path(dir_figures, "qho_wigner_grid.pdf")
 
 # --- 2. Data Selection ---
-# Action leads. Quantum number is parenthetical.
 target_n_levels <- c(0, 1, 2, 3, 24)
 dt_selected <- data.table(
   quantum_n = target_n_levels,
@@ -26,21 +29,19 @@ dt_selected <- data.table(
 )
 
 # --- 3. Plot Function ---
-plot_qho_grid <- function(dt_meta, base_font = "") {
+plot_qho_wigner_grid <- function(dt_meta, base_font = "") {
   plot_list <- list()
   num_rows  <- nrow(dt_meta)
 
-  # Axis labels in q_0, p_0 units — consistent with manuscript
-  ax_x     <- expression(italic(q)/italic(q)[0])
-  ax_y     <- expression(italic(p)/italic(p)[0])
-  ax_y_cdf <- expression("Pr(" * italic(Q) <= italic(q) * ")")
-  ax_y_den <- expression(italic(P)[delta*italic(q)](italic(q)))
+  ax_x       <- expression(italic(q)/italic(q)[0])
+  ax_y       <- expression(italic(p)/italic(p)[0])
+  ax_y_cross <- expression(italic(W)[italic(n)](italic(q)*","*0))
+  ax_y_conv  <- expression(italic(P)[delta*italic(q)](italic(q)*","*0))
 
   for (i in seq_len(num_rows)) {
     n_val <- dt_meta$quantum_n[i]
     alpha <- dt_meta$action_A[i]
 
-    # Robertson-Schrödinger geometry for QHO eigenstate n
     rs <- qho_covariance(n_val)
 
     cat(sprintf(
@@ -55,9 +56,8 @@ plot_qho_grid <- function(dt_meta, base_font = "") {
     delta_q <- rs$delta_q
     delta_p <- rs$delta_p
 
-    ell_lim       <- Delta_q * 1.15
-    plot_lim      <- max(Delta_q * 1.15, Delta_q + 2.5)
-    # Breaks at turning points — clamped to ell_lim so they always display
+    ell_lim       <- Delta_q * 1.25
+    plot_lim      <- max(Delta_q * 1.25, Delta_q + 2.5)
     break_val     <- round(Delta_q, 1)
     break_val     <- min(break_val, floor(ell_lim * 10) / 10)
     custom_breaks <- c(-break_val, 0, break_val)
@@ -73,12 +73,12 @@ plot_qho_grid <- function(dt_meta, base_font = "") {
                size   = 4.5,
                hjust  = 0.5)
 
-    # Computation grid (wide, for accurate integration)
-    # Display grid (ell_lim, for plotting)
-    q_display <- seq(-plot_lim, plot_lim, length.out = max(400, 15 * alpha))
+    # Grids
+    grid_res  <- max(400, 15 * alpha)
+    q_display <- seq(-plot_lim, plot_lim, length.out = grid_res)
     dq_disp   <- diff(q_display)[1]
 
-    # 2D Wigner on ell_lim grid for phase-space panel
+    # 2D Wigner heatmap on ell_lim grid
     q_ell     <- seq(-ell_lim, ell_lim, length.out = 400)
     p_ell_seq <- seq(-ell_lim, ell_lim, length.out = 400)
     dt_w2d    <- as.data.table(expand.grid(q = q_ell, p = p_ell_seq))
@@ -87,31 +87,68 @@ plot_qho_grid <- function(dt_meta, base_font = "") {
     max_w <- max(abs(dt_w2d$w_plot), na.rm = TRUE)
     if (max_w > 0) dt_w2d[, w_plot := w_plot / max_w]
 
-    # Symplectic density via shared pipeline
-    result <- compute_symplectic_density(
-      n         = n_val,
-      wigner_fn = qho_wigner,
-      kernel_fn = squeezed_kernel_q,
-      rs        = rs,
-      q_display = q_display
+    # Cross-section W_n(q, 0) — raw Wigner at p=0
+    W_cross <- qho_wigner(n_val, q_display, rep(0, length(q_display)))
+
+    # y limit for cross-section panels — based on raw Wigner amplitude
+    w_max   <- max(abs(W_cross), na.rm=TRUE)
+    y_lim_w <- w_max * 1.3
+
+    # Build integration grid for 2D convolution
+    integ_lim <- max(Delta_q * 2.0, 4.0)
+    integ_res <- max(601, 20 * ceiling(rs$A_over_A0))
+    if (integ_res %% 2 == 0) integ_res <- integ_res + 1
+    q_int <- seq(-integ_lim, integ_lim, length.out = integ_res)
+    p_int <- seq(-integ_lim, integ_lim, length.out = integ_res)
+    dq    <- diff(q_int)[1]
+    dp    <- diff(p_int)[1]
+    nq    <- length(q_int)
+    np_i  <- length(p_int)
+
+    # 2D Wigner and kernel on integration grid
+    W_mat <- outer(q_int, p_int, FUN = function(q, p) qho_wigner(n_val, q, p))
+    K_mat <- outer(q_int, p_int, FUN = function(q, p) squeezed_kernel_q(q, p, rs))
+    K_mat <- K_mat / (sum(K_mat) * dq * dp)
+
+    ifftshift2d <- function(m) {
+      nr <- nrow(m); nc <- ncol(m)
+      sr <- floor(nr/2); sc <- floor(nc/2)
+      rbind(cbind(m[(sr+1):nr,(sc+1):nc], m[(sr+1):nr,1:sc]),
+            cbind(m[1:sr,    (sc+1):nc], m[1:sr,    1:sc]))
+    }
+
+    K_shift <- ifftshift2d(K_mat)
+    P_mat   <- Re(fft(fft(W_mat) * fft(K_shift), inverse=TRUE)) / (nq * np_i)
+    P_mat   <- P_mat * dq * dp
+
+    # Extract p=0 cross-section from convolved distribution
+    p0_idx      <- which.min(abs(p_int))
+    P_cross_int <- P_mat[, p0_idx]
+
+    # Interpolate onto display grid
+    P_cross <- approx(q_int, P_cross_int, xout=q_display, rule=1)$y
+    P_cross[is.na(P_cross)] <- 0
+
+    # Normalize convolved cross-section for display — shape is what matters
+    # Both columns share raw Wigner amplitude scale for honest visual comparison
+    P_cross_display <- P_cross
+    p_max_display   <- max(abs(P_cross_display), na.rm=TRUE)
+    if (p_max_display > 0) {
+      P_cross_display <- P_cross_display / p_max_display * w_max
+    }
+
+    cat(sprintf("  W_n(0,0) = %.4f | P_conv(0,0) raw = %.4e | scaled peak = %.4f\n",
+                qho_wigner(n_val, 0, 0),
+                P_cross_int[p0_idx],
+                max(abs(P_cross_display), na.rm=TRUE)))
+
+    dt_cross <- data.table(
+      q      = q_display,
+      W_raw  = W_cross,
+      P_conv = P_cross_display
     )
 
-    cat(sprintf(
-      "  w_norm=%.6f | W_n(0,0) error=%.2e | max_neg=%.2e | tol=%.2e\n",
-      result$w_norm, result$w_spot_check, result$max_negative, result$tolerance
-    ))
-
-    P_q        <- result$P_q
-    disp_norm  <- sum(P_q) * dq_disp
-    cat(sprintf("  Display integral (informational): %.6f\n", disp_norm))
-
-    dt_density <- data.table(
-      q       = q_display,
-      density = P_q,
-      cdf     = cumsum(P_q) * dq_disp
-    )
-
-    # Ellipse overlays derived from RS geometry
+    # Ellipse overlays
     df_circles <- data.frame(x0=0, y0=0, r_A=Delta_q)
     df_cigars  <- data.frame(
       x0=0, y0=0,
@@ -119,7 +156,7 @@ plot_qho_grid <- function(dt_meta, base_font = "") {
       ap_a=Delta_q, ap_b=delta_p
     )
 
-    # Column 1: Phase-space Wigner with symplectic blob overlays
+    # Column 1: Wigner heatmap with p=0 slice marker
     p_ell <- ggplot(dt_w2d, aes(x=q, y=p)) +
       geom_circle(data=df_circles, aes(x0=x0, y0=y0, r=r_A),
                   inherit.aes=FALSE, fill="white", color=NA) +
@@ -132,6 +169,7 @@ plot_qho_grid <- function(dt_meta, base_font = "") {
                    inherit.aes=FALSE, color="black", linewidth=0.5) +
       geom_ellipse(data=df_cigars, aes(x0=x0, y0=y0, a=ap_a, b=ap_b, angle=0),
                    inherit.aes=FALSE, color="black", linewidth=0.5) +
+      geom_hline(yintercept=0, linetype="dashed", color="black", linewidth=0.4) +
       coord_fixed(xlim=c(-ell_lim, ell_lim),
                   ylim=c(-ell_lim, ell_lim), expand=FALSE) +
       scale_x_continuous(breaks=custom_breaks, labels=label_format) +
@@ -143,29 +181,16 @@ plot_qho_grid <- function(dt_meta, base_font = "") {
             plot.margin=margin(2,4,2,4)) +
       labs(x=ax_x, y=ax_y)
 
-    # Column 2: Cumulative distribution function
-    p_stair <- ggplot(dt_density, aes(x=q, y=cdf)) +
-      geom_line(color="black", linewidth=0.8) +
-      coord_cartesian(xlim=c(-ell_lim, ell_lim), ylim=c(0,1), expand=FALSE) +
-      scale_x_continuous(breaks=custom_breaks, labels=label_format) +
-      theme_bw(base_family=base_font) +
-      theme(panel.grid.minor=element_blank(),
-            axis.text=element_text(size=8),
-            aspect.ratio=1,
-            plot.margin=margin(2,4,2,4)) +
-      labs(x=ax_x, y=ax_y_cdf)
-
-    # Column 3: Symplectic density P_delta_q(q)
-    density_peak <- max(dt_density$density, na.rm=TRUE)
-    y_lim_den    <- density_peak * 1.15
-
-    p_den <- ggplot() +
-      geom_ribbon(data=dt_density, aes(x=q, ymin=0, ymax=density),
+    # Column 2: W_n(q,0) cross-section — raw Wigner, goes negative
+    p_cross_raw <- ggplot(dt_cross, aes(x=q, y=W_raw)) +
+      geom_hline(yintercept=0, color="black", linewidth=0.3) +
+      geom_ribbon(aes(ymin=pmin(W_raw, 0), ymax=0),
+                  fill="gray60", alpha=0.6, color=NA) +
+      geom_ribbon(aes(ymin=0, ymax=pmax(W_raw, 0)),
                   fill="gray85", color=NA) +
-      geom_path(data=dt_density, aes(x=q, y=density),
-                color="black", linewidth=0.4) +
+      geom_path(color="black", linewidth=0.4) +
       coord_cartesian(xlim=c(-ell_lim, ell_lim),
-                      ylim=c(0, y_lim_den), expand=FALSE) +
+                      ylim=c(-y_lim_w, y_lim_w), expand=FALSE) +
       scale_x_continuous(breaks=custom_breaks, labels=label_format) +
       theme_bw(base_family=base_font) +
       theme(panel.grid.minor=element_blank(),
@@ -174,44 +199,63 @@ plot_qho_grid <- function(dt_meta, base_font = "") {
             axis.ticks.y=element_blank(),
             aspect.ratio=1,
             plot.margin=margin(2,4,2,4)) +
-      labs(x=ax_x, y=ax_y_den)
+      labs(x=ax_x, y=ax_y_cross)
+
+    # Column 3: P_delta_q(q,0) — convolved cross-section, non-negative
+    # Scaled to same amplitude as raw Wigner for honest shape comparison
+    p_cross_conv <- ggplot(dt_cross, aes(x=q, y=P_conv)) +
+      geom_hline(yintercept=0, color="black", linewidth=0.3) +
+      geom_ribbon(aes(ymin=0, ymax=pmax(P_conv, 0)),
+                  fill="gray85", color=NA) +
+      geom_path(color="black", linewidth=0.4) +
+      coord_cartesian(xlim=c(-ell_lim, ell_lim),
+                      ylim=c(-y_lim_w, y_lim_w), expand=FALSE) +
+      scale_x_continuous(breaks=custom_breaks, labels=label_format) +
+      theme_bw(base_family=base_font) +
+      theme(panel.grid.minor=element_blank(),
+            axis.text=element_text(size=8),
+            axis.text.y=element_blank(),
+            axis.ticks.y=element_blank(),
+            aspect.ratio=1,
+            plot.margin=margin(2,4,2,4)) +
+      labs(x=ax_x, y=ax_y_conv)
 
     # Headers on first row only
     if (i == 1) {
-      p_label <- p_label + labs(title=" ") +
+      p_label      <- p_label      + labs(title=" ") +
         theme(plot.title=element_text(size=11, hjust=0.5))
-      p_ell   <- p_ell   + labs(title="Phase Space") +
+      p_ell        <- p_ell        + labs(title="Phase Space") +
         theme(plot.title=element_text(size=11, hjust=0.5))
-      p_stair <- p_stair + labs(title="Quantization Map") +
+      p_cross_raw  <- p_cross_raw  + labs(title="Wigner Cross-Section") +
         theme(plot.title=element_text(size=11, hjust=0.5))
-      p_den   <- p_den   + labs(title="Symplectic Density") +
+      p_cross_conv <- p_cross_conv + labs(title="Symplectic Cross-Section") +
         theme(plot.title=element_text(size=11, hjust=0.5))
     }
 
     # X-axis titles on bottom row only
     if (i != num_rows) {
-      p_ell   <- p_ell   + theme(axis.title.x=element_blank())
-      p_stair <- p_stair + theme(axis.title.x=element_blank())
-      p_den   <- p_den   + theme(axis.title.x=element_blank())
+      p_ell        <- p_ell        + theme(axis.title.x=element_blank())
+      p_cross_raw  <- p_cross_raw  + theme(axis.title.x=element_blank())
+      p_cross_conv <- p_cross_conv + theme(axis.title.x=element_blank())
     }
 
     # Y-axis titles on middle row only
     if (i != 3) {
-      p_ell   <- p_ell   + theme(axis.title.y=element_blank())
-      p_stair <- p_stair + theme(axis.title.y=element_blank())
-      p_den   <- p_den   + theme(axis.title.y=element_blank())
+      p_ell        <- p_ell        + theme(axis.title.y=element_blank())
+      p_cross_raw  <- p_cross_raw  + theme(axis.title.y=element_blank())
+      p_cross_conv <- p_cross_conv + theme(axis.title.y=element_blank())
     }
 
-    plot_list <- c(plot_list, list(p_label, p_ell, p_stair, p_den))
+    plot_list <- c(plot_list, list(p_label, p_ell, p_cross_raw, p_cross_conv))
   }
 
   wrap_plots(plot_list, ncol=4, widths=c(0.25, 1, 1, 1))
 }
 
 # --- 4. Execution ---
-cat("Computing QHO symplectic densities via Robertson-Schrödinger pipeline...\n")
+cat("Computing Wigner cross-section grid...\n")
 
-p_final <- plot_qho_grid(dt_meta=dt_selected, base_font=latex_font)
+p_final <- plot_qho_wigner_grid(dt_meta=dt_selected, base_font=latex_font)
 p_final <- p_final + theme(plot.margin=margin(10,10,10,10))
 
 fig_width  <- 7.0
