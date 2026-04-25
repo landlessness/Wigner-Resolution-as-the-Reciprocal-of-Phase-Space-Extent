@@ -2,6 +2,7 @@
 # plot_qho_grid.R  —  QHO symplectic density grid, A_0 action units
 # ==============================================================================
 
+library(here)
 library(data.table)
 library(ggplot2)
 library(ggforce)
@@ -12,7 +13,7 @@ source(here::here("R", "symplectic_tools.R"))
 
 # --- 1. Configuration ---
 latex_font  <- "CMU Serif"
-dir_figures <- "./figures"
+dir_figures <- here::here("figures")
 if (!dir.exists(dir_figures)) dir.create(dir_figures, recursive = TRUE)
 file_output_pdf <- file.path(dir_figures, "qho_grid.pdf")
 
@@ -29,6 +30,7 @@ plot_qho_grid <- function(dt_meta, base_font = "") {
   plot_list <- list()
   num_rows  <- nrow(dt_meta)
 
+  # Axis labels in q_0, p_0 units — consistent with manuscript
   ax_x     <- expression(italic(q)/italic(q)[0])
   ax_y     <- expression(italic(p)/italic(p)[0])
   ax_y_cdf <- expression("Pr(" * italic(Q) <= italic(q) * ")")
@@ -36,15 +38,17 @@ plot_qho_grid <- function(dt_meta, base_font = "") {
 
   for (i in seq_len(num_rows)) {
     n_val <- dt_meta$quantum_n[i]
-    alpha <- dt_meta$action_A[i]  # A/A_0 = 2n+1 for QHO
+    alpha <- dt_meta$action_A[i]
 
-    # Robertson-Schrödinger covariance for QHO eigenstate n
-    # sigma_qq = sigma_pp = alpha/2 in natural units (hbar=1)
+    # Robertson-Schrödinger geometry for QHO eigenstate n
     rs <- qho_covariance(n_val)
 
-    cat(sprintf("\nn=%d | A/A_0=%.0f | Delta_q=%.4f | delta_q=%.4f | RS satisfied: %s\n",
-                n_val, rs$A_over_A0, rs$Delta_q, rs$delta_q,
-                ifelse(rs$rs_satisfied, "YES", "NO")))
+    cat(sprintf(
+      "\nn=%d | A/A_0=%.0f | Delta_q=%.4f | delta_q=%.4f | RS: %s | SP: %s\n",
+      n_val, rs$A_over_A0, rs$Delta_q, rs$delta_q,
+      ifelse(rs$rs_satisfied, "OK", "FAIL"),
+      ifelse(rs$sp_satisfied, "OK", "FAIL")
+    ))
 
     Delta_q <- rs$Delta_q
     Delta_p <- rs$Delta_p
@@ -66,11 +70,12 @@ plot_qho_grid <- function(dt_meta, base_font = "") {
                size   = 4.5,
                hjust  = 0.5)
 
-    # Display grid (ell_lim) and computation grid (plot_lim)
+    # Computation grid (wide, for accurate integration)
+    # Display grid (ell_lim, for plotting)
     q_display <- seq(-plot_lim, plot_lim, length.out = max(400, 15 * alpha))
     dq_disp   <- diff(q_display)[1]
 
-    # 2D Wigner on display grid for phase-space panel
+    # 2D Wigner on ell_lim grid for phase-space panel
     q_ell     <- seq(-ell_lim, ell_lim, length.out = 400)
     p_ell_seq <- seq(-ell_lim, ell_lim, length.out = 400)
     dt_w2d    <- as.data.table(expand.grid(q = q_ell, p = p_ell_seq))
@@ -81,21 +86,21 @@ plot_qho_grid <- function(dt_meta, base_font = "") {
 
     # Symplectic density via shared pipeline
     result <- compute_symplectic_density(
-      n          = n_val,
-      wigner_fn  = qho_wigner,
-      kernel_fn  = squeezed_kernel_q,
-      rs         = rs,
-      q_display  = q_display
+      n         = n_val,
+      wigner_fn = qho_wigner,
+      kernel_fn = squeezed_kernel_q,
+      rs        = rs,
+      q_display = q_display
     )
 
-    cat(sprintf("  Wigner norm: %.6f | max_negative: %.2e | tolerance: %.2e\n",
-                result$w_norm, result$max_negative, result$tolerance))
+    cat(sprintf(
+      "  w_norm=%.6f | W_n(0,0) error=%.2e | max_neg=%.2e | tol=%.2e\n",
+      result$w_norm, result$w_spot_check, result$max_negative, result$tolerance
+    ))
 
-    P_q <- result$P_q
-
-    # Verify display-grid integral (diagnostic only, no renormalization)
-    disp_integral <- sum(P_q) * dq_disp
-    cat(sprintf("  Display grid integral (informational): %.6f\n", disp_integral))
+    P_q        <- result$P_q
+    disp_norm  <- sum(P_q) * dq_disp
+    cat(sprintf("  Display integral (informational): %.6f\n", disp_norm))
 
     dt_density <- data.table(
       q       = q_display,
@@ -103,7 +108,7 @@ plot_qho_grid <- function(dt_meta, base_font = "") {
       cdf     = cumsum(P_q) * dq_disp
     )
 
-    # Ellipse overlays — derived from RS, not hardcoded
+    # Ellipse overlays derived from RS geometry
     df_circles <- data.frame(x0=0, y0=0, r_A=Delta_q)
     df_cigars  <- data.frame(
       x0=0, y0=0,
@@ -111,7 +116,7 @@ plot_qho_grid <- function(dt_meta, base_font = "") {
       ap_a=Delta_q, ap_b=delta_p
     )
 
-    # Column 1: Phase-space Wigner distribution with symplectic blobs
+    # Column 1: Phase-space Wigner with symplectic blob overlays
     p_ell <- ggplot(dt_w2d, aes(x=q, y=p)) +
       geom_circle(data=df_circles, aes(x0=x0, y0=y0, r=r_A),
                   inherit.aes=FALSE, fill="white", color=NA) +
@@ -135,7 +140,7 @@ plot_qho_grid <- function(dt_meta, base_font = "") {
             plot.margin=margin(2,4,2,4)) +
       labs(x=ax_x, y=ax_y)
 
-    # Column 2: Quantization map (CDF of symplectic density)
+    # Column 2: Cumulative distribution function
     p_stair <- ggplot(dt_density, aes(x=q, y=cdf)) +
       geom_line(color="black", linewidth=0.8) +
       coord_cartesian(xlim=c(-ell_lim, ell_lim), ylim=c(0,1), expand=FALSE) +
