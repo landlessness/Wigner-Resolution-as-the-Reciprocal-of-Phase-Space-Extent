@@ -27,10 +27,9 @@ plot_qho_wigner_grid <- function(dt_meta, base_font="") {
   plot_list <- list()
   num_rows  <- nrow(dt_meta)
 
-  ax_x       <- expression(italic(q)/italic(q)[0])
-  ax_y       <- expression(italic(p)/italic(p)[0])
   ax_y_cross <- expression(italic(W)[italic(n)](italic(q)*","*0))
   ax_y_conv  <- expression(italic(P)[delta*italic(q)](italic(q)*","*0))
+  ax_x       <- expression(italic(q)/italic(q)[0])
 
   for (i in seq_len(num_rows)) {
     n_val <- dt_meta$quantum_n[i]
@@ -39,33 +38,27 @@ plot_qho_wigner_grid <- function(dt_meta, base_font="") {
 
     cat(sprintf("\nn=%d | A/A_0=%.0f | Delta_q=%.4f | delta_q=%.4f | RS: %s | SP: %s\n", n_val, rs$A_over_A0, rs$Delta_q, rs$delta_q, ifelse(rs$rs_satisfied,"OK","FAIL"), ifelse(rs$sp_satisfied,"OK","FAIL")))
 
-    Delta_q <- rs$Delta_q; Delta_p <- rs$Delta_p
-    delta_q <- rs$delta_q; delta_p <- rs$delta_p
+    Delta_q <- rs$Delta_q
 
-    ell_lim       <- Delta_q * 1.25
-    plot_lim      <- max(Delta_q * 1.25, Delta_q + 2.5)
-    break_val     <- min(round(Delta_q,1), floor(ell_lim*10)/10)
-    custom_breaks <- c(-break_val, 0, break_val)
-    label_format  <- function(x) sprintf("%.1f", x)
+    # Display geometry from shared library
+    geom          <- display_geometry(Delta_q)
+    ell_lim       <- geom$ell_lim
+    plot_lim      <- geom$plot_lim
+    custom_breaks <- geom$custom_breaks
+    label_format  <- geom$label_format
 
-    p_label <- ggplot() + theme_void() + coord_cartesian(xlim=c(-1,1), ylim=c(0,1), clip="off") + annotate("text", x=0, y=0.5, label=sprintf("%.0f*A[0]", alpha), parse=TRUE, family=base_font, size=4.5, hjust=0.5)
+    # Row label from shared library
+    p_label <- plot_row_label(sprintf("%.0f*A[0]", alpha), base_font=base_font)
 
-    grid_res  <- max(400, 15*alpha)
-    q_display <- seq(-plot_lim, plot_lim, length.out=grid_res)
-
-    # 2D Wigner heatmap
-    q_ell     <- seq(-ell_lim, ell_lim, length.out=400)
-    p_ell_seq <- seq(-ell_lim, ell_lim, length.out=400)
-    dt_w2d    <- as.data.table(expand.grid(q=q_ell, p=p_ell_seq))
-    dt_w2d[, w := qho_wigner(n_val, q, p)]
-    dt_w2d[, w_plot := sign(w) * abs(w)^0.4]
-    max_w <- max(abs(dt_w2d$w_plot), na.rm=TRUE)
-    if (max_w > 0) dt_w2d[, w_plot := w_plot / max_w]
+    # Heatmap data from shared library
+    dt_w2d <- wigner_heatmap_data(n_val, qho_wigner, ell_lim)
 
     # Center column: W_n(q,0) exact cross-section at p=0
-    W_cross <- qho_wigner(n_val, q_display, rep(0, length(q_display)))
-    w_max   <- max(abs(W_cross), na.rm=TRUE)
-    y_lim_w <- w_max * 1.3
+    grid_res  <- max(400, 15*alpha)
+    q_display <- seq(-plot_lim, plot_lim, length.out=grid_res)
+    W_cross   <- qho_wigner(n_val, q_display, rep(0, length(q_display)))
+    w_max     <- max(abs(W_cross), na.rm=TRUE)
+    y_lim_w   <- w_max * 1.3
 
     # Right column: P_delta_q(q,0) — p=0 slice of convolved 2D distribution
     integ_lim <- max(Delta_q*2.0, 4.0)
@@ -92,31 +85,19 @@ plot_qho_wigner_grid <- function(dt_meta, base_font="") {
     P_cross     <- approx(q_int, P_cross_int, xout=q_display, rule=1)$y
     P_cross[is.na(P_cross)] <- 0
 
-    # Scale to raw Wigner amplitude for honest shape comparison
-    P_cross_display <- P_cross
-    p_max_display   <- max(abs(P_cross_display), na.rm=TRUE)
-    if (p_max_display > 0) P_cross_display <- P_cross_display / p_max_display * w_max
+    # Scale convolved cross-section to raw Wigner amplitude for shape comparison
+    p_max_display <- max(abs(P_cross), na.rm=TRUE)
+    if (p_max_display > 0) P_cross_display <- P_cross / p_max_display * w_max else P_cross_display <- P_cross
 
     cat(sprintf("  W_n(0,0)=%.4f | scaled peak=%.4f\n", qho_wigner(n_val,0,0), max(abs(P_cross_display),na.rm=TRUE)))
 
     dt_cross <- data.table(q=q_display, W_raw=W_cross, P_conv=P_cross_display)
 
-    # Symplectic ellipse overlays — for QHO r_system = Delta_q so boundaries coincide
+    # Symplectic ellipse overlays — for QHO system and Fermi boundaries coincide
     ell_data <- symplectic_ellipse_data(rs, r_system=Delta_q)
 
-    # Column 1: Wigner 2D heatmap
-    # Bottom layers (white fill) drawn before raster, top layers (outlines) after
-    p_ell <- ggplot(dt_w2d, aes(x=q, y=p)) +
-      symplectic_ellipse_layers_bottom(ell_data) +
-      geom_raster(aes(fill=w_plot), interpolate=TRUE) +
-      scale_fill_gradient2(low="gray10", mid="white", high="gray40", midpoint=0, limits=c(-1,1), guide="none") +
-      symplectic_ellipse_layers_top(ell_data) +
-      coord_fixed(xlim=c(-ell_lim,ell_lim), ylim=c(-ell_lim,ell_lim), expand=FALSE) +
-      scale_x_continuous(breaks=custom_breaks, labels=label_format) +
-      scale_y_continuous(breaks=custom_breaks, labels=label_format) +
-      theme_bw(base_family=base_font) +
-      theme(panel.grid.minor=element_blank(), panel.background=element_rect(fill="white"), axis.text=element_text(size=8), plot.margin=margin(2,4,2,4)) +
-      labs(x=ax_x, y=ax_y)
+    # Column 1: heatmap from shared library
+    p_ell <- plot_phase_space_heatmap(dt_w2d, ell_data, ell_lim, custom_breaks, label_format, base_font)
 
     # Column 2: W_n(q,0) — exact Wigner cross-section, goes negative
     p_cross_raw <- ggplot(dt_cross, aes(x=q, y=W_raw)) +
@@ -169,5 +150,4 @@ plot_qho_wigner_grid <- function(dt_meta, base_font="") {
 cat("Computing Wigner cross-section grid...\n")
 p_final <- plot_qho_wigner_grid(dt_meta=dt_selected, base_font=latex_font)
 p_final <- p_final + theme(plot.margin=margin(10,10,10,10))
-ggsave(filename=file_output_pdf, plot=p_final, device=cairo_pdf, width=7.0, height=nrow(dt_selected)*1.8+0.5, limitsize=FALSE)
-cat("Done.", file_output_pdf, "\n")
+save_figure(p_final, file_output_pdf, nrow(dt_selected))
