@@ -111,10 +111,8 @@ plot_berry_grid <- function(dt_meta, base_font="") {
     clip_y       <- density_peak * 1.2
 
     dt_density <- data.table(q=q_display, density=P_berry_conv, berry_raw_display=berry_raw_display)
-
-    dt_forced <- rbind(dt_density[abs(q) < Delta_q], data.table(q=-Delta_q, density=0, berry_raw_display=y_lim_den*0.88), data.table(q=Delta_q, density=0, berry_raw_display=y_lim_den*0.88))[order(q)]
-
-    dt_center <- dt_density[abs(q) < Delta_q & berry_raw_display <= clip_y]
+    dt_density[, ribbon_top := pmin(berry_raw_display, y_lim_den)]
+    dt_center  <- dt_density[abs(q) <= Delta_q & berry_raw_display <= clip_y]
 
     # Symplectic ellipse overlays from shared library
     ell_data <- symplectic_ellipse_data(rs, r_system=Delta_q)
@@ -123,11 +121,13 @@ plot_berry_grid <- function(dt_meta, base_font="") {
     p_ell <- plot_phase_space_heatmap(dt_w2d, ell_data, ell_lim, custom_breaks, label_format, base_font)
 
     # Column 2: W_Berry(q,0) — diverges at turning points
+    # Ribbon rises to y_lim_den at turning points — seamless connection to infinity symbols
+    # Line runs across interior and terminates into full-height bars at +/- Delta_q
     p_raw <- ggplot() +
-      geom_ribbon(data=dt_forced, aes(x=q, ymin=0, ymax=pmin(berry_raw_display, y_lim_den*0.88)), fill="gray85", color=NA) +
+      geom_ribbon(data=dt_density[abs(q) <= Delta_q], aes(x=q, ymin=0, ymax=ribbon_top), fill="gray85", color=NA) +
       geom_path(data=dt_center[order(q)], aes(x=q, y=berry_raw_display), color="black", linewidth=0.4, arrow=arrow(length=unit(0.12,"cm"), ends="both", type="closed")) +
-      annotate("text", x=-Delta_q, y=y_lim_den*0.92, label="infinity", parse=TRUE, color="gray30", size=4.5) +
-      annotate("text", x= Delta_q, y=y_lim_den*0.92, label="infinity", parse=TRUE, color="gray30", size=4.5) +
+      annotate("text", x=-Delta_q, y=y_lim_den*0.92, label="infinity", parse=TRUE, color="black", size=4.5) +
+      annotate("text", x= Delta_q, y=y_lim_den*0.92, label="infinity", parse=TRUE, color="black", size=4.5) +
       coord_cartesian(xlim=c(-ell_lim,ell_lim), ylim=c(0,y_lim_den), expand=FALSE) +
       scale_x_continuous(breaks=custom_breaks, labels=label_format) +
       theme_bw(base_family=base_font) +
