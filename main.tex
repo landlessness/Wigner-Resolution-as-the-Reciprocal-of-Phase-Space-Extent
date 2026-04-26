@@ -1,12 +1,11 @@
 \documentclass[%
- aps, reprint, prl, amsmath,amssymb
+  aps, reprint, prl, amsmath,amssymb
 ]{revtex4-2}
 
 \usepackage{graphicx}
 \graphicspath{{figures/}}
 \usepackage{orcidlink}
 \usepackage{mathtools}
-\usepackage{algpseudocode}
 
 % -------------- arXiv-Style Margin Stamp ----------------
 \usepackage[style=iso]{datetime2}
@@ -14,15 +13,9 @@
 \usepackage{tikz}
 
 \AddToHook{shipout/background}{
- \begin{tikzpicture}[remember picture, overlay]
- \node [
- rotate=90,
- color=gray!80,
- font=\fontfamily{FiraMono-TLF}\selectfont\footnotesize
- ] at ([xshift=1.2cm]current page.west) {
- WORKING DRAFT \quad $\bullet$ \quad \DTMnow \quad $\bullet$ \quad doi.org/10.17605/OSF.IO/EV8H6 \quad $\bullet$ \quad Brian S. Mulloy \quad $\bullet$ \quad bmulloy@umich.edu
- };
- \end{tikzpicture}
+  \begin{tikzpicture}[remember picture, overlay]
+    \node [rotate=90, color=gray!80, font=\fontfamily{FiraMono-TLF}\selectfont\footnotesize] at ([xshift=1.2cm]current page.west) {WORKING DRAFT \quad $\bullet$ \quad \DTMnow \quad $\bullet$ \quad doi.org/10.17605/OSF.IO/EV8H6 \quad $\bullet$ \quad Brian S. Mulloy \quad $\bullet$ \quad bmulloy@umich.edu};
+  \end{tikzpicture}
 }
 % --------------------------------------------------------
 
@@ -31,7 +24,7 @@
 \title{Resolving Wigner Negativity and Semiclassical Caustics via Finite Classical Action}
 
 \begin{abstract}
-Wigner negativity and semiclassical caustics both follow from assuming unbounded classical action. Enforcing the finite action of a physical system via symplectic phase-space cells resolves both simultaneously. The resulting densities are provably non-negative and free of turning-point divergences.
+Wigner negativity and semiclassical caustics both follow from assuming unbounded classical action. Enforcing the finite action of a physical system via symplectic phase-space cells resolves both simultaneously. The resulting phase-space densities are provably non-negative and free of turning-point divergences.
 \end{abstract}
 
 \author{Brian S. Mulloy\orcidlink{0000-0002-1803-3172}}
@@ -47,25 +40,29 @@ Phase-space representations of quantum mechanics bridge classical trajectories a
 
 They are not. Both pathologies are kinematic consequences of the same assumption: that classical action is unbounded. Wigner negativity arises from interference on scales below $\hbar/\Delta p$; the WKB caustic arises from demanding $\delta q \to 0$ at the turning point, which forces $\Delta p \to \infty$ and hence infinite classical action. No physical system satisfies this condition.
 
-The standard remedy applies a fixed Gaussian kernel to yield the Husimi Q-function \cite{husimi1940}, which suppresses negativity and softens the caustics. But the Husimi kernel is set once by the ground state and carries no knowledge of the system's classical action --- a kernel ignorant of $A$ cannot resolve structure governed by $A$, and introduces artifactual tails broader than true quantum tunneling.
+The standard remedy applies a fixed Gaussian kernel to yield the Husimi Q-function \cite{husimi1940}, which suppresses negativity and softens the caustics. But the Husimi kernel is set once by the ground state and carries no information about the system's classical action --- a kernel decoupled from $A$ cannot resolve structure governed by $A$, and introduces artifactual tails broader than true quantum tunneling.
 
 Here we enforce what the physics already demands: a finite classical action $A$ constrains the phase-space resolution to Zurek's reciprocal scales $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$ \cite{zurek2001}. Drawing on de~Gosson's symplectic geometry \cite{degosson2009,degosson2012fermi} and Gromov's non-squeezing theorem \cite{gromov1985}, we construct squeezed Gaussian kernels governed entirely by $A$. These kernels saturate the Heisenberg limit, provably eliminate Wigner negativity by Hudson's theorem \cite{hudson1974}, and bound the momentum support at turning points, replacing WKB divergences with finite-amplitude densities. Finite classical action resolves Wigner negativity and semiclassical caustics.
 
 \begin{figure}[t!]
 \centering
 \includegraphics[width=\linewidth]{figures/quantum_of_action.pdf}
-\caption{\textbf{The symplectic quantum of action} (schematic, 1D case). The Heisenberg limit $\sigma_q \sigma_p \ge \hbar/2$ maps onto classical semi-axes $\Delta q = \sqrt{2}\sigma_q$, $\Delta p = \sqrt{2}\sigma_p$, projecting the $1\sigma$ contour onto a Fermi blob with phase-space area $A = \pi \Delta q \Delta p \ge h/2$. Its interior contains a conjugate pair of quantum blobs, $a_q = \pi\,\delta q\,\Delta p = h/2$ and $a_p = \pi\,\Delta q\,\delta p = h/2$, summing to the quantum of action $h = a_q + a_p$. Their widths are Zurek's reciprocal scales $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$. As $A$ grows, $a_q$ and $a_p$ compress along their conjugate axes, enforcing the correspondence principle.}
+\caption{\textbf{The symplectic quantum of action} (schematic, 1D case). The Heisenberg limit $\sigma_q \sigma_p \ge \hbar/2$ maps onto classical semi-axes $\Delta q = \sqrt{2}\sigma_q$, $\Delta p = \sqrt{2}\sigma_p$, projecting the $1\sigma$ contour onto a Fermi blob with phase-space area $A = \pi \Delta q \Delta p \ge h/2$. Its interior contains a conjugate pair of quantum blobs, $a_q = \pi\,\delta q\,\Delta p = h/2$ and $a_p = \pi\,\Delta q\,\delta p = h/2$, summing to the quantum of action $h = a_q + a_p$. Their widths are Zurek's reciprocal scales $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$; $a_q$ is squeezed along the position axis and $a_p$ along the momentum axis, and their joint structure is accessible only through ensemble tomography on separate copies of the state. As $A$ grows, $a_q$ and $a_p$ compress along their conjugate axes, enforcing the correspondence principle.}
 \label{fig:quantum_of_action}
 \end{figure}
 
 \section{Wigner Negativity and Semiclassical Caustics}
 
 The Wigner--Weyl distribution furnishes an exact phase-space representation of a quantum state $\psi$,
-$$W(q,p) = \frac{1}{\pi\hbar}\int_{-\infty}^{\infty} \psi^*(q+x)\psi(q-x)\, e^{2ipx/\hbar}\, dx,$$
+\begin{equation}
+W(q,p) = \frac{1}{\pi\hbar}\int_{-\infty}^{\infty} \psi^*(q+x)\psi(q-x)\, e^{2ipx/\hbar}\, dx,
+\end{equation}
 but allows negative values wherever quantum interference is strong \cite{wigner1932}. Negativity is not a numerical artifact; it is a structural feature of the Wigner function for any pure state beyond the ground state, and no phase-space rotation or scaling removes it.
 
 The semiclassical limit approaches the problem from the opposite direction. The WKB probability density,
-$$P_\text{WKB}(q) \propto \frac{1}{\sqrt{E - V(q)}},$$
+\begin{equation}
+P_\text{WKB}(q) \propto \frac{1}{\sqrt{E - V(q)}},
+\end{equation}
 diverges at the classical turning points $q_\pm$ where $E = V(q)$ and the local momentum vanishes \cite{berry1977,langer1937}. Physically, the particle slows to rest at the boundary; statistically, it spends infinite time there. The divergence is not regularized by any finite order of the WKB expansion.
 
 Both pathologies share a kinematic root. Wigner negativity arises from interference on scales below $\hbar/\Delta p$, and the WKB caustic arises from assuming $\delta q \to 0$ at the turning point --- which demands $\Delta p \to \infty$ and hence unbounded classical action.
@@ -73,58 +70,73 @@ Both pathologies share a kinematic root. Wigner negativity arises from interfere
 \begin{figure}[t!]
 \centering
 \includegraphics[width=\linewidth]{figures/qho_wigner_grid.pdf}
-\caption{\textbf{Wigner negativity resolved.} Rows show harmonic oscillator eigenstates with action $A = 1, 3, 5, 7, 49\,A_0$ (quantum numbers $n = 0, 1, 2, 3, 24$). All positions in units of $q_0$, momenta in units of $p_0$. \textit{Left:} Phase-space Wigner distribution $W_n(q,p)$ with the symplectic quantum of action overlaid. The dashed line marks the $p = 0$ cross-section shown in the adjacent columns. \textit{Center:} Cross-section $W_n(q,0)$; dark shading marks negative values, which grow in extent and depth with increasing $n$. \textit{Right:} Cross-section $P_{\delta q}(q,0)$ of the convolved distribution; negative regions are eliminated by construction, with the kernel width set by the finite classical action $A$. Each row is independently scaled to show shape; amplitudes decrease with $n$ as the distribution spreads over a larger classical region.}
+\caption{\textbf{Wigner negativity resolved.} Rows show harmonic oscillator eigenstates with action $A = 1, 3, 5, 7, 49\,A_0$ (quantum numbers $n = 0,1,2,3,24$). All positions in units of $q_0$, momenta in units of $p_0$. \textit{Left:} Phase-space Wigner distribution $W_n(q,p)$ with the symplectic quantum of action overlaid. The dashed line marks the $p = 0$ cross-section shown in the adjacent columns. \textit{Center:} Cross-section $W_n(q,0)$ of the exact Wigner distribution at $p=0$; dark shading marks negative values, which grow in extent and depth with increasing $n$. \textit{Right:} Cross-section $P_{\delta q}(q,0)$ of the convolved phase-space density at $p=0$; negative regions are eliminated everywhere in phase space by Hudson's theorem, with kernel width set by the finite classical action $A$. Each row is independently scaled to show shape.}
 \label{fig:qho_wigner_grid}
 \end{figure}
 
 \begin{figure}[t!]
 \centering
 \includegraphics[width=\linewidth]{figures/qho_berry_grid.pdf}
-\caption{\textbf{Semiclassical caustics resolved.} Rows show the same harmonic oscillator eigenstates as Fig.~\ref{fig:qho_wigner_grid}, using Berry's semiclassical phase-space approximation \cite{berry1977}. \textit{Left:} Berry's 2D semiclassical distribution with the symplectic quantum of action overlaid. \textit{Center:} Raw Berry density $P_\text{Berry}(q)$; the distribution diverges at the classical turning points $q = \pm\Delta q$ ($\infty$, arrows), a direct manifestation of the semiclassical caustic. \textit{Right:} Convolved symplectic density $P_{\delta q}(q)$; enforcing the finite classical action $A$ via the squeezed kernel $G_{\delta q}$ replaces the divergences with finite-amplitude densities, while preserving the quantum oscillation structure in the interior.}
+\caption{\textbf{Semiclassical caustics resolved.} Rows show the same harmonic oscillator eigenstates as Fig.~\ref{fig:qho_wigner_grid}, using Berry's semiclassical phase-space approximation. \textit{Left:} Berry's 2D semiclassical phase-space distribution $W_\text{Berry}(q,p)$ with the symplectic quantum of action overlaid. \textit{Center:} Cross-section $W_\text{Berry}(q,0)$ at $p=0$; the distribution diverges at the classical turning points $q = \pm\Delta q$ ($\infty$, arrows), a direct manifestation of the semiclassical caustic present at every action level. \textit{Right:} Cross-section $P_{\delta q}(q,0)$ of the convolved phase-space density at $p=0$; enforcing the finite classical action $A$ via the squeezed kernel $G_{\delta q}$ replaces the divergences with finite-amplitude densities, while preserving the quantum oscillation structure in the interior.}
 \label{fig:qho_berry_grid}
 \end{figure}
 
 \section{The Symplectic Quantum of Action}
 
 De~Gosson maps the Heisenberg limit $\sigma_q \sigma_p \ge \hbar/2$ into classical semi-axes $\Delta q = \sqrt{2}\sigma_q$, $\Delta p = \sqrt{2}\sigma_p$, projecting the $1\sigma$ contour onto a Fermi blob \cite{degosson2012fermi} with phase-space area
-$$A = \pi \Delta q \Delta p \ge \frac{h}{2}.$$
+\begin{equation}
+A = \pi \Delta q \Delta p \ge \frac{h}{2}.
+\end{equation}
 Hereafter, $\Delta q$ and $\Delta p$ are classical kinematic boundaries.
 
 Zurek's reciprocal scales \cite{zurek2001} partition the blob interior: $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$. These define a conjugate pair of orthogonal quantum blobs \cite{degosson2009},
-$$a_q = \pi\,\delta q\,\Delta p = \frac{h}{2}, \qquad a_p = \pi\,\Delta q\,\delta p = \frac{h}{2},$$
-each carrying the irreducible area $h/2$. Holding their areas fixed while $\Delta q$ and $\Delta p$ expand forces reciprocal compression of $\delta q$ and $\delta p$ --- a topological necessity enforced by Gromov's non-squeezing theorem \cite{gromov1985}. Conjugate pairing locks their areas, $a_q + a_p = h$, to Planck's quantum of action (Fig.~\ref{fig:quantum_of_action}).
+\begin{equation}
+a_q = \pi\,\delta q\,\Delta p = \frac{h}{2}, \qquad a_p = \pi\,\Delta q\,\delta p = \frac{h}{2},
+\end{equation}
+each carrying the irreducible area $h/2$. The blobs $a_q$ and $a_p$ are orthogonal in phase space --- $a_q$ squeezed along the position axis and $a_p$ squeezed along the momentum axis \cite{degossoncharlyne2022} --- and their joint structure is accessible only through ensemble tomography on separate copies of the state, never through simultaneous measurement of a single copy. Holding their areas fixed while $\Delta q$ and $\Delta p$ expand forces reciprocal compression of $\delta q$ and $\delta p$ --- a topological necessity enforced by Gromov's non-squeezing theorem \cite{gromov1985}. Conjugate pairing locks their areas, $a_q + a_p = h$, to Planck's quantum of action (Fig.~\ref{fig:quantum_of_action}).
 
 \section{Resolution via Finite Classical Action}
 
-The classical action $A = \pi \Delta q \Delta p$ sets the phase-space resolution via the reciprocal scales $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$. We work in units of the ground state scales $q_0$ and $p_0$, so that $\hbar = q_0 p_0 = 1$ and $A_0 = \pi q_0 p_0 = h/2$ is the unit of action. In these units the minimum-uncertainty blobs $a_q$ and $a_p$ of area $h/2$ consistent with these bounds take the Gaussian form of the conjugate squeezed kernels \cite{degosson2009,degosson2012fermi},
-$$G_{\delta q}(q,p) = \frac{1}{\pi}\exp\!\left(-\frac{q^2}{\delta q^2} - \frac{p^2}{\Delta p^2}\right),$$
-$$G_{\delta p}(q,p) = \frac{1}{\pi}\exp\!\left(-\frac{q^2}{\Delta q^2} - \frac{p^2}{\delta p^2}\right),$$
-where $G_{\delta q}$ is squeezed in $q$ and spans $\Delta p$, and $G_{\delta p}$ is squeezed in $p$ and spans $\Delta q$. Each kernel carries symplectic area $h/2$, saturating the Heisenberg limit. The kernel symplectic positivity condition $\delta q \cdot \Delta p = \hbar = 1$ is satisfied by construction from Zurek's reciprocal scales.
+The classical action $A = \pi \Delta q \Delta p$ sets the phase-space resolution via the reciprocal scales $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$. The minimum-uncertainty blobs $a_q$ and $a_p$ of area $h/2$ take the Gaussian form of the conjugate squeezed kernels \cite{degosson2009,degosson2012fermi},
+\begin{equation}
+G_{\delta q}(q,p) = \frac{1}{\pi}\exp\!\left(-\frac{q^2}{\delta q^2} - \frac{p^2}{\Delta p^2}\right),
+\end{equation}
+\begin{equation}
+G_{\delta p}(q,p) = \frac{1}{\pi}\exp\!\left(-\frac{q^2}{\Delta q^2} - \frac{p^2}{\delta p^2}\right),
+\end{equation}
+where $G_{\delta q}$ is squeezed in $\delta q$ and spans $\Delta p$, and $G_{\delta p}$ is squeezed in $\delta p$ and spans $\Delta q$. Each kernel carries symplectic area $h/2$, saturating the Heisenberg limit. The symplectic positivity condition $\delta q \cdot \Delta p = \hbar$ is satisfied by construction from Zurek's reciprocal scales.
 
-The conjugate squeezed densities and their 1D projections are
-$$P_{\delta q} = W * G_{\delta q}, \qquad P_{\delta p} = W * G_{\delta p},$$
-$$P_{\delta q}(q) = \int P_{\delta q}(q,p)\, dp, \qquad P_{\delta p}(p) = \int P_{\delta p}(q,p)\, dq.$$
-Since each kernel satisfies the symplectic positivity condition $\lambda_{\min}(\Sigma + \frac{i}{2}J) = 0$, Hudson's theorem \cite{hudson1974} guarantees $P_{\delta q} \ge 0$ and $P_{\delta p} \ge 0$ pointwise. The finite momentum support $\delta p = 1/\Delta q$ simultaneously bounds the kinematic action at the classical turning points, replacing WKB caustics with finite-amplitude densities.
+The convolved phase-space densities are
+\begin{equation}
+P_{\delta q}(q,p) = (W * G_{\delta q})(q,p), \qquad P_{\delta p}(q,p) = (W * G_{\delta p})(q,p).
+\end{equation}
+Since each kernel satisfies the symplectic positivity condition $\lambda_{\min}(\Sigma + \frac{i}{2}J) = 0$, Hudson's theorem \cite{hudson1974} guarantees
+\begin{equation}
+P_{\delta q}(q,p) \ge 0 \quad \text{and} \quad P_{\delta p}(q,p) \ge 0
+\end{equation}
+pointwise everywhere in phase space. The finite momentum support of $G_{\delta q}$, with width $\Delta p = \hbar/\delta q$, simultaneously bounds the kinematic action at the classical turning points, replacing WKB caustics with finite-amplitude densities.
 
-The squeezed densities differ fundamentally from the Husimi Q-function \cite{husimi1940}. Husimi convolves $W$ with a fixed coherent-state kernel set once by the ground state, blind to the system's classical action. The kernels $G_{\delta q}$ and $G_{\delta p}$ are governed entirely by $A$: as $A$ grows they sharpen anisotropically along the classical trajectory, recovering structure the fixed Husimi kernel permanently obscures.
+The squeezed densities differ fundamentally from the Husimi Q-function \cite{husimi1940}. Husimi convolves $W$ with a fixed coherent-state kernel set once by the ground state, carrying no information about the system's classical action. The kernels $G_{\delta q}$ and $G_{\delta p}$ are governed entirely by $A$: as $A$ grows they sharpen anisotropically along the classical trajectory, recovering phase-space structure the fixed Husimi kernel cannot access.
 
 \section{The Harmonic Oscillator}
 
 The quantum harmonic oscillator provides the canonical test of both resolutions. Its Wigner function is known exactly \cite{wigner1932},
-$$W_n(q,p) = \frac{(-1)^n}{\pi} e^{-(q^2+p^2)} L_n\!\left(2(q^2+p^2)\right),$$
-where $L_n$ is the Laguerre polynomial of order $n$ and all quantities are in $q_0, p_0$ units. The Robertson--Schrödinger covariance for eigenstate $|n\rangle$ gives $\sigma_{qq} = \sigma_{pp} = (2n+1)/2$ and $\sigma_{qp} = 0$, yielding classical boundaries $\Delta q = \Delta p = \sqrt{2n+1}$ and reciprocal scales $\delta q = \delta p = 1/\sqrt{2n+1}$, so that $A/A_0 = 2n+1$.
+\begin{equation}
+W_n(q,p) = \frac{(-1)^n}{\pi}\, e^{-(q^2+p^2)}\, L_n\!\left(2(q^2+p^2)\right),
+\end{equation}
+where $L_n$ is the Laguerre polynomial of order $n$. The Robertson--Schr\"{o}dinger covariance for eigenstate $|n\rangle$ gives $\sigma_{qq} = \sigma_{pp} = (2n+1)/2$ and $\sigma_{qp} = 0$, yielding classical boundaries $\Delta q = \Delta p = \sqrt{2n+1}$ and reciprocal scales $\delta q = \delta p = 1/\sqrt{2n+1}$, so that $A_\text{ho}/A_0 = 2n+1$, where $A_0 = h/2$ is the ground-state action and $A_\text{ho}$ is the harmonic oscillator classical action. For the harmonic oscillator $A = A_\text{ho}$ exactly; the Fermi blob is the energy shell ellipse. All quantities below are expressed in units of the ground-state scales $q_0$ and $p_0$, so that $\hbar = q_0 p_0 = 1$.
 
 \subsection{Wigner Negativity}
 
-Figure~\ref{fig:qho_wigner_grid} shows the cross-section $W_n(q,0)$ at $p=0$ for five action levels. For $n=0$ the cross-section is a positive Gaussian --- the ground state Wigner function is non-negative everywhere. For $n \ge 1$ the cross-section oscillates and goes negative, with $W_n(0,0) = (-1)^n/\pi$ alternating sign at the origin. The dark-shaded negative regions grow in extent with increasing $n$, reflecting deepening quantum interference.
+Figure~\ref{fig:qho_wigner_grid} shows the $p=0$ cross-section $W_n(q,0)$ of the exact Wigner function for five action levels. For $n=0$ the cross-section is a positive Gaussian --- the ground state Wigner function is non-negative everywhere in phase space. For $n \ge 1$ the cross-section oscillates and goes negative, with $W_n(0,0) = (-1)^n/\pi$ alternating sign at the origin. The dark-shaded negative regions grow in extent with increasing $n$, reflecting deepening quantum interference.
 
-The convolved cross-section $P_{\delta q}(q,0)$ shown in the right column is everywhere non-negative, confirming Hudson's theorem numerically. The kernel width $\delta q = 1/\sqrt{2n+1}$ shrinks with increasing action, so at $49A_0$ the convolution barely smooths the oscillations while still eliminating all negativity. Each row is independently scaled; the absolute amplitude of $P_{\delta q}(q,0)$ decreases with $n$ as the distribution spreads over the growing classical region.
+The $p=0$ cross-section $P_{\delta q}(q,0)$ of the convolved phase-space density shown in the right column is everywhere non-negative, consistent with Hudson's theorem guaranteeing $P_{\delta q}(q,p) \ge 0$ pointwise throughout phase space. The kernel width $\delta q = 1/\sqrt{2n+1}$ shrinks with increasing action, so at $49A_0$ the convolution barely smooths the oscillations while still eliminating all negativity. Each row is independently scaled; the absolute amplitude of the cross-section decreases with $n$ as the distribution spreads over the growing classical region.
 
 \subsection{Semiclassical Caustics}
 
-Figure~\ref{fig:qho_berry_grid} shows the same action levels using Berry's semiclassical phase-space approximation \cite{berry1977}. The raw Berry density $P_\text{Berry}(q)$ diverges at both classical turning points $q = \pm\Delta q$ for every eigenstate --- the caustic is present at all action levels and is not regularized by increasing $n$. At $49A_0$ the interior oscillations are dense but the turning-point divergences remain.
+Figure~\ref{fig:qho_berry_grid} shows the same action levels using Berry's semiclassical phase-space approximation \cite{berry1977}. The $p=0$ cross-section $W_\text{Berry}(q,0)$ diverges at both classical turning points $q = \pm\Delta q$ for every eigenstate --- the caustic is present at all action levels and is not regularized by increasing $n$. At $49A_0$ the interior oscillations are dense but the turning-point divergences remain.
 
-The convolved density $P_{\delta q}(q)$ in the right column replaces each divergence with a finite-amplitude peak. The kernel width $\delta q = 1/\sqrt{2n+1}$ provides exactly the resolution needed: coarse at low action where quantum structure dominates, fine at high action where the classical envelope is being recovered. The caustics are resolved without introducing any free parameters --- the kernel is fully determined by the system's classical action.
+The $p=0$ cross-section $P_{\delta q}(q,0)$ of the convolved phase-space density in the right column replaces each divergence with a finite-amplitude peak. The kernel width $\delta q = 1/\sqrt{2n+1}$ provides exactly the resolution needed: coarse at low action where quantum structure dominates, fine at high action where the classical envelope is being recovered. The caustics are resolved without introducing any free parameters --- the kernel is fully determined by the system's classical action $A_\text{ho}$.
 
 \section{Morse Potential}
 
