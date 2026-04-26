@@ -146,7 +146,7 @@ plot_berry_grid <- function(dt_meta, base_font="") {
 
     if (i==1) {
       p_label <- p_label + labs(title=" ") + theme(plot.title=element_text(size=11, hjust=0.5))
-      p_ell   <- p_ell   + labs(title="Quantum of Action") + theme(plot.title=element_text(size=11, hjust=0.5))
+      p_ell   <- p_ell   + labs(title="Phase-Space Cells") + theme(plot.title=element_text(size=11, hjust=0.5))
       p_raw   <- p_raw   + labs(title="Semiclassical Caustics") + theme(plot.title=element_text(size=11, hjust=0.5))
       p_den   <- p_den   + labs(title="Finite-Action Resolution") + theme(plot.title=element_text(size=11, hjust=0.5))
     }

@@ -124,7 +124,7 @@ plot_qho_wigner_grid <- function(dt_meta, base_font="") {
 
     if (i==1) {
       p_label      <- p_label      + labs(title=" ") + theme(plot.title=element_text(size=11, hjust=0.5))
-      p_ell        <- p_ell        + labs(title="Quantum of Action") + theme(plot.title=element_text(size=11, hjust=0.5))
+      p_ell        <- p_ell        + labs(title="Phase-Space Cells") + theme(plot.title=element_text(size=11, hjust=0.5))
       p_cross_raw  <- p_cross_raw  + labs(title="Wigner Negativity") + theme(plot.title=element_text(size=11, hjust=0.5))
       p_cross_conv <- p_cross_conv + labs(title="Finite-Action Resolution") + theme(plot.title=element_text(size=11, hjust=0.5))
     }
