@@ -2,12 +2,24 @@
 # plot_harmonic_wigner_husimi.R
 # Appendix: Husimi resolution of Wigner negativity — Harmonic oscillator
 #
-# Five rows: n=0,1,2,3,100. The semiclassical n=100 row demonstrates
-# Husimi smoothing in the regime where the oscillation period (~0.28)
-# is far below the kernel width (~1.0).
+# Five rows showing the harmonic oscillator's Wigner-negativity ladder:
+#   n=0   ground state (positive everywhere — Hudson's theorem)
+#   n=1   first excited state (single negative lobe at origin)
+#   n=2   two nodes, more interference structure
+#   n=3   three nodes
+#   n=30  semiclassical regime, ~30 oscillation lobes approaching the
+#         classical density on the energy shell
 #
-# Wavefunction: harmonic_psi() — analytic Hermite-Gaussian
-# Reference: Griffiths Introduction to Quantum Mechanics Ch.2
+# QHO eigenstates are analytic Hermite-Gaussians; no Schrodinger solver
+# is needed. harmonic_soln() returns a soln object with the same interface
+# as solve_schrodinger(), so the kernel-agnostic pipeline is reused unchanged.
+#
+# Architecture:
+#   build_wigner_state()           — kernel-agnostic per-state computation
+#   apply_kernel_cross_section()   — kernel-specific (Husimi here)
+#
+# Layout, column titles, and figure dimensions are owned by plot_tools.R.
+# This file specifies only what is potential-specific and Husimi-specific.
 # ==============================================================================
 
 library(here)
@@ -16,7 +28,8 @@ library(patchwork)
 source(here("R", "plot_tools.R"))
 source(here("R", "harmonic_potential.R"))
 source(here("R", "wigner_tools.R"))
-source(here("R", "husimi_tools.R"))
+source(here("R", "wigner_state.R"))
+source(here("R", "husimi_kernel.R"))
 source(here("R", "classical_action_tools.R"))
 
 latex_font      <- "CMU Serif"
@@ -30,27 +43,11 @@ ho_soln <- harmonic_soln(n_states=HARMONIC_N_STATES,
                          q_max=HARMONIC_Q_MAX,
                          dq=HARMONIC_DQ)
 
-target_n_levels <- c(0, 1, 2, 3, 100)
+target_n_levels <- c(0, 1, 2, 3, 20)
 
 # ------------------------------------------------------------------------------
-# Choose integration grid resolution per state.
-# Wavefunction has n nodes over orbit radius sqrt(2n+1); shortest oscillation
-# period is roughly 2*sqrt(2n+1)/n. We need dq < period/4 to avoid Nyquist
-# aliasing in the Wigner FFT.
-# At n=100 the period is ~0.28; the integration grid spans about 4x the
-# orbit (display + padding), so we need ~3000+ q points to be safe.
-# ------------------------------------------------------------------------------
-
-choose_resolution <- function(n_val) {
-  if (n_val >= 50) {
-    list(n_q_int=3201, n_p_int=2401, n_heat=600)
-  } else if (n_val >= 10) {
-    list(n_q_int=1601, n_p_int=1201, n_heat=500)
-  } else {
-    list(n_q_int=801, n_p_int=601, n_heat=400)
-  }
-}
-
+# Build a single row's panels for a given quantum number.
+# Returns list(label_str, p_heatmap, p_wigner, p_husimi).
 # ------------------------------------------------------------------------------
 
 build_harmonic_row <- function(n_val, soln, base_font="") {
@@ -84,31 +81,19 @@ build_harmonic_row <- function(n_val, soln, base_font="") {
   label_format    <- function(x) sprintf("%.1f", x)
   q_display       <- seq(q_lo, q_hi, length.out=500)
 
-  res <- choose_resolution(n_val)
-  cat(sprintf("  Grid resolution: n_q_int=%d, n_p_int=%d, n_heat=%d\n",
-              res$n_q_int, res$n_p_int, res$n_heat))
+  # Kernel-agnostic: build the per-state Wigner data.
+  state <- build_wigner_state(psi_vec, q_grid,
+                              q_lo, q_hi, p_lo, p_hi, q_display)
 
-  cat("  Computing Wigner cross-section...\n")
-  W_cross <- compute_wigner_cross_section(
-    psi_vec, q_grid, q_lo, q_hi, p_lo, p_hi, q_display,
-    n_q_int=res$n_q_int, n_p_int=res$n_p_int)
+  # Kernel-specific: apply the Husimi kernel.
+  Q_cross <- apply_kernel_cross_section(state, husimi_kernel_matrix, q_display)
 
-  cat("  Computing Husimi cross-section...\n")
-  Q_cross <- compute_husimi_cross_section(
-    psi_vec, q_grid, q_lo, q_hi, p_lo, p_hi, q_display, wigner_fft,
-    n_q_int=res$n_q_int, n_p_int=res$n_p_int)
-
-  w_max     <- max(abs(W_cross), na.rm=TRUE)
+  # Cross-section data table for the right column.
+  w_max     <- max(abs(state$W_cross), na.rm=TRUE)
   y_lim     <- w_max * 1.3
   q_max_amp <- max(abs(Q_cross), na.rm=TRUE)
   Q_display <- if (q_max_amp > 0) Q_cross/q_max_amp*w_max else Q_cross
-
-  dt_cross <- data.table(q=q_display, W_raw=W_cross, Q_husimi=Q_display)
-
-  cat("  Computing Husimi heatmap...\n")
-  dt_w2d <- compute_husimi_heatmap(
-    psi_vec, q_grid, q_lo, q_hi, p_lo, p_hi, wigner_fft,
-    n_heat=res$n_heat)
+  dt_cross  <- data.table(q=q_display, W_raw=state$W_cross, Q_husimi=Q_display)
 
   df_traj    <- classical_trajectory(harmonic_V, E_n, tp)
   husimi_ell <- husimi_ellipse_data(q_center=0)
@@ -116,7 +101,7 @@ build_harmonic_row <- function(n_val, soln, base_font="") {
   list(
     sprintf("italic(n)==%d", n_val),
     plot_phase_space_heatmap_husimi(
-      dt_w2d, husimi_ell, df_traj,
+      state$heatmap_dt, husimi_ell, df_traj,
       q_lim=c(q_lo,q_hi), p_lim=c(p_lo,p_hi),
       custom_breaks_q=custom_breaks_q,
       custom_breaks_p=custom_breaks_p,

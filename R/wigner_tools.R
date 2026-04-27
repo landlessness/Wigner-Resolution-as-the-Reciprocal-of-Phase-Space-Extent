@@ -1,15 +1,15 @@
 # ==============================================================================
 # wigner_tools.R
-# Wigner function computation — exact (QHO) and numerical (anharmonic).
+# Wigner function computation primitives.
 #
-# Schrodinger solver: finite difference matrix diagonalization
-# Reference: Numerov 1924, Press et al. Numerical Recipes 3rd ed. Ch.18
-#            Landau, Paez & Bordeianu Computational Physics Ch.9
+# Two main functions:
+#   solve_schrodinger() — finite-difference matrix diagonalization
+#   wigner_fft()        — Wigner function via FFT method
+#                         (Leonhardt 1997 Ch.5; Johansson et al. 2012)
 #
-# Wigner FFT method: Leonhardt, Measuring the Quantum State of Light
-#            (Cambridge 1997) Ch.5
-#            Johansson, Nation & Nori, Comp. Phys. Comm. 183, 1760 (2012)
-#            (QuTiP _wigner_fourier method)
+# This file computes raw Wigner data on integration grids. Higher-level
+# orchestration (extracting cross-sections, building heatmap data, applying
+# kernels) lives in wigner_state.R.
 #
 # Units: positions in q_0, momenta in p_0, hbar = q_0*p_0 = 1
 # Author: Brian S. Mulloy
@@ -19,17 +19,17 @@ library(here)
 library(gsl)
 source(here("R", "math_tools.R"))
 
-# Default integration grid sizes for Wigner/Husimi pipelines.
+# Default integration grid sizes.
 # For high quantum numbers the wavefunction oscillates fast; pass larger
-# values via n_q_int / n_p_int to avoid Nyquist aliasing.
+# values via build_wigner_state() to avoid Nyquist aliasing.
 WIGNER_DEFAULT_NQ <- 801
 WIGNER_DEFAULT_NP <- 601
 
 # ------------------------------------------------------------------------------
-# QHO — exact analytic Wigner function
+# QHO — exact analytic Wigner function (reference)
 # ------------------------------------------------------------------------------
 
-#' Exact QHO Wigner function W_n(q,p).
+#' Exact QHO Wigner function W_n(q,p) = (-1)^n/pi * exp(-(q^2+p^2)) * L_n(2(q^2+p^2)).
 qho_wigner <- function(n, q, p) {
   rho2 <- q^2 + p^2
   (-1)^n / pi * exp(-rho2) * laguerre_n(n, 0, 2*rho2)
@@ -37,6 +37,7 @@ qho_wigner <- function(n, q, p) {
 
 # ------------------------------------------------------------------------------
 # SCHRODINGER SOLVER
+# H*psi = E*psi, H = -hbar^2/2 * d^2/dq^2 + V(q)
 # ------------------------------------------------------------------------------
 
 solve_schrodinger <- function(V_fn, q_min, q_max, dq=0.01, n_states=6, hbar=1.0) {
@@ -86,10 +87,31 @@ solve_schrodinger <- function(V_fn, q_min, q_max, dq=0.01, n_states=6, hbar=1.0)
 
 # ------------------------------------------------------------------------------
 # WIGNER FFT METHOD
-# Reference: Leonhardt 1997 Ch.5, Johansson et al. 2012
+#
+# Definition: W(q, p) = (1/pi) * integral psi(q+x) psi(q-x) exp(2i*p*x) dx
+#
+# Discrete form: for each iq, define
+#   rho[iq, k] = psi(q_iq + k*dq) * psi(q_iq - k*dq), k = 0..nq-1, hbar=1
+# Then for real psi:
+#   W(q_iq, p) = (dq/pi) * [ rho[iq,0] + 2 * sum_{k>=1} rho[iq,k] * cos(2*p*k*dq) ]
+#              = (dq/pi) * ( 2 * Re[FFT(rho_padded)] - rho[iq,0] )
+#
+# The cosine sum over k is the real part of the FFT of rho along k. Padding
+# rho with zeros before FFT gives fine sampling of the cosine kernel.
+#
+# Output frequencies: p_native[m] = pi * m / (M * dq), m = 0..M/2.
+# We interpolate from p_native to the requested p_grid (Wigner is even in p
+# for real psi, so |p| works).
+#
+# Reference: Leonhardt 1997 Ch.5
 # ------------------------------------------------------------------------------
 
-#' Wigner function via FFT method on sampled wavefunction.
+#' Wigner function via FFT method, vectorized over k and over p.
+#'
+#' @param psi_vec Wavefunction sampled on q_grid (will be re-normalized).
+#' @param q_grid Uniform position grid.
+#' @param p_grid Momentum grid at which W is evaluated.
+#' @return Matrix W[nq x np] with W[iq, ip] = W(q_grid[iq], p_grid[ip]).
 wigner_fft <- function(psi_vec, q_grid, p_grid) {
   nq    <- length(q_grid)
   np    <- length(p_grid)
@@ -97,57 +119,40 @@ wigner_fft <- function(psi_vec, q_grid, p_grid) {
   norm  <- sqrt(sum(psi_vec^2)*dq)
   if (norm > 0) psi_vec <- psi_vec/norm
 
-  W_mat <- matrix(0, nrow=nq, ncol=np)
-  k_seq <- 0:(nq-1)
+  # Build rho[iq, k] = psi[iq+k] * psi[iq-k] for valid indices.
+  # iq, k are 1-indexed in R; out-of-bounds entries are 0.
+  iq_grid <- matrix(seq_len(nq), nrow=nq, ncol=nq)
+  k_grid  <- matrix(seq_len(nq) - 1, nrow=nq, ncol=nq, byrow=TRUE)
+  ip_idx  <- iq_grid + k_grid
+  im_idx  <- iq_grid - k_grid
+  valid   <- (ip_idx >= 1) & (ip_idx <= nq) & (im_idx >= 1) & (im_idx <= nq)
+  safe_ip <- ifelse(valid, ip_idx, 1)
+  safe_im <- ifelse(valid, im_idx, 1)
+  rho     <- psi_vec[safe_ip] * psi_vec[safe_im]
+  rho     <- ifelse(valid, rho, 0)
+  dim(rho) <- c(nq, nq)
 
+  # FFT along k. Pad to length M (power of 2) for fine p sampling.
+  # M is chosen so the native p step pi/(M*dq) is at most ~1/4 of the
+  # display p step; this controls interpolation error.
+  M <- 2^ceiling(log2(max(2*nq, 4*np)))
+  rho_padded <- matrix(0, nrow=nq, ncol=M)
+  rho_padded[, 1:nq] <- rho
+
+  # mvfft FFTs columns. We want FFT along k (rows of rho_padded) — transpose.
+  fft_full   <- t(mvfft(t(rho_padded)))
+  half       <- M/2 + 1
+  W_native   <- (dq/pi) * (2*Re(fft_full[, 1:half, drop=FALSE]) - rho[, 1])
+  p_native   <- pi * (0:(half-1)) / (M * dq)
+
+  # Wigner is even in p for real psi: interpolate at |p|.
+  abs_p <- abs(p_grid)
+  W_mat <- matrix(0, nrow=nq, ncol=np)
   for (iq in seq_len(nq)) {
-    rho <- numeric(nq)
-    for (k in k_seq) {
-      ip <- iq+k; im <- iq-k
-      pp <- if (ip >= 1 && ip <= nq) psi_vec[ip] else 0
-      pm <- if (im >= 1 && im <= nq) psi_vec[im] else 0
-      rho[k+1] <- pp * pm
-    }
-    for (ip_idx in seq_len(np)) {
-      phase   <- exp(2i * p_grid[ip_idx] * k_seq * dq)
-      contrib <- rho * phase
-      W_mat[iq, ip_idx] <-
-        (Re(contrib[1]) + 2*sum(Re(contrib[-1]))) * dq / pi
-    }
+    interp <- approx(p_native, W_native[iq, ], xout=abs_p,
+                     rule=2, ties=mean)$y
+    interp[abs_p > p_native[half]] <- 0
+    W_mat[iq, ] <- interp
   }
   W_mat
-}
-
-# ------------------------------------------------------------------------------
-# WIGNER PIPELINE
-# Returns W(q,0) cross-section on display grid.
-# Integration grid extends beyond display to avoid boundary artifacts.
-# n_q_int / n_p_int control resolution; raise for high quantum numbers.
-# ------------------------------------------------------------------------------
-
-#' Compute W(q,0) cross-section from sampled wavefunction.
-#' @param n_q_int Number of q points in the integration grid (default 801).
-#'   Must satisfy dq < 1 / (2 * highest spatial frequency in psi). For n=100
-#'   harmonic states, set to ~2401 to avoid Nyquist aliasing.
-#' @param n_p_int Number of p points (default 601). Generally less critical.
-compute_wigner_cross_section <- function(psi_vec, psi_q_grid,
-                                         q_lo, q_hi, p_lo, p_hi,
-                                         q_display,
-                                         n_q_int=WIGNER_DEFAULT_NQ,
-                                         n_p_int=WIGNER_DEFAULT_NP) {
-  disp_width <- q_hi - q_lo
-  q_int <- seq(q_lo - disp_width, q_hi + disp_width, length.out=n_q_int)
-  p_int <- seq(p_lo - 2,          p_hi + 2,          length.out=n_p_int)
-
-  psi_int <- approx(psi_q_grid, psi_vec, xout=q_int,
-                    rule=1, yleft=0, yright=0)$y
-
-  cat(sprintf("    Computing Wigner on %d x %d grid (dq=%.4f)...\n",
-              n_q_int, n_p_int, diff(q_int)[1]))
-  W_mat  <- wigner_fft(psi_int, q_int, p_int)
-  w_norm <- sum(W_mat) * diff(q_int)[1] * diff(p_int)[1]
-  cat(sprintf("    Wigner norm: %.6f\n", w_norm))
-  if (abs(w_norm-1) > 1e-3) warning(sprintf("Wigner norm=%.6f.", w_norm))
-
-  extract_p0_cross_section(W_mat, q_int, p_int, q_display)
 }
