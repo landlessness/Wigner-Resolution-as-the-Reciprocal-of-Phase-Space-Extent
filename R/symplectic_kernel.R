@@ -107,7 +107,7 @@ symplectic_overlay_layers <- function(Delta_q, Delta_p, q_center=0, hbar=1.0) {
     geom_ellipse(data=ellipse_A,
                  aes(x0=x0, y0=y0, a=a, b=b, angle=angle),
                  inherit.aes=FALSE,
-                 color="gray80", linewidth=0.5, linetype="22"),
+                 color="gray60", linewidth=0.5, linetype="22"),
     geom_ellipse(data=ellipse_a_q,
                  aes(x0=x0, y0=y0, a=a, b=b, angle=angle),
                  inherit.aes=FALSE,
