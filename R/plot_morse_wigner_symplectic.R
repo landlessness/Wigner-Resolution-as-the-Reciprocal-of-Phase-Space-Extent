@@ -1,15 +1,20 @@
 # ==============================================================================
-# plot_morse_wigner_husimi.R
-# Appendix: Husimi resolution of Wigner negativity — Morse potential
+# plot_morse_wigner_symplectic.R
+# Main paper: Symplectic resolution of Wigner negativity — Morse potential
 #
-# Three rows: n=0 (harmonic-like ground state), n=4 (intermediate
-# anharmonic), n=6 (horseshoe state near dissociation).
+# Same three rows as the Husimi appendix figure: n=0, 4, 6.
+# Same Wigner heatmap (left column) and Wigner cross-section (middle column)
+# as the Husimi figure. The differences are entirely in the kernel:
+#   - Left column overlay: three QoA ellipses (outer A, inner a_q, a_p)
+#     instead of a single Husimi unit circle
+#   - Right column: P_delta_q(q,0) = (W * G_delta_q)(q,0), the symplectic
+#     resolution of the Wigner cross-section, in place of Q(q,0)
 #
 # Architecture:
 #   build_wigner_state()              kernel-agnostic per-state computation
-#   apply_kernel_cross_section()      kernel-specific (Husimi here)
-#   husimi_kernel_matrix(),
-#   husimi_overlay_layers()           the two Husimi-specific pieces
+#   apply_kernel_cross_section()      kernel-specific (symplectic G_delta_q)
+#   G_delta_q_kernel_matrix(),
+#   symplectic_overlay_layers()       the two symplectic-specific pieces
 # ==============================================================================
 
 library(here)
@@ -19,13 +24,13 @@ source(here("R", "plot_tools.R"))
 source(here("R", "morse_potential.R"))
 source(here("R", "wigner_tools.R"))
 source(here("R", "wigner_state.R"))
-source(here("R", "husimi_kernel.R"))
+source(here("R", "symplectic_kernel.R"))
 source(here("R", "classical_action_tools.R"))
 
 latex_font      <- "CMU Serif"
 dir_figures     <- here("figures")
 if (!dir.exists(dir_figures)) dir.create(dir_figures, recursive=TRUE)
-file_output_pdf <- file.path(dir_figures, "morse_wigner_husimi.pdf")
+file_output_pdf <- file.path(dir_figures, "morse_wigner_symplectic.pdf")
 
 cat("Solving Morse Schrodinger equation...\n")
 morse_soln <- solve_schrodinger(morse_V,
@@ -52,10 +57,8 @@ build_morse_row <- function(n_val, soln, base_font="") {
   rs   <- numerical_covariance(psi_vec, q_grid)
   A_BS <- classical_action(morse_V, E_n, tp)
 
-  cat(sprintf("  A_BS/A0=%.2f | A_RS/A0=%.2f | RS:%s SP:%s\n",
-              A_BS, rs$A_over_A0,
-              ifelse(rs$rs_satisfied,"OK","FAIL"),
-              ifelse(rs$sp_satisfied,"OK","FAIL")))
+  cat(sprintf("  A_BS/A0=%.2f | A_RS/A0=%.2f | Delta_q=%.3f Delta_p=%.3f\n",
+              A_BS, rs$A_over_A0, rs$Delta_q, rs$Delta_p))
 
   q_center <- (q_plus + q_minus) / 2
   q_span   <- q_plus - q_minus
@@ -73,16 +76,22 @@ build_morse_row <- function(n_val, soln, base_font="") {
 
   state <- build_wigner_state(psi_vec, q_grid,
                               q_lo, q_hi, p_lo, p_hi, q_display)
-  Q_cross <- apply_kernel_cross_section(state, husimi_kernel_matrix, q_display)
+
+  # Symplectic kernel for this state — closure binds Delta_q, Delta_p.
+  symplectic_kernel_for_state <- function(q_grid, p_grid) {
+    G_delta_q_kernel_matrix(q_grid, p_grid, rs$Delta_q, rs$Delta_p)
+  }
+  P_cross <- apply_kernel_cross_section(state, symplectic_kernel_for_state, q_display)
 
   w_max     <- max(abs(state$W_cross), na.rm=TRUE)
   y_lim     <- w_max * 1.3
-  q_max_amp <- max(abs(Q_cross), na.rm=TRUE)
-  Q_display <- if (q_max_amp > 0) Q_cross/q_max_amp*w_max else Q_cross
-  dt_cross  <- data.table(q=q_display, W_raw=state$W_cross, Q_husimi=Q_display)
+  p_max_amp <- max(abs(P_cross), na.rm=TRUE)
+  P_display <- if (p_max_amp > 0) P_cross/p_max_amp*w_max else P_cross
+  dt_cross  <- data.table(q=q_display, W_raw=state$W_cross, P_sympl=P_display)
 
   df_traj        <- classical_trajectory(morse_V, E_n, tp)
-  overlay_layers <- husimi_overlay_layers(q_center=q_center)
+  overlay_layers <- symplectic_overlay_layers(rs$Delta_q, rs$Delta_p,
+                                              q_center=q_center)
 
   list(
     sprintf("italic(n)==%d", n_val),
@@ -96,15 +105,15 @@ build_morse_row <- function(n_val, soln, base_font="") {
       dt_cross, q_lim=c(q_lo,q_hi), y_lim=y_lim,
       custom_breaks=custom_breaks_q,
       label_format=label_format, base_font=base_font),
-    plot_husimi_cross_section(
+    plot_symplectic_cross_section(
       dt_cross, q_lim=c(q_lo,q_hi), y_lim=y_lim,
       custom_breaks=custom_breaks_q,
       label_format=label_format, base_font=base_font)
   )
 }
 
-cat("Computing Morse Wigner-Husimi grid...\n")
+cat("Computing Morse Wigner-Symplectic grid...\n")
 rows    <- lapply(target_n_levels,
                   function(n) build_morse_row(n, morse_soln, base_font=latex_font))
-p_final <- assemble_grid(rows, COLUMN_TITLE_RIGHT_HUSIMI, base_font=latex_font)
+p_final <- assemble_grid(rows, COLUMN_TITLE_RIGHT_SYMPLECTIC, base_font=latex_font)
 save_figure(p_final, file_output_pdf, length(target_n_levels))

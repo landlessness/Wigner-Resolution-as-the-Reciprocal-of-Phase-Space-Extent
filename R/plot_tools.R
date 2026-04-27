@@ -3,21 +3,24 @@
 # Display functions only — no computation, no physics.
 #
 # Layout architecture:
-#   Three columns: heatmap, Wigner cross-section, Husimi cross-section.
+#   Three columns: heatmap, Wigner cross-section, kernel cross-section.
 #   Row labels are attached as patchwork plot tags on each row's heatmap
-#   panel. tag_position is set in panel npc coordinates, so the label
-#   tracks the panel regardless of how coord_fixed() squeezes the panel's
-#   render width.
+#   panel (see attach_row_tag).
 #
-#   The heatmap panel reserves extra left margin (HEATMAP_LEFT_MARGIN_PT)
-#   to give the tag horizontal room. Without this margin, the tag's
-#   negative-x npc position renders outside the panel's drawn area and
-#   gets clipped by cairo_pdf at the figure's left edge.
+# Heatmap:
+#   plot_wigner_heatmap takes an `overlay_layers` parameter — a list of
+#   ggplot layers (geom_circle for Husimi, three geom_ellipses for
+#   symplectic) supplied by the kernel files. The heatmap function knows
+#   nothing about kernels; it just adds the overlay layers on top.
+#
+#   This file has only one heatmap function for the underlying density
+#   (Wigner). A future plot_wkb_heatmap will be its sibling, accepting
+#   the same overlay_layers parameter so any kernel can decorate any
+#   density.
 #
 # Heatmap colormap:
-#   Asymmetric diverging — positive W renders darkest, negative W renders
-#   medium gray, zero is white. The heatmap itself shows where W is
-#   negative.
+#   Asymmetric diverging — positive density renders darkest, negative
+#   medium gray, zero is white.
 #
 # Author: Brian S. Mulloy
 # ==============================================================================
@@ -31,45 +34,45 @@ library(patchwork)
 # FIGURE-LEVEL CONSTANTS
 # ------------------------------------------------------------------------------
 
-COLUMN_TITLE_LEFT   <- "Phase-Space Cells"
-COLUMN_TITLE_CENTER <- "Wigner Negativity"
-COLUMN_TITLE_RIGHT  <- "Husimi Resolution"
+COLUMN_TITLE_LEFT             <- "Phase-Space Cells"
+COLUMN_TITLE_CENTER           <- "Wigner Negativity"
+COLUMN_TITLE_RIGHT_HUSIMI     <- "Husimi Resolution"
+COLUMN_TITLE_RIGHT_SYMPLECTIC <- "Symplectic Resolution"
 
-# Three-column layout (heatmap, Wigner, Husimi). Row labels attach as tags.
 PANEL_WIDTHS    <- c(1, 1, 1)
 FIGURE_WIDTH_IN <- 7.5
 ROW_HEIGHT_IN   <- 1.8
 FIGURE_PAD_IN   <- 0.5
 
-# Left margin reserved on the heatmap panel for the row tag. The tag sits
-# at npc x = TAG_X_NPC (negative => left of panel's left edge); the panel's
-# left margin must be wide enough that this position lies within the panel's
-# rendered area, otherwise cairo_pdf clips it at the figure boundary.
-# 80 pt accommodates labels up to "n = 100" with a small safety margin.
 HEATMAP_LEFT_MARGIN_PT <- 80
 
-# Heatmap colormap: asymmetric diverging.
-HEATMAP_COLOR_NEG  <- "gray45"   # negative W: medium gray
+HEATMAP_COLOR_NEG  <- "gray45"
 HEATMAP_COLOR_ZERO <- "white"
-HEATMAP_COLOR_POS  <- "gray10"   # positive W: darkest
+HEATMAP_COLOR_POS  <- "gray10"
 
-# Husimi-circle linetype: short dashes so small circles don't look like an
-# orphaned dash.
-HUSIMI_LINETYPE <- "22"
-
-# Row label tag.
 ROW_LABEL_SIZE_PT <- 11
-TAG_X_NPC <- -0.18   # left of panel's left edge
-TAG_Y_NPC <-  0.5    # vertical center of panel
+TAG_X_NPC <- -0.18
+TAG_Y_NPC <-  0.5
 
 # ------------------------------------------------------------------------------
-# PHASE SPACE HEATMAP — Husimi variant
+# WIGNER HEATMAP
+# Underlying density is the Wigner function. Overlay is whatever the caller
+# provides (Husimi circle, symplectic ellipses, future variants).
 # ------------------------------------------------------------------------------
 
-plot_phase_space_heatmap_husimi <- function(dt_w2d, husimi_ell, df_traj=NULL,
-                                            q_lim, p_lim,
-                                            custom_breaks_q, custom_breaks_p,
-                                            label_format, base_font="") {
+#' Wigner phase-space heatmap with arbitrary kernel overlay.
+#'
+#' @param dt_w2d Data table with columns q, p, w_plot for geom_raster.
+#' @param overlay_layers A list of pre-built ggplot layers (e.g. output of
+#'   husimi_overlay_layers() or symplectic_overlay_layers()).
+#' @param df_traj Optional data frame with q, p columns for classical orbit.
+#' @param q_lim,p_lim Display limits.
+#' @param custom_breaks_q,custom_breaks_p,label_format Axis controls.
+#' @param base_font Font family.
+plot_wigner_heatmap <- function(dt_w2d, overlay_layers, df_traj=NULL,
+                                q_lim, p_lim,
+                                custom_breaks_q, custom_breaks_p,
+                                label_format, base_font="") {
   ax_x <- expression(italic(q)/italic(q)[0])
   ax_y <- expression(italic(p)/italic(p)[0])
 
@@ -84,10 +87,9 @@ plot_phase_space_heatmap_husimi <- function(dt_w2d, husimi_ell, df_traj=NULL,
     p <- p + geom_path(data=df_traj, aes(x=q, y=p), inherit.aes=FALSE,
                        color="black", linewidth=0.5, linetype="solid")
 
+  for (layer in overlay_layers) p <- p + layer
+
   p +
-    geom_circle(data=husimi_ell$circle, aes(x0=x0, y0=y0, r=r),
-                inherit.aes=FALSE,
-                color="gray20", linewidth=0.4, linetype=HUSIMI_LINETYPE) +
     coord_fixed(xlim=q_lim, ylim=p_lim, expand=FALSE) +
     scale_x_continuous(breaks=custom_breaks_q, labels=label_format) +
     scale_y_continuous(breaks=custom_breaks_p, labels=label_format) +
@@ -127,6 +129,25 @@ plot_husimi_cross_section <- function(dt, q_lim, y_lim, custom_breaks, label_for
   ggplot(dt, aes(x=q, y=Q_husimi)) +
     geom_hline(yintercept=0, color="black", linewidth=0.3) +
     geom_ribbon(aes(ymin=0, ymax=pmax(Q_husimi,0)), fill="gray85", color=NA) +
+    geom_path(color="black", linewidth=0.4) +
+    coord_cartesian(xlim=q_lim, ylim=c(-y_lim,y_lim), expand=FALSE) +
+    scale_x_continuous(breaks=custom_breaks, labels=label_format) +
+    theme_bw(base_family=base_font) +
+    theme(panel.grid.minor=element_blank(),
+          axis.text=element_text(size=8),
+          axis.text.y=element_blank(), axis.ticks.y=element_blank(),
+          aspect.ratio=1, plot.margin=margin(2,4,2,4)) +
+    labs(x=ax_x, y=ax_y)
+}
+
+#' Symplectic cross-section panel: P_delta_q(q,0) — non-negative by Hudson,
+#' preserving quantum oscillation structure absent from the Husimi version.
+plot_symplectic_cross_section <- function(dt, q_lim, y_lim, custom_breaks, label_format, base_font="") {
+  ax_x <- expression(italic(q)/italic(q)[0])
+  ax_y <- expression(italic(P)[italic(delta*q)](italic(q)*","*0))
+  ggplot(dt, aes(x=q, y=P_sympl)) +
+    geom_hline(yintercept=0, color="black", linewidth=0.3) +
+    geom_ribbon(aes(ymin=0, ymax=pmax(P_sympl,0)), fill="gray85", color=NA) +
     geom_path(color="black", linewidth=0.4) +
     coord_cartesian(xlim=q_lim, ylim=c(-y_lim,y_lim), expand=FALSE) +
     scale_x_continuous(breaks=custom_breaks, labels=label_format) +
@@ -180,9 +201,15 @@ suppress_y_titles <- function(...) {
 
 # ------------------------------------------------------------------------------
 # GRID ASSEMBLY
+# Generic — caller specifies the right-column title (Husimi or Symplectic).
 # ------------------------------------------------------------------------------
 
-assemble_wigner_husimi_grid <- function(rows, base_font="") {
+#' Assemble a three-column figure grid.
+#' @param rows List of rows; each row is list(label_str, p_heatmap, p_wigner, p_kernel).
+#' @param title_right Title for the kernel cross-section column
+#'   (COLUMN_TITLE_RIGHT_HUSIMI or COLUMN_TITLE_RIGHT_SYMPLECTIC).
+#' @param base_font Font family.
+assemble_grid <- function(rows, title_right, base_font="") {
   num_rows <- length(rows)
   plot_list <- list()
 
@@ -199,7 +226,7 @@ assemble_wigner_husimi_grid <- function(rows, base_font="") {
       panels <- add_column_titles(p_left, p_center, p_right,
                                   COLUMN_TITLE_LEFT,
                                   COLUMN_TITLE_CENTER,
-                                  COLUMN_TITLE_RIGHT)
+                                  title_right)
       p_left <- panels[[1]]; p_center <- panels[[2]]; p_right <- panels[[3]]
     }
     if (i != num_rows) {
