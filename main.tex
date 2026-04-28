@@ -129,7 +129,7 @@ where $L_n$ is the Laguerre polynomial of order $n$. The Robertson--Schr\"{o}din
 \begin{figure}[t!]
 \centering
 \includegraphics[width=\linewidth]{figures/harmonic_wigner_symplectic.pdf}
-\caption{\textbf{Symplectic resolution of Wigner negativity --- harmonic oscillator.} Rows show eigenstates $n = 0, 1, 2, 3, 20$ with classical action $A = (2n+1)A_0$. \textit{Left:} Phase-space Wigner distribution $W_n(q,p)$ with the symplectic quantum of action overlaid (outer Fermi blob $A$, inner conjugate blobs $a_q$ and $a_p$, all dashed). At $n=0$ the three blobs coincide because the state saturates the Heisenberg limit; for $n>0$ they separate as $\Delta q$ and $\Delta p$ grow while $a_q$ and $a_p$ retain their fixed area $h/2$. \textit{Center:} Cross-section $W_n(q,0)$ at $p=0$; dark shading marks negative values, which grow in extent and depth with increasing $n$. \textit{Right:} Cross-section $P_{\delta q}(q,0) = (W * G_{\delta q})(q,0)$ of the convolved phase-space density at $p=0$; negative regions are eliminated everywhere by Hudson's theorem, with kernel width set by the finite classical action $A$. Each row independently scaled to show shape.}
+\caption{\textbf{Harmonic oscillator, Wigner.} Rows show eigenstates $n = 0, 1, 2, 3, 20$ with classical action $A = (2n+1)A_0$. \textit{Left:} Phase-space Wigner distribution $W_n(q,p)$ with the symplectic quantum of action overlaid (outer Fermi blob $A$, inner conjugate blobs $a_q$ and $a_p$, all dashed). At $n=0$ the three blobs coincide because the state saturates the Heisenberg limit; for $n>0$ they separate as $\Delta q$ and $\Delta p$ grow while $a_q$ and $a_p$ retain their fixed area $h/2$. \textit{Center:} Cross-section $W_n(q,0)$ at $p=0$; dark shading marks negative values, which grow in extent and depth with increasing $n$. \textit{Right:} Cross-section $P_{\delta q}(q,0) = (W * G_{\delta q})(q,0)$ of the convolved phase-space density at $p=0$; negative regions are eliminated everywhere by Hudson's theorem, with kernel width set by the finite classical action $A$. Each row independently scaled to show shape.}
 \label{fig:harmonic_wigner_symplectic}
 \end{figure}
 
@@ -145,16 +145,16 @@ The convolved cross-section $P_{\delta q}(q,0)$ in the right column is everywher
 
 \section{Morse Potential}
 
-The Morse oscillator $V(q) = D_e(1 - e^{-\alpha q})^2$ provides an anharmonic test where the Fermi blob and the classical orbit no longer coincide. We use $D_e = 30$, $\alpha = 1$, $m = 1$, supporting eight bound states. For each bound state the quantum covariance product $A$ is smaller than the Bohr--Sommerfeld action $A_\text{cl}$, with the gap widening as $n$ approaches dissociation. The kernel widths $\delta q$ and $\delta p$ are sized by $A$, the state's actual phase-space cell, not by the larger classical envelope.
+The Morse oscillator $V(q) = D_e(1 - e^{-\alpha q})^2$ provides an anharmonic test where the Fermi blob and the classical orbit no longer coincide. We use $D_e = 12.5$, $\alpha = 0.2$, $m = 1$, chosen so that $\omega_0 = \alpha\sqrt{2D_e/m} = 1$ matches the harmonic oscillator's natural frequency. For each bound state the quantum covariance product $A$ is smaller than the Bohr--Sommerfeld action $A_\text{cl}$, with the gap widening as $n$ approaches dissociation. The kernel widths $\delta q$ and $\delta p$ are sized by $A$, the state's actual phase-space cell, not by the larger classical envelope.
 
 \begin{figure}[t!]
 \centering
 \includegraphics[width=\linewidth]{figures/morse_wigner_symplectic.pdf}
-\caption{\textbf{Symplectic resolution of Wigner negativity --- Morse potential.} Rows show eigenstates $n = 0, 4, 6$ spanning the harmonic-like ground state, an intermediate anharmonic state, and a horseshoe state near dissociation. \textit{Left:} Phase-space Wigner distribution $W_n(q,p)$ with the symplectic quantum of action overlaid; the Fermi blob $A$ is anisotropic and reflects the asymmetric Morse confinement. The kernel structure is drawn centered on the orbit; the convolution is translation-invariant. \textit{Center:} Cross-section $W_n(q,0)$ showing growing oscillation structure. \textit{Right:} Cross-section $P_{\delta q}(q,0)$, non-negative everywhere by Hudson's theorem and preserving most of the Wigner oscillation envelope.}
+\caption{\textbf{Morse potential, Wigner.} Rows show eigenstates $n = 0, 8, 16$ spanning the harmonic-like ground state, an intermediate anharmonic state, and a strongly anharmonic state. \textit{Left:} Phase-space Wigner distribution $W_n(q,p)$ with the symplectic quantum of action overlaid; the Fermi blob $A$ becomes increasingly anisotropic as $n$ grows, reflecting the asymmetric Morse confinement. The kernel structure is drawn centered on the orbit; the convolution is translation-invariant. \textit{Center:} Cross-section $W_n(q,0)$ showing growing oscillation structure. \textit{Right:} Cross-section $P_{\delta q}(q,0)$, non-negative everywhere by Hudson's theorem and preserving most of the Wigner oscillation envelope.}
 \label{fig:morse_wigner_symplectic}
 \end{figure}
 
-Figure~\ref{fig:morse_wigner_symplectic} shows three states: the ground state ($n=0$), an intermediate anharmonic state ($n=8$), and a strongly anharmonic state ($n=16$). With $\omega_0 = 1$, the ground state has $\Delta q = \Delta p = 1$ to within numerical precision and the Fermi blob $A$ is circular --- coinciding with the harmonic oscillator ground state. As $n$ grows, the orbit develops the characteristic horseshoe shape of Morse confinement; $\Delta q$ stretches as the wavefunction reaches further into the soft-wall region while $\Delta p$ remains bounded by the dissociation energy. The symplectic kernel $G_{\delta q}$ inherits this anisotropy, sharpening preferentially along the classical trajectory. The convolved cross-section $P_{\delta q}(q,0)$ retains the multi-lobed structure of $W_n(q,0)$ while remaining non-negative everywhere, in contrast to the Husimi resolution (Appendix, Fig.~\ref{fig:morse_wigner_husimi}) which collapses the interior oscillations to a single peak at the slow turning point.
+Figure~\ref{fig:morse_wigner_symplectic} shows three states: the ground state ($n=0$), an intermediate anharmonic state ($n=8$), and a strongly anharmonic state ($n=16$). With $\omega_0 = 1$, the ground state has $\Delta q \approx \Delta p \approx 1$ and the Fermi blob $A$ is approximately circular --- coinciding with the harmonic oscillator ground state. As $n$ grows, the orbit develops the characteristic horseshoe shape of Morse confinement; $\Delta q$ stretches as the wavefunction reaches further into the soft-wall region while $\Delta p$ remains bounded by the dissociation energy. The symplectic kernel $G_{\delta q}$ inherits this anisotropy, sharpening preferentially along the classical trajectory. The convolved cross-section $P_{\delta q}(q,0)$ retains the multi-lobed structure of $W_n(q,0)$ while remaining non-negative everywhere, in contrast to the Husimi resolution (Appendix, Fig.~\ref{fig:morse_wigner_husimi}) which collapses the interior oscillations to a single peak at the slow turning point.
 
 \section{Double-Well Potential}
 
@@ -163,7 +163,7 @@ The symmetric double-well $V(q) = \mu^2(q^2 - V_0)^2/(4 V_0) - \mu^2 V_0/4$ with
 \begin{figure}[t!]
 \centering
 \includegraphics[width=\linewidth]{figures/double_well_wigner_symplectic.pdf}
-\caption{\textbf{Symplectic resolution of Wigner negativity --- double-well potential.} Rows show eigenstates $n = 0$ (lowest tunneling doublet partner), $n = 2$ (upper symmetric doublet partner, still below barrier), and $n = 7$ (above-barrier connected orbit). \textit{Left:} Phase-space Wigner distribution showing the inter-well interference fringes characteristic of tunneling doublets. \textit{Center:} Cross-section $W_n(q,0)$ retaining the central interference peak that distinguishes a coherent superposition from a classical mixture. \textit{Right:} Cross-section $P_{\delta q}(q,0)$ preserving the three-peak structure (left well, central interference, right well) that the fixed-kernel Husimi Q-function destroys.}
+\caption{\textbf{Double-well potential, Wigner.} Rows show eigenstates $n = 0$ (lowest tunneling doublet partner), $n = 2$ (upper symmetric doublet partner, still below barrier), and $n = 7$ (above-barrier connected orbit). \textit{Left:} Phase-space Wigner distribution showing the inter-well interference fringes characteristic of tunneling doublets. \textit{Center:} Cross-section $W_n(q,0)$ retaining the central interference peak that distinguishes a coherent superposition from a classical mixture. \textit{Right:} Cross-section $P_{\delta q}(q,0)$ preserving the three-peak structure (left well, central interference, right well) that the fixed-kernel Husimi Q-function destroys.}
 \label{fig:double_well_wigner_symplectic}
 \end{figure}
 
@@ -180,19 +180,19 @@ The construction introduces no free parameters: $\Delta q$ and $\Delta p$ are re
 \appendix
 \section*{Appendix: Husimi Resolution}
 
-The Husimi Q-function applies a fixed coherent-state kernel of width $1/\sqrt{2}$ in both $q$ and $p$, set once by the ground-state scales and independent of the system's classical action. Figures~\ref{fig:harmonic_wigner_husimi}--\ref{fig:double_well_wigner_husimi} show the Husimi resolution of the same eigenstates rendered with the symplectic kernel in the main text. The contrast across the right columns illustrates the central claim of the paper: a kernel decoupled from $A$ cannot resolve structure governed by $A$.
+The Husimi Q-function applies a fixed coherent-state kernel of unit width in both $q$ and $p$, set once by the ground-state scales and independent of the system's classical action. Figures~\ref{fig:harmonic_wigner_husimi}--\ref{fig:double_well_wigner_husimi} show the Husimi resolution of the same eigenstates rendered with the symplectic kernel in the main text. The contrast across the right columns illustrates the central claim of the paper: a kernel decoupled from $A$ cannot resolve structure governed by $A$.
 
 \begin{figure}[t!]
 \centering
 \includegraphics[width=\linewidth]{figures/harmonic_wigner_husimi.pdf}
-\caption{\textbf{Husimi resolution of Wigner negativity --- harmonic oscillator.} Same eigenstates as Fig.~\ref{fig:harmonic_wigner_symplectic}. The fixed Husimi kernel of width $1$ in both $q$ and $p$ (dashed unit circle in left column) over-smooths the Wigner oscillations as the action grows: at $n=20$, the Husimi cross-section $Q(q,0)$ retains only two outer peaks, having flattened the dense oscillation structure visible in the symplectic version.}
+\caption{\textbf{Husimi resolution of Wigner negativity --- harmonic oscillator.} Same eigenstates as Fig.~\ref{fig:harmonic_wigner_symplectic}. The fixed Husimi kernel (dashed unit circle in left column) over-smooths the Wigner oscillations as the action grows: at $n=20$, the Husimi cross-section $Q(q,0)$ retains only two outer peaks, having flattened the dense oscillation structure visible in the symplectic version.}
 \label{fig:harmonic_wigner_husimi}
 \end{figure}
 
 \begin{figure}[t!]
 \centering
 \includegraphics[width=\linewidth]{figures/morse_wigner_husimi.pdf}
-\caption{\textbf{Husimi resolution of Wigner negativity --- Morse potential.} Same eigenstates as Fig.~\ref{fig:morse_wigner_symplectic}. The Husimi kernel is drawn centered on the orbit; the convolution is translation-invariant. The fixed-width Husimi kernel cannot adapt to the Morse anisotropy, smoothing the multi-lobed structure of the Wigner cross-section into a single broad peak for $n \ge 4$.}
+\caption{\textbf{Husimi resolution of Wigner negativity --- Morse potential.} Same eigenstates as Fig.~\ref{fig:morse_wigner_symplectic}. The Husimi kernel is drawn centered on the orbit; the convolution is translation-invariant. The fixed-width Husimi kernel cannot adapt to the Morse anisotropy, smoothing the multi-lobed structure of the Wigner cross-section into a single peak at the slow turning point for $n \ge 8$.}
 \label{fig:morse_wigner_husimi}
 \end{figure}
 
