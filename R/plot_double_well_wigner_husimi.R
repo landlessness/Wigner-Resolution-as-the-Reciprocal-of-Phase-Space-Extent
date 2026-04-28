@@ -94,5 +94,9 @@ build_double_well_row <- function(n_val, soln, base_font="") {
 cat("Computing double-well Wigner-Husimi grid...\n")
 rows    <- lapply(target_n_levels,
                   function(n) build_double_well_row(n, dw_soln, base_font=latex_font))
-p_final <- assemble_grid(rows, COLUMN_TITLE_RIGHT_HUSIMI, base_font=latex_font)
+p_final <- assemble_grid(rows,
+                         title_center=COLUMN_TITLE_CENTER_WIGNER,
+                         title_right=COLUMN_TITLE_RIGHT_HUSIMI,
+                         base_font=latex_font)
+
 save_figure(p_final, file_output_pdf, length(target_n_levels))

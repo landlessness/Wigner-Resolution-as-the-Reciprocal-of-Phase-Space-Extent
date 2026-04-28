@@ -142,49 +142,116 @@ plot_wigner_cross_section <- function(dt, q_lim, y_lim, custom_breaks, label_for
 # ------------------------------------------------------------------------------
 # WKB CAUSTIC CROSS-SECTION (with infinity-arrow rendering at turning points)
 #
-# Renders the analytical WKB density 1/(T * sqrt(2*(E - V(q)))) which
-# diverges at classical turning points. The divergence is rendered as a
-# full-height ribbon at the turning point with arrow markers and an
-# infinity symbol, following the convention from Berry's textbooks.
+# Detects all classical turning points from the data (positions where the
+# WKB density transitions between positive-finite and zero/Inf along q),
+# then draws:
+#   - Bowl ribbon fills only in classically-allowed regions
+#   - Vertical infinity arrows at every turning point
+#   - "infinity" text annotation outside each vertical line
+#
+# Handles both:
+#   - 2 turning points (above-barrier / single-well states): one bowl
+#   - 4 turning points (sub-barrier double-well states):    two bowls
 # ------------------------------------------------------------------------------
 
+#' Detect turning point positions from a wkb_density vector on a q grid.
+#' Turning points are where the density transitions between positive-finite
+#' (classically allowed) and zero (forbidden) cells along q.
+#' Returns sorted q-values of all detected transitions.
+detect_wkb_turning_points <- function(q, wkb_density) {
+  # A cell is "allowed" if density > 0 and finite
+  allowed <- is.finite(wkb_density) & wkb_density > 0
+  # Detect transitions: where allowed[i] != allowed[i+1]
+  transitions <- which(diff(allowed) != 0)
+  if (length(transitions) == 0) return(numeric(0))
+  # Place the turning point at the boundary between cells
+  tp_q <- (q[transitions] + q[transitions + 1]) / 2
+  sort(tp_q)
+}
+
+#' Identify contiguous classically-allowed regions for ribbon clipping.
+#' Returns a list of (start_idx, end_idx) pairs, one per allowed segment.
+identify_allowed_segments <- function(wkb_density) {
+  allowed <- is.finite(wkb_density) & wkb_density > 0
+  if (!any(allowed)) return(list())
+  rle_a <- rle(allowed)
+  ends   <- cumsum(rle_a$lengths)
+  starts <- ends - rle_a$lengths + 1
+  segments <- list()
+  for (k in seq_along(rle_a$values)) {
+    if (rle_a$values[k]) {
+      segments[[length(segments)+1]] <- list(start=starts[k], end=ends[k])
+    }
+  }
+  segments
+}
+
 plot_wkb_caustic_cross_section <- function(dt, q_lim, y_lim, custom_breaks,
-                                           label_format, q_minus, q_plus,
-                                           base_font="") {
+                                           label_format, base_font="", ...) {
   ax_x <- expression(italic(q)/italic(q)[0])
   ax_y <- expression(italic(P)[WKB](italic(q)))
 
-  # Determine clip threshold for the line: anything above 0.85*y_lim hides
-  # behind the turning-point ribbon
-  clip_y <- y_lim * 0.85
+  # Auto-detect turning points from the data
+  turning_points <- detect_wkb_turning_points(dt$q, dt$wkb_density)
 
-  # Interior of allowed region with finite caustic values
-  dt_interior <- dt[is.finite(wkb_density) & wkb_density <= clip_y &
-                      q > q_minus & q < q_plus]
-  # Capped at clip_y for path rendering near turning points
-  dt_capped <- dt[is.finite(wkb_density) & q > q_minus & q < q_plus]
-  dt_capped[, wkb_capped := pmin(wkb_density, clip_y)]
+  # Identify allowed segments for ribbon clipping
+  segments <- identify_allowed_segments(dt$wkb_density)
 
-  ggplot() +
-    geom_hline(yintercept=0, color="black", linewidth=0.3) +
-    # Fill the bowl
-    geom_ribbon(data=dt_capped, aes(x=q, ymin=0, ymax=wkb_capped),
-                fill="gray85", color=NA) +
-    # Vertical infinity bars at turning points (full height to top of plot)
-    annotate("segment", x=q_minus, xend=q_minus, y=0, yend=y_lim,
-             color="black", linewidth=0.4,
-             arrow=arrow(length=unit(0.12,"cm"), ends="last", type="closed")) +
-    annotate("segment", x=q_plus, xend=q_plus, y=0, yend=y_lim,
-             color="black", linewidth=0.4,
-             arrow=arrow(length=unit(0.12,"cm"), ends="last", type="closed")) +
-    # Infinity annotations near top
-    annotate("text", x=q_minus, y=y_lim*0.92, label="infinity", parse=TRUE,
-             color="black", size=4, hjust=-0.3, family=base_font) +
-    annotate("text", x=q_plus, y=y_lim*0.92, label="infinity", parse=TRUE,
-             color="black", size=4, hjust=1.3, family=base_font) +
-    # Caustic line in the interior
-    geom_path(data=dt_interior, aes(x=q, y=wkb_density),
-              color="black", linewidth=0.4) +
+  # The line and ribbon should run all the way to y_lim where they meet
+  # the vertical infinity arrows seamlessly
+  clip_y <- y_lim
+
+  # Build the plot: start with the zero baseline
+  p <- ggplot() +
+    geom_hline(yintercept=0, color="black", linewidth=0.3)
+
+  # Add ribbon and line for each allowed segment separately, so the
+  # forbidden regions render as white space
+  for (seg in segments) {
+    dt_seg <- dt[seg$start:seg$end]
+    dt_seg[, wkb_capped := pmin(wkb_density, clip_y)]
+    p <- p +
+      geom_ribbon(data=dt_seg[is.finite(wkb_density)],
+                  aes(x=q, ymin=0, ymax=wkb_capped),
+                  fill="gray85", color=NA) +
+      geom_path(data=dt_seg[is.finite(wkb_density) & wkb_density <= clip_y],
+                aes(x=q, y=wkb_density),
+                color="black", linewidth=0.4)
+  }
+
+  # Vertical infinity arrows at every turning point
+  for (tp_q in turning_points) {
+    p <- p + annotate("segment", x=tp_q, xend=tp_q, y=0, yend=y_lim,
+                      color="black", linewidth=0.4,
+                      arrow=arrow(length=unit(0.12,"cm"),
+                                  ends="last", type="closed"))
+  }
+
+  # Infinity text annotations: place each just outside its vertical line.
+  # For the leftmost arrow, label goes left of it; rightmost, right of it.
+  # For inner pairs (sub-barrier case), labels go on the outer side of
+  # each so they appear in the forbidden barrier region.
+  if (length(turning_points) >= 2) {
+    n_tp <- length(turning_points)
+    for (k in seq_along(turning_points)) {
+      tp_q <- turning_points[k]
+      # Determine "outside" direction:
+      # leftmost (k==1): outside = left  -> hjust = 1.3
+      # rightmost (k==n): outside = right -> hjust = -0.3
+      # inner-left (k==2 of 4): outside = right (toward forbidden zone) -> hjust = -0.3
+      # inner-right (k==3 of 4): outside = left  -> hjust = 1.3
+      if (k == 1)            hj <- 1.3
+      else if (k == n_tp)    hj <- -0.3
+      else if (k == 2 && n_tp == 4) hj <- -0.3
+      else if (k == 3 && n_tp == 4) hj <- 1.3
+      else                   hj <- 1.3
+      p <- p + annotate("text", x=tp_q, y=y_lim*0.92,
+                        label="infinity", parse=TRUE,
+                        color="black", size=4, hjust=hj, family=base_font)
+    }
+  }
+
+  p +
     coord_cartesian(xlim=q_lim, ylim=c(0,y_lim), expand=FALSE) +
     scale_x_continuous(breaks=custom_breaks, labels=label_format) +
     theme_bw(base_family=base_font) +
@@ -297,7 +364,7 @@ suppress_y_titles <- function(...) {
 }
 
 # ------------------------------------------------------------------------------
-# GRID ASSEMBLY (now takes title_center as well as title_right)
+# GRID ASSEMBLY
 # ------------------------------------------------------------------------------
 
 assemble_grid <- function(rows, title_center, title_right, base_font="") {

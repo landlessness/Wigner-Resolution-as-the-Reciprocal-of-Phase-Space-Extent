@@ -9,13 +9,12 @@
 #   Right:   1D position density rho_{delta q}(q), the marginal of
 #            (W_cl * G_{delta q})
 #
-# Architecture mirrors plot_morse_wigner_symplectic.R:
-#   - solve_schrodinger() to get eigenstate energies (same energies the
-#     Wigner figure uses, ensuring consistent level selection)
-#   - build_semiclassical_state() builds the regularized 2D shell on
-#     the same display window as Wigner figure
-#   - apply_kernel_cross_section() with G_delta_q gives the 1D position
-#     density via marginalization over p
+# Y-axis scaling (independent per column, golden-ratio fill):
+#   Right column:  y_lim = rho_peak / (GOLDEN_FILL + 0.2)
+#                  density peak lands above the golden ratio for visibility
+#   Middle column: y_lim = caustic_floor / (1 - GOLDEN_FILL)
+#                  caustic bowl minimum at orbit center sits at 1 - GOLDEN_FILL
+#                  of vertical, infinity arrows handle the divergences above
 # ==============================================================================
 
 library(here)
@@ -28,6 +27,8 @@ source(here("R", "semiclassical_state.R"))
 source(here("R", "math_tools.R"))             # for fft_convolve_2d
 source(here("R", "symplectic_kernel.R"))
 source(here("R", "classical_action_tools.R"))
+
+GOLDEN_FILL <- 0.6
 
 latex_font      <- "CMU Serif"
 dir_figures     <- here("figures")
@@ -68,8 +69,6 @@ build_morse_row <- function(n_val, soln, base_font="") {
               n_val, E_n, q_minus, q_plus))
 
   # Use the wavefunction's RS covariance to size the symplectic kernel.
-  # This keeps the kernel sized by A (the quantum cell), consistent with
-  # the Wigner figures.
   q_grid  <- soln$q_grid
   psi_vec <- soln$psi_matrix[, n_val+1]
   rs <- numerical_covariance(psi_vec, q_grid)
@@ -101,24 +100,26 @@ build_morse_row <- function(n_val, soln, base_font="") {
   }
   rho_sympl <- apply_symplectic_marginal(state, symplectic_kernel_for_state, q_display)
 
-  # Build cross-section data tables for the two right columns
-  dt_caustic <- data.table(q=q_display, wkb_density=state$wkb_density)
+  # Independent y-scaling per column.
+  # Right column: density peak fills (GOLDEN_FILL + 0.2) of vertical space.
+  rho_peak  <- max(rho_sympl, na.rm=TRUE)
+  y_lim_rho <- rho_peak / (GOLDEN_FILL + 0.2)
 
-  # Determine y-limit for caustic column: cap at a multiple of the
-  # maximum *finite* density. The infinity arrows handle the divergence.
-  finite_caustic <- state$wkb_density[is.finite(state$wkb_density) &
-                                        state$wkb_density > 0]
-  if (length(finite_caustic) > 0) {
-    caustic_floor <- median(finite_caustic, na.rm=TRUE)
-    y_lim_caustic <- caustic_floor * 6   # caustic value at midpoint × 6
-  } else {
-    y_lim_caustic <- 1
+  # Middle column: caustic bowl floor at orbit center (where momentum
+  # is maximal, density minimal) sits at (1 - GOLDEN_FILL) of vertical.
+  # Infinity arrows handle the divergences at turning points.
+  q_center_idx <- which.min(abs(q_display - q_center))
+  caustic_floor <- state$wkb_density[q_center_idx]
+  if (!is.finite(caustic_floor) || caustic_floor <= 0) {
+    finite_caustic <- state$wkb_density[is.finite(state$wkb_density) &
+                                          state$wkb_density > 0]
+    caustic_floor <- if (length(finite_caustic) > 0)
+      min(finite_caustic, na.rm=TRUE) else 1
   }
+  y_lim_caustic <- caustic_floor / (1 - GOLDEN_FILL)
 
-  # Match right column scale to caustic column for visual comparability
-  rho_max <- max(rho_sympl, na.rm=TRUE)
-  y_lim_rho <- max(rho_max * 1.3, caustic_floor * 6)
-  dt_rho <- data.table(q=q_display, rho_sympl=rho_sympl)
+  dt_caustic <- data.table(q=q_display, wkb_density=state$wkb_density)
+  dt_rho     <- data.table(q=q_display, rho_sympl=rho_sympl)
 
   # QoA overlay (centered on orbit, just like Wigner figure)
   overlay_layers <- symplectic_overlay_layers(rs$Delta_q, rs$Delta_p,
@@ -152,4 +153,5 @@ p_final <- assemble_grid(rows,
                          COLUMN_TITLE_CENTER_SEMICLASSICAL,
                          COLUMN_TITLE_RIGHT_SYMPLECTIC,
                          base_font=latex_font)
+
 save_figure(p_final, file_output_pdf, length(target_n_levels))
