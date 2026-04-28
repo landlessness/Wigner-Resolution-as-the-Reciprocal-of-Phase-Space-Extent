@@ -72,6 +72,7 @@ Both pathologies share a kinematic root. Wigner negativity arises from interfere
 De~Gosson maps the Heisenberg limit $\sigma_q \sigma_p \ge \hbar/2$ into classical semi-axes $\Delta q = \sqrt{2}\sigma_q$, $\Delta p = \sqrt{2}\sigma_p$, projecting the $1\sigma$ contour onto a Fermi blob \cite{degosson2012fermi} with phase-space area
 \begin{equation}
 A = \pi \Delta q \Delta p \ge \frac{h}{2}.
+\label{eq:fermi_blob_area}
 \end{equation}
 Hereafter, $\Delta q$ and $\Delta p$ are classical kinematic boundaries.
 
@@ -80,6 +81,19 @@ Zurek's reciprocal scales \cite{zurek2001} partition the blob interior: $\delta 
 a_q = \pi\,\delta q\,\Delta p = \frac{h}{2}, \qquad a_p = \pi\,\Delta q\,\delta p = \frac{h}{2},
 \end{equation}
 each carrying the irreducible area $h/2$. The blobs $a_q$ and $a_p$ are orthogonal in phase space --- $a_q$ squeezed along the position axis and $a_p$ squeezed along the momentum axis \cite{degossoncharlyne2022} --- and their joint structure is accessible only through ensemble tomography \cite{ibort2009} on separate copies of the state \cite{wootterszurek1982}, never through simultaneous measurement of a single copy. Holding their areas fixed while $\Delta q$ and $\Delta p$ expand forces reciprocal compression of $\delta q$ and $\delta p$ --- a topological necessity enforced by Gromov's non-squeezing theorem \cite{gromov1985}. Conjugate pairing locks their areas, $a_q + a_p = h$, to Planck's quantum of action (Fig.~\ref{fig:quantum_of_action}).
+
+\subsection{The Fermi Blob and the Classical Orbit}
+\label{sec:fermi_vs_classical}
+
+The Fermi blob $A$ is a property of the \emph{quantum state}, not of the classical orbit. It is read directly from the state's Robertson--Schr\"{o}dinger covariance \cite{robertson1929,schrodinger1930}, with $\Delta q = \sqrt{2\sigma_{qq}}$ and $\Delta p = \sqrt{2\sigma_{pp}}$, and the saturation condition $\sigma_{qq}\sigma_{pp} - \sigma_{qp}^2 = \hbar^2/4$ identifying the minimum-uncertainty case. The blob exists for any quantum state, harmonic or otherwise.
+
+The classical orbit is a different object. The Bohr--Sommerfeld action,
+\begin{equation}
+A_\text{cl} = \oint p\, dq,
+\end{equation}
+is the area enclosed by the classical trajectory at the eigenstate's energy. For the harmonic oscillator $A = A_\text{cl}$: the Fermi blob coincides with the energy-shell ellipse. For anharmonic systems the two areas separate, with the quantum state's covariance product $A$ generally smaller than the classical orbit area $A_\text{cl}$.
+
+The kernel widths $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$ are governed by $A$, not $A_\text{cl}$. The state's actual phase-space extent --- not the classical orbit it would trace if it had no quantum spread --- determines the resolution scales.
 
 \section{Resolution via Finite Classical Action}
 
@@ -110,7 +124,7 @@ The quantum harmonic oscillator provides the canonical test of both resolutions.
 \begin{equation}
 W_n(q,p) = \frac{(-1)^n}{\pi}\, e^{-(q^2+p^2)}\, L_n\!\left(2(q^2+p^2)\right),
 \end{equation}
-where $L_n$ is the Laguerre polynomial of order $n$. The Robertson--Schr\"{o}dinger covariance for eigenstate $|n\rangle$ gives $\sigma_{qq} = \sigma_{pp} = (2n+1)/2$ and $\sigma_{qp} = 0$, yielding classical boundaries $\Delta q = \Delta p = \sqrt{2n+1}$ and reciprocal scales $\delta q = \delta p = 1/\sqrt{2n+1}$, so that $A_\text{ho}/A_0 = 2n+1$, where $A_0 = h/2$ is the ground-state action and $A_\text{ho}$ is the harmonic oscillator classical action. For the harmonic oscillator $A = A_\text{ho}$ exactly; the Fermi blob is the energy shell ellipse. All quantities below are expressed in units of the ground-state scales $q_0$ and $p_0$, so that $\hbar = q_0 p_0 = 1$.
+where $L_n$ is the Laguerre polynomial of order $n$. The Robertson--Schr\"{o}dinger covariance for eigenstate $|n\rangle$ gives $\sigma_{qq} = \sigma_{pp} = (2n+1)/2$ and $\sigma_{qp} = 0$, yielding classical boundaries $\Delta q = \Delta p = \sqrt{2n+1}$ and reciprocal scales $\delta q = \delta p = 1/\sqrt{2n+1}$, so that $A/A_0 = 2n+1$. Here $A_0 = h/2$ is the ground-state action. Because the harmonic potential is quadratic, $A = A_\text{cl}$ exactly: the Fermi blob coincides with the energy-shell ellipse. All quantities below are expressed in units of the ground-state scales $q_0$ and $p_0$, so that $\hbar = q_0 p_0 = 1$.
 
 \begin{figure}[t!]
 \centering
@@ -131,20 +145,20 @@ The convolved cross-section $P_{\delta q}(q,0)$ in the right column is everywher
 
 \section{Morse Potential}
 
-The Morse oscillator $V(q) = D_e(1 - e^{-\alpha q})^2$ provides an anharmonic test where the classical action varies anisotropically with energy. We use $D_e = 30$, $\alpha = 1$, $m = 1$, supporting eight bound states. Unlike the harmonic case, the Robertson--Schr\"{o}dinger covariance product $A_\text{RS} = \pi \Delta q \Delta p$ is bounded above by the Bohr--Sommerfeld action $A_\text{BS}$ but does not generally saturate it; the symplectic kernel is sized by $A_\text{RS}$, the geometric content of the state's quantum extent rather than the classical orbit's enclosed area.
+The Morse oscillator $V(q) = D_e(1 - e^{-\alpha q})^2$ provides an anharmonic test where the Fermi blob and the classical orbit no longer coincide. We use $D_e = 30$, $\alpha = 1$, $m = 1$, supporting eight bound states. For each bound state the quantum covariance product $A$ is smaller than the Bohr--Sommerfeld action $A_\text{cl}$, with the gap widening as $n$ approaches dissociation. The kernel widths $\delta q$ and $\delta p$ are sized by $A$, the state's actual phase-space cell, not by the larger classical envelope.
 
 \begin{figure}[t!]
 \centering
 \includegraphics[width=\linewidth]{figures/morse_wigner_symplectic.pdf}
-\caption{\textbf{Symplectic resolution of Wigner negativity --- Morse potential.} Rows show eigenstates $n = 0, 4, 6$ spanning the harmonic-like ground state, an intermediate anharmonic state, and a horseshoe state near dissociation. \textit{Left:} Phase-space Wigner distribution $W_n(q,p)$ with the symplectic quantum of action overlaid; the Fermi blob $A$ is anisotropic and reflects the asymmetric Morse confinement. \textit{Center:} Cross-section $W_n(q,0)$ showing growing oscillation structure. \textit{Right:} Cross-section $P_{\delta q}(q,0)$, non-negative everywhere by Hudson's theorem and preserving most of the Wigner oscillation envelope.}
+\caption{\textbf{Symplectic resolution of Wigner negativity --- Morse potential.} Rows show eigenstates $n = 0, 4, 6$ spanning the harmonic-like ground state, an intermediate anharmonic state, and a horseshoe state near dissociation. \textit{Left:} Phase-space Wigner distribution $W_n(q,p)$ with the symplectic quantum of action overlaid; the Fermi blob $A$ is anisotropic and reflects the asymmetric Morse confinement. The kernel structure is drawn centered on the orbit; the convolution is translation-invariant. \textit{Center:} Cross-section $W_n(q,0)$ showing growing oscillation structure. \textit{Right:} Cross-section $P_{\delta q}(q,0)$, non-negative everywhere by Hudson's theorem and preserving most of the Wigner oscillation envelope.}
 \label{fig:morse_wigner_symplectic}
 \end{figure}
 
-Figure~\ref{fig:morse_wigner_symplectic} shows three states: the ground state ($n=0$), an intermediate state ($n=4$), and a horseshoe state near dissociation ($n=6$). The Fermi blob $A$ is highly anisotropic --- narrow in $q$ and broad in $p$, reflecting the asymmetric Morse confinement. The symplectic kernel $G_{\delta q}$ inherits this anisotropy, sharpening preferentially along the classical trajectory. The convolved cross-section $P_{\delta q}(q,0)$ retains the multi-lobed structure of $W_n(q,0)$ while remaining non-negative everywhere.
+Figure~\ref{fig:morse_wigner_symplectic} shows three states: the ground state ($n=0$), an intermediate anharmonic state ($n=8$), and a strongly anharmonic state ($n=16$). With $\omega_0 = 1$, the ground state has $\Delta q = \Delta p = 1$ to within numerical precision and the Fermi blob $A$ is circular --- coinciding with the harmonic oscillator ground state. As $n$ grows, the orbit develops the characteristic horseshoe shape of Morse confinement; $\Delta q$ stretches as the wavefunction reaches further into the soft-wall region while $\Delta p$ remains bounded by the dissociation energy. The symplectic kernel $G_{\delta q}$ inherits this anisotropy, sharpening preferentially along the classical trajectory. The convolved cross-section $P_{\delta q}(q,0)$ retains the multi-lobed structure of $W_n(q,0)$ while remaining non-negative everywhere, in contrast to the Husimi resolution (Appendix, Fig.~\ref{fig:morse_wigner_husimi}) which collapses the interior oscillations to a single peak at the slow turning point.
 
 \section{Double-Well Potential}
 
-The symmetric double-well $V(q) = \mu^2(q^2 - V_0)^2/(4 V_0) - \mu^2 V_0/4$ with $\mu^2 = 4$, $V_0 = 4$ supports tunneling doublets below the barrier and connected orbits above it. The state's RS covariance is dominated by delocalization across both wells for the lowest doublet partner, yielding a Fermi blob $A$ that envelops the entire double-well region.
+The symmetric double-well $V(q) = \mu^2(q^2 - V_0)^2/(4 V_0) - \mu^2 V_0/4$ with $\mu^2 = 4$, $V_0 = 4$ supports tunneling doublets below the barrier and connected orbits above it. For doublet partners the classical envelope is the union of two disconnected orbits, but the quantum state's covariance is dominated by delocalization across both wells, yielding a single Fermi blob $A$ that envelops the entire double-well region. The Fermi blob captures the coherent superposition that the disconnected classical picture cannot.
 
 \begin{figure}[t!]
 \centering
@@ -178,7 +192,7 @@ The Husimi Q-function applies a fixed coherent-state kernel of width $1/\sqrt{2}
 \begin{figure}[t!]
 \centering
 \includegraphics[width=\linewidth]{figures/morse_wigner_husimi.pdf}
-\caption{\textbf{Husimi resolution of Wigner negativity --- Morse potential.} Same eigenstates as Fig.~\ref{fig:morse_wigner_symplectic}. The fixed-width Husimi kernel cannot adapt to the Morse anisotropy, smoothing the multi-lobed structure of the Wigner cross-section into a single broad peak for $n \ge 4$.}
+\caption{\textbf{Husimi resolution of Wigner negativity --- Morse potential.} Same eigenstates as Fig.~\ref{fig:morse_wigner_symplectic}. The Husimi kernel is drawn centered on the orbit; the convolution is translation-invariant. The fixed-width Husimi kernel cannot adapt to the Morse anisotropy, smoothing the multi-lobed structure of the Wigner cross-section into a single broad peak for $n \ge 4$.}
 \label{fig:morse_wigner_husimi}
 \end{figure}
 
