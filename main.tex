@@ -36,18 +36,16 @@ Wigner negativity and semiclassical caustics both follow from assuming unbounded
 
 \section{Introduction}
 
-Phase-space representations of quantum mechanics bridge classical trajectories and quantum amplitudes, but the mapping introduces two persistent pathologies. The Wigner--Weyl distribution exhibits negative values wherever quantum interference is strong \cite{wigner1932}, while the WKB probability density diverges at classical turning points where the local momentum vanishes \cite{berry1977,langer1937}. These are typically treated as separate inconveniences of separate formalisms.
+Phase-space quantum mechanics has lived with two stubborn pathologies for nearly a century. The Wigner--Weyl distribution, an exact phase-space representation of any quantum state, takes negative values wherever interference is strong \cite{wigner1932}. The WKB probability density, the leading-order semiclassical approximation, diverges at every classical turning point \cite{berry1977,langer1937}. Each is treated as an inconvenience of its own formalism.
 
-They are not. Both pathologies are kinematic consequences of the same assumption: that classical action is unbounded. Wigner negativity arises from interference on scales below $\hbar/\Delta p$; the WKB caustic arises from demanding $\delta q \to 0$ at the turning point, which forces $\Delta p \to \infty$ and hence infinite classical action. No physical system satisfies this condition.
+They are the same problem. Both arise from assuming that classical action is unbounded --- an assumption no physical system satisfies. The standard remedy, the Husimi Q-function \cite{husimi1940}, blurs both away with a Gaussian kernel set once by the ground state. But that kernel knows nothing about the system at hand: it cannot resolve structure governed by an action it never sees.
 
-The standard remedy applies a fixed Gaussian kernel to yield the Husimi Q-function \cite{husimi1940}, which suppresses negativity and softens the caustics. But the Husimi kernel is set once by the ground state and carries no information about the system's classical action --- a kernel decoupled from $A$ cannot resolve structure governed by $A$, and introduces artifactual tails broader than true quantum tunneling.
-
-Here we enforce what the physics already demands: a finite classical action $A$ constrains the phase-space resolution to Zurek's reciprocal scales $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$ \cite{zurek2001}. Drawing on de~Gosson's symplectic geometry \cite{degosson2009,degosson2012fermi} and Gromov's non-squeezing theorem \cite{gromov1985}, we construct squeezed Gaussian kernels governed entirely by $A$. These kernels saturate the Heisenberg limit, provably eliminate Wigner negativity by Hudson's theorem \cite{hudson1974}, and bound the momentum support at turning points, replacing WKB divergences with finite-amplitude densities. Finite classical action resolves Wigner negativity and semiclassical caustics.
+Here we replace the Husimi kernel with one whose width is fixed by the state's own classical action. The construction is forced: de~Gosson's symplectic geometry \cite{degosson2009,degosson2012fermi}, Zurek's reciprocal scales \cite{zurek2001}, and Gromov's non-squeezing theorem \cite{gromov1985} together pick out a unique pair of squeezed Gaussian kernels. Hudson's theorem \cite{hudson1974} guarantees the resulting density is everywhere non-negative; finite momentum support guarantees it is everywhere finite. One construction resolves both pathologies, and across three test potentials it preserves the quantum oscillation structure that the Husimi kernel destroys.
 
 \begin{figure}[t!]
 \centering
 \includegraphics[width=\linewidth]{figures/quantum_of_action.pdf}
-\caption{\textbf{The symplectic quantum of action} (schematic, 1D case). The Heisenberg limit $\sigma_q \sigma_p \ge \hbar/2$ maps onto classical semi-axes $\Delta q = \sqrt{2}\sigma_q$, $\Delta p = \sqrt{2}\sigma_p$, projecting the $1\sigma$ contour onto a Fermi blob with phase-space area $A = \pi \Delta q \Delta p \ge h/2$. Its interior contains a conjugate pair of quantum blobs, $a_q = \pi\,\delta q\,\Delta p = h/2$ and $a_p = \pi\,\Delta q\,\delta p = h/2$, summing to the quantum of action $h = a_q + a_p$. Their minor semi-axes are Zurek's reciprocal scales $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$; $a_q$ is squeezed along the position axis and $a_p$ along the momentum axis, and their joint structure is accessible only through ensemble tomography on separate copies of the state. As $A$ grows, $a_q$ and $a_p$ compress along their conjugate axes, enforcing the correspondence principle.}
+\caption{\textbf{The symplectic quantum of action} (schematic, 1D case). The Heisenberg limit $\sigma_q \sigma_p \ge \hbar/2$ admits classical semi-axes $\Delta q = \sqrt{2}\sigma_q$, $\Delta p = \sqrt{2}\sigma_p$; de~Gosson's construction projects the $1\sigma$ contour onto a Fermi blob with phase-space area $A = \pi \Delta q \Delta p \ge h/2$. Its interior contains a conjugate pair of de~Gosson's quantum blobs, $a_q = \pi\,\delta q\,\Delta p = h/2$ and $a_p = \pi\,\Delta q\,\delta p = h/2$, summing to the quantum of action $h = a_q + a_p$. Their minor semi-axes are Zurek's reciprocal scales $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$; $a_q$ is squeezed along the position axis and $a_p$ along the momentum axis, and their joint structure is accessible only through ensemble tomography on separate copies of the state. As $A$ grows, $a_q$ and $a_p$ compress along their conjugate axes, sharpening phase-space resolution.}
 \label{fig:quantum_of_action}
 \end{figure}
 
@@ -97,7 +95,7 @@ The kernel widths $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$ ar
 
 \section{Resolution via Finite Classical Action}
 
-The classical action $A = \pi \Delta q \Delta p$ sets the phase-space resolution via the reciprocal scales $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$. The minimum-uncertainty blobs $a_q$ and $a_p$ of area $h/2$ take the Gaussian form of the conjugate squeezed kernels \cite{degosson2009,degosson2012fermi},
+The classical action $A = \pi \Delta q \Delta p$ sets the phase-space resolution via the reciprocal scales $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$. De Gosson's minimum-uncertainty blobs $a_q$ and $a_p$ of area $h/2$ take the Gaussian form of the conjugate squeezed kernels \cite{degosson2009,degosson2012fermi},
 \begin{equation}
 G_{\delta q}(q,p) = \frac{1}{\pi}\exp\!\left(-\frac{q^2}{\delta q^2} - \frac{p^2}{\Delta p^2}\right),
 \end{equation}
@@ -122,7 +120,11 @@ where $W_\text{cl}(q,p) \propto \delta(H(q,p) - E)$ is the classical microcanoni
 
 The squeezed densities differ fundamentally from the Husimi Q-function \cite{husimi1940}. Husimi convolves $W$ with a fixed coherent-state kernel set once by the ground state, carrying no information about the system's classical action. The kernels $G_{\delta q}$ and $G_{\delta p}$ are governed entirely by $A$: as $A$ grows they sharpen anisotropically along the classical trajectory, recovering phase-space structure the fixed Husimi kernel cannot access.
 
-\section{The Harmonic Oscillator}
+\section{Numerical Demonstrations}
+
+The construction above is analytical: Hudson's theorem guarantees pointwise non-negativity of $P_{\delta q}$ and $P_{\delta p}$ for any state, and finite momentum support guarantees the classical caustic is replaced by a finite peak whatever the potential. The numerical demonstrations that follow do not test these guarantees; they show what the resolved densities actually look like across three potentials chosen to cover progressively more demanding quantum behavior. The harmonic oscillator anchors the construction in a system where the Fermi blob and the classical orbit coincide. The Morse potential breaks that coincidence, separating the quantum action $A$ from the Bohr--Sommerfeld action $A_\text{cl}$. The double-well introduces tunneling doublets, where the classical orbit is disconnected but the quantum state is not. Across all three, both Wigner and semiclassical input are resolved by the same kernel.
+
+\subsection{The Harmonic Oscillator}
 
 The quantum harmonic oscillator provides the canonical test of both resolutions. Its Wigner function is known exactly \cite{wigner1932},
 \begin{equation}
@@ -130,7 +132,7 @@ W_n(q,p) = \frac{(-1)^n}{\pi}\, e^{-(q^2+p^2)}\, L_n\!\left(2(q^2+p^2)\right),
 \end{equation}
 where $L_n$ is the Laguerre polynomial of order $n$. The Robertson--Schr\"{o}dinger covariance for eigenstate $|n\rangle$ gives $\sigma_{qq} = \sigma_{pp} = (2n+1)/2$ and $\sigma_{qp} = 0$, yielding classical boundaries $\Delta q = \Delta p = \sqrt{2n+1}$ and reciprocal scales $\delta q = \delta p = 1/\sqrt{2n+1}$, so that $A/A_0 = 2n+1$. Here $A_0 = h/2$ is the ground-state action. Because the harmonic potential is quadratic, $A = A_\text{cl}$ exactly: the Fermi blob coincides with the energy-shell ellipse. All quantities below are expressed in units of the ground-state scales $q_0$ and $p_0$, so that $\hbar = q_0 p_0 = 1$.
 
-\subsection{Wigner Negativity}
+\subsubsection{Wigner Negativity}
 
 \begin{figure}[t!]
 \centering
@@ -143,7 +145,7 @@ Figure~\ref{fig:harmonic_wigner_symplectic} shows the $p=0$ cross-section $W_n(q
 
 The convolved cross-section $P_{\delta q}(q,0)$ in the right column is everywhere non-negative, consistent with Hudson's theorem guaranteeing $P_{\delta q}(q,p) \ge 0$ pointwise throughout phase space. The kernel width $\delta q = 1/\sqrt{2n+1}$ shrinks with increasing action, so at $n=20$ ($A = 41\,A_0$) the convolution preserves nearly all of the Wigner oscillation structure while still eliminating all negativity. Each row is independently scaled; the absolute amplitude of the cross-section decreases with $n$ as the distribution spreads over the growing classical region.
 
-\subsection{Semiclassical Caustics}
+\subsubsection{Semiclassical Caustics}
 
 \begin{figure}[t!]
 \centering
@@ -156,11 +158,11 @@ Figure~\ref{fig:harmonic_semiclassical_symplectic} shows the parallel semiclassi
 
 The right column shows the symplectic resolution $\rho_{\delta q}(q)$, obtained by marginalizing the convolution $W_\text{cl} * G_{\delta q}$ over $p$. The kernel's finite momentum support $\Delta p = \sqrt{2n+1}$ bounds the kinematic action at the turning points, replacing each divergence with a finite peak. As $n$ grows the resolution evolves from a smooth bell ($n=0$, where the kernel width $\delta q = 1$ exceeds the orbit half-width $\Delta q = 1$) toward two sharp turning-point peaks bracketing a relatively flat interior ($n=20$). The semiclassical limit emerges as the resolved density tracks the classical $1/p(q)$ profile away from the turning points, while remaining finite at them.
 
-\section{Morse Potential}
+\subsection{Morse Potential}
 
 The Morse oscillator $V(q) = D_e(1 - e^{-\alpha q})^2$ provides an anharmonic test where the Fermi blob and the classical orbit no longer coincide. We use $D_e = 12.5$, $\alpha = 0.2$, $m = 1$, chosen so that $\omega_0 = \alpha\sqrt{2D_e/m} = 1$ matches the harmonic oscillator's natural frequency. For each bound state the quantum covariance product $A$ is smaller than the Bohr--Sommerfeld action $A_\text{cl}$, with the gap widening as $n$ approaches dissociation. The kernel widths $\delta q$ and $\delta p$ are sized by $A$, the state's actual phase-space cell, not by the larger classical envelope.
 
-\subsection{Wigner Negativity}
+\subsubsection{Wigner Negativity}
 
 \begin{figure}[t!]
 \centering
@@ -171,7 +173,7 @@ The Morse oscillator $V(q) = D_e(1 - e^{-\alpha q})^2$ provides an anharmonic te
 
 Figure~\ref{fig:morse_wigner_symplectic} shows three states: the ground state ($n=0$), an intermediate anharmonic state ($n=8$), and a strongly anharmonic state ($n=16$). With $\omega_0 = 1$, the ground state has $\Delta q \approx \Delta p \approx 1$ and the Fermi blob $A$ is approximately circular --- coinciding with the harmonic oscillator ground state. As $n$ grows, the orbit develops the characteristic horseshoe shape of Morse confinement; $\Delta q$ stretches as the wavefunction reaches further into the soft-wall region while $\Delta p$ remains bounded by the dissociation energy. The symplectic kernel $G_{\delta q}$ inherits this anisotropy, sharpening preferentially along the classical trajectory. The convolved cross-section $P_{\delta q}(q,0)$ retains the multi-lobed structure of $W_n(q,0)$ while remaining non-negative everywhere, in contrast to the Husimi resolution (Appendix, Fig.~\ref{fig:morse_wigner_husimi}) which collapses the interior oscillations to a single peak at the slow turning point.
 
-\subsection{Semiclassical Caustics}
+\subsubsection{Semiclassical Caustics}
 
 \begin{figure}[t!]
 \centering
@@ -182,11 +184,11 @@ Figure~\ref{fig:morse_wigner_symplectic} shows three states: the ground state ($
 
 Figure~\ref{fig:morse_semiclassical_symplectic} demonstrates that the symplectic resolution captures the asymmetric classical dwell-time distribution that defines Morse semiclassics. Where the harmonic-oscillator caustic was symmetric, the Morse caustic is dramatically lopsided: the classical particle spends much longer near the soft-wall turning point than the steep-wall one, and the WKB density correspondingly accumulates more probability there. Both features --- the asymmetry and the divergences --- are preserved by the symplectic kernel, which adapts its anisotropy to the state's classical envelope while bounding the divergences via $\Delta p$.
 
-\section{Double-Well Potential}
+\subsection{Double-Well Potential}
 
 The symmetric double-well $V(q) = -\mu^2 q^2/2 + \lambda q^4/4$ with $\mu^2 = 4$, $\lambda = 1$ supports tunneling doublets below the barrier and connected orbits above it. Here $V_0 \equiv \mu^4/(4\lambda) = 4$ is the barrier height and $\pm\sqrt{\mu^2/\lambda} = \pm 2$ are the well minima. For doublet partners the classical envelope is the union of two disconnected orbits, but the quantum state's covariance is dominated by delocalization across both wells, yielding a single Fermi blob $A$ that envelops the entire double-well region. The Fermi blob captures the coherent superposition that the disconnected classical picture cannot.
 
-\subsection{Wigner Negativity}
+\subsubsection{Wigner Negativity}
 
 \begin{figure}[t!]
 \centering
@@ -197,7 +199,7 @@ The symmetric double-well $V(q) = -\mu^2 q^2/2 + \lambda q^4/4$ with $\mu^2 = 4$
 
 Figure~\ref{fig:double_well_wigner_symplectic} demonstrates the most stringent test of the Wigner resolution: the inter-well interference peak in $W_0(q,0)$ that is the phase-space signature of coherent superposition between the two wells. This central peak is preserved by the symplectic kernel because the kernel width $\delta q = \hbar/\Delta p$ is small enough to resolve sub-well features when the state's momentum spread $\Delta p$ is large. The fixed-width Husimi kernel (Appendix, Fig.~\ref{fig:double_well_wigner_husimi}) flattens this central peak entirely.
 
-\subsection{Semiclassical Caustics}
+\subsubsection{Semiclassical Caustics}
 
 \begin{figure}[t!]
 \centering
@@ -216,32 +218,57 @@ Wigner negativity and WKB caustics are not separate pathologies of separate form
 
 Across three potentials --- harmonic, Morse, and double-well --- the symplectic resolution preserves quantum oscillation structure that the fixed-width Husimi Q-function destroys. The improvement is most dramatic for high-action states where Husimi's ground-state-sized kernel over-smooths by orders of magnitude, and for tunneling doublets where the inter-well interference peak is the diagnostic of quantum coherence. For semiclassical caustics, the same kernel replaces the WKB turning-point divergence with a finite peak whose width is set by $\Delta p$ and whose location matches the classical turning point.
 
-The construction introduces no free parameters: $\Delta q$ and $\Delta p$ are read directly from the state's Robertson--Schr\"{o}dinger covariance, and $\delta q$, $\delta p$ are determined by the Heisenberg limit. The kernel adapts to each state by the same rule that makes the state quantum-mechanical in the first place. The quantum of action does the work; we have only to use it.
+The construction introduces no free parameters: $\Delta q$ and $\Delta p$ are read directly from the state's Robertson--Schr\"{o}dinger covariance, and $\delta q$, $\delta p$ follow from de~Gosson's quantum blobs at the Heisenberg limit. The kernel adapts to each state by the same rule that makes the state quantum-mechanical in the first place. Wigner negativity and semiclassical caustics are resolved via classical action.
+
+\section*{Data and Code Availability}
+
+All numerical data, figure-generating code, and reproducibility scaffolding for this paper are available at \url{https://doi.org/10.17605/OSF.IO/EV8H6}.
 
 \appendix
 \section*{Appendix: Husimi Resolution}
 
-The Husimi Q-function applies a fixed coherent-state kernel of unit width in both $q$ and $p$, set once by the ground-state scales and independent of the system's classical action. Figures~\ref{fig:harmonic_wigner_husimi}--\ref{fig:double_well_wigner_husimi} show the Husimi resolution of the same eigenstates rendered with the symplectic kernel in the main text. The contrast across the right columns illustrates the central claim of the paper: a kernel decoupled from $A$ cannot resolve structure governed by $A$.
+The Husimi Q-function applies a fixed coherent-state kernel of unit width in both $q$ and $p$, set once by the ground-state scales and independent of the system's classical action. Figures~\ref{fig:harmonic_wigner_husimi}--\ref{fig:double_well_semiclassical_husimi} show the Husimi resolution of the same eigenstates rendered with the symplectic kernel in the main text, for both the Wigner function and the classical microcanonical density. The contrast across the right columns illustrates the central claim of the paper: a kernel decoupled from $A$ cannot resolve structure governed by $A$, regardless of whether the input is the quantum Wigner function or the classical energy shell.
 
 \begin{figure}[t!]
 \centering
 \includegraphics[width=\linewidth]{figures/harmonic_wigner_husimi.pdf}
-\caption{\textbf{Harmonic oscillator, Husimi.} Same eigenstates as Fig.~\ref{fig:harmonic_wigner_symplectic}. The fixed Husimi kernel (dashed unit circle in left column) over-smooths the Wigner oscillations as the action grows: at $n=20$, the Husimi cross-section $Q(q,0)$ retains only two outer peaks, having flattened the dense oscillation structure visible in the symplectic version.}
+\caption{\textbf{Harmonic oscillator, Husimi (Wigner input).} Same eigenstates as Fig.~\ref{fig:harmonic_wigner_symplectic}. The fixed Husimi kernel (dashed unit circle in left column) over-smooths the Wigner oscillations as the action grows: at $n=20$, the Husimi cross-section $Q(q,0)$ retains only two outer peaks, having flattened the dense oscillation structure visible in the symplectic version.}
 \label{fig:harmonic_wigner_husimi}
 \end{figure}
 
 \begin{figure}[t!]
 \centering
+\includegraphics[width=\linewidth]{figures/harmonic_semiclassical_husimi.pdf}
+\caption{\textbf{Harmonic oscillator, Husimi (classical input).} Same eigenstates as Fig.~\ref{fig:harmonic_semiclassical_symplectic}. The Husimi unit circle remains fixed in size as the classical energy shell expands with $n$, illustrating the kernel-action mismatch directly. \textit{Right:} Husimi-resolved 1D position density $\rho_Q(q)$, the marginal of the Husimi-convolved energy shell over $p$. The turning-point peaks are broader and the interior is more uniformly filled than in the symplectic version, consistent with a kernel of fixed width $\hbar$ rather than width $\delta q = 1/\sqrt{2n+1}$.}
+\label{fig:harmonic_semiclassical_husimi}
+\end{figure}
+
+\begin{figure}[t!]
+\centering
 \includegraphics[width=\linewidth]{figures/morse_wigner_husimi.pdf}
-\caption{\textbf{Morse potential, Husimi.} Same eigenstates as Fig.~\ref{fig:morse_wigner_symplectic}. The Husimi kernel is drawn centered on the orbit; the convolution is translation-invariant. The fixed-width Husimi kernel cannot adapt to the Morse anisotropy, smoothing the multi-lobed structure of the Wigner cross-section into a single peak at the slow turning point for $n \ge 8$.}
+\caption{\textbf{Morse potential, Husimi (Wigner input).} Same eigenstates as Fig.~\ref{fig:morse_wigner_symplectic}. The Husimi kernel is drawn centered on the orbit; the convolution is translation-invariant. The fixed-width Husimi kernel cannot adapt to the Morse anisotropy, smoothing the multi-lobed structure of the Wigner cross-section into a single peak at the slow turning point for $n \ge 8$.}
 \label{fig:morse_wigner_husimi}
 \end{figure}
 
 \begin{figure}[t!]
 \centering
+\includegraphics[width=\linewidth]{figures/morse_semiclassical_husimi.pdf}
+\caption{\textbf{Morse potential, Husimi (classical input).} Same eigenstates as Fig.~\ref{fig:morse_semiclassical_symplectic}. The Husimi unit circle stays unchanged as the classical horseshoe grows; for $n=8, 16$ the kernel sits well inside the classical envelope, unable to resolve the soft-wall accumulation that the symplectic kernel preserves. The resolved density $\rho_Q(q)$ retains only a broad single peak at the slow turning point, having lost the secondary structure visible in Fig.~\ref{fig:morse_semiclassical_symplectic}.}
+\label{fig:morse_semiclassical_husimi}
+\end{figure}
+
+\begin{figure}[t!]
+\centering
 \includegraphics[width=\linewidth]{figures/double_well_wigner_husimi.pdf}
-\caption{\textbf{Double-well potential, Husimi.} Same eigenstates as Fig.~\ref{fig:double_well_wigner_symplectic}. The fixed Husimi kernel destroys the inter-well interference peak in $n=0$, rendering a tunneling doublet partner indistinguishable from a classical mixture of the two wells.}
+\caption{\textbf{Double-well potential, Husimi (Wigner input).} Same eigenstates as Fig.~\ref{fig:double_well_wigner_symplectic}. The fixed Husimi kernel destroys the inter-well interference peak in $n=0$, rendering a tunneling doublet partner indistinguishable from a classical mixture of the two wells.}
 \label{fig:double_well_wigner_husimi}
+\end{figure}
+
+\begin{figure}[t!]
+\centering
+\includegraphics[width=\linewidth]{figures/double_well_semiclassical_husimi.pdf}
+\caption{\textbf{Double-well potential, Husimi (classical input).} Same eigenstates as Fig.~\ref{fig:double_well_semiclassical_symplectic}. The Husimi unit circle sits in the classically forbidden barrier region for sub-barrier states ($n=0, 2$), producing a single broad envelope that flattens the well structure as $n$ grows. By $n=2$ the resolved density is essentially a single mound with no separation between the wells, and by $n=7$ the interior caustic feature visible in the symplectic version (Fig.~\ref{fig:double_well_semiclassical_symplectic}) has been smoothed away entirely. The kernel-action mismatch is more severe here than for the harmonic or Morse potentials because the barrier introduces an additional sub-orbit length scale that the unit-width kernel cannot resolve.}
+\label{fig:double_well_semiclassical_husimi}
 \end{figure}
 
 \bibliography{main}
