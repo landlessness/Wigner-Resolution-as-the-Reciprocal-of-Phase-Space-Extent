@@ -324,6 +324,29 @@ plot_semiclassical_resolution <- function(dt, q_lim, y_lim, custom_breaks, label
 }
 
 # ------------------------------------------------------------------------------
+# SEMICLASSICAL RIGHT-COLUMN (Husimi variant): rho_Q(q)
+# 1D position density obtained by marginalizing the Husimi-convolved
+# 2D shell over p. Always non-negative.
+# ------------------------------------------------------------------------------
+
+plot_semiclassical_husimi_resolution <- function(dt, q_lim, y_lim, custom_breaks, label_format, base_font="") {
+  ax_x <- expression(italic(q)/italic(q)[0])
+  ax_y <- expression(rho[italic(Q)](italic(q)))
+  ggplot(dt, aes(x=q, y=rho_husimi)) +
+    geom_hline(yintercept=0, color="black", linewidth=0.3) +
+    geom_ribbon(aes(ymin=0, ymax=pmax(rho_husimi,0)), fill="gray85", color=NA) +
+    geom_path(color="black", linewidth=0.4) +
+    coord_cartesian(xlim=q_lim, ylim=c(0,y_lim), expand=FALSE) +
+    scale_x_continuous(breaks=custom_breaks, labels=label_format) +
+    theme_bw(base_family=base_font) +
+    theme(panel.grid.minor=element_blank(),
+          axis.text=element_text(size=8),
+          axis.text.y=element_blank(), axis.ticks.y=element_blank(),
+          aspect.ratio=1, plot.margin=margin(2,4,2,4)) +
+    labs(x=ax_x, y=ax_y)
+}
+
+# ------------------------------------------------------------------------------
 # ROW LABEL via PATCHWORK TAG
 # ------------------------------------------------------------------------------
 
