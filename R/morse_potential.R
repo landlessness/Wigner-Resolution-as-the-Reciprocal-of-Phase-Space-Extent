@@ -19,8 +19,8 @@
 #   V(25) ≈ 30 ≈ E_7=29.97 (n=7 has very long tail near dissociation)
 #   q_max=25 captures n=0..6 fully and n=7 to ~99% of its support.
 # ==============================================================================
-De    <- 30.0
-alpha <- 1.0
+De    <- 12.5
+alpha <- 0.2
 morse_V <- function(q) De * (1 - exp(-alpha*q))^2
 morse_turning_points <- function(E_n) {
   list(q_minus = -log(1 + sqrt(E_n/De)) / alpha,
@@ -28,6 +28,6 @@ morse_turning_points <- function(E_n) {
 }
 # Schrodinger solver grid parameters
 MORSE_Q_MIN    <- -2.0
-MORSE_Q_MAX    <- 25.0
+MORSE_Q_MAX    <- 50
 MORSE_DQ       <- 0.01
-MORSE_N_STATES <- 8
+MORSE_N_STATES <- 18

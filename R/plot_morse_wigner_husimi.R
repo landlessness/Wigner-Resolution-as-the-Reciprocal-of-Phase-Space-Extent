@@ -34,7 +34,7 @@ morse_soln <- solve_schrodinger(morse_V,
                                 dq=MORSE_DQ,
                                 n_states=MORSE_N_STATES)
 
-target_n_levels <- c(0, 4, 6)
+target_n_levels <- c(0, 8, 16)
 
 # ------------------------------------------------------------------------------
 

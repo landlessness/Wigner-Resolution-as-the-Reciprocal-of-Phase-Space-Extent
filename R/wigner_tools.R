@@ -64,7 +64,9 @@ solve_schrodinger <- function(V_fn, q_min, q_max, dq=0.01, n_states=6, hbar=1.0)
     off_H  <- rep(ke_off, nq-1)
     H_sp   <- Matrix::bandSparse(nq, nq, k=c(-1,0,1),
                                  diagonals=list(off_H, diag_H, off_H))
-    eig    <- RSpectra::eigs_sym(H_sp, k=n_states, which="SM")
+    eig    <- RSpectra::eigs_sym(H_sp, k=n_states, which="SM",
+                                 opts=list(ncv=max(8*n_states, 100),
+                                           maxitr=2000))
     ord    <- order(eig$values)
     energies <- eig$values[ord]
     psi_mat  <- eig$vectors[, ord, drop=FALSE]
