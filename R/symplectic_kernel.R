@@ -1,10 +1,10 @@
 # ==============================================================================
 # symplectic_kernel.R
-# Symplectic-specific data: action-scaled squeezed Gaussian kernels and the
-# three-ellipse visual overlay expressing the quantum of action.
+# Action-scaled squeezed Gaussian kernels and the conjugate-blob overlay
+# expressing the quantum of action.
 #
 # The symplectic resolution uses two conjugate squeezed kernels (Mulloy 2025
-# manuscript, Sec. "Resolution via Finite Classical Action"):
+# manuscript, Sec. "Resolution via Action Capacity"):
 #
 #   G_delta_q(q,p) = (1/pi) * exp(-q^2/delta_q^2 - p^2/Delta_p^2)
 #                    squeezed in q (width delta_q), spans Delta_p in p
@@ -21,25 +21,25 @@
 # copies of the state — never simultaneously on a single copy. The overlay
 # shows both contours plus the outer Fermi blob A.
 #
-# Geometry: a_q and a_p are always inscribed within A. a_q has the same
-# Delta_p extent as A but is narrower in q; a_p has the same Delta_q extent
-# as A but is narrower in p. The QoA's bounding box equals A's.
-#
 # This file provides only the symplectic-specific pieces:
-#   - kernel-width computation from RS covariance widths
-#   - kernel matrix builder for G_delta_q (used in cross-section convolution)
+#   - kernel-width computation from RS / orbit covariance widths
+#   - kernel matrix builder for G_delta_q (used in convolution)
 #   - overlay-layers builder for the three QoA ellipses
+#   - symplectic_marginal_density: convenience function for the
+#     semiclassical right-column rho_{delta q}(q) marginal
 #
 # Reference: de Gosson, Symplectic Methods in Harmonic Analysis (Birkhauser
 #            2011); Zurek Nature 412, 712 (2001); Mulloy 2025 (this work).
 # Author: Brian S. Mulloy
 # ==============================================================================
 
+library(here)
 library(ggplot2)
 library(ggforce)
+source(here("R", "math_tools.R"))
 
 # ------------------------------------------------------------------------------
-# KERNEL WIDTHS FROM RS COVARIANCE
+# KERNEL WIDTHS FROM COVARIANCE WIDTHS
 # ------------------------------------------------------------------------------
 
 #' Symplectic resolution scales (Zurek's reciprocal scales) from RS widths.
@@ -56,7 +56,8 @@ symplectic_kernel_widths <- function(Delta_q, Delta_p, hbar=1.0) {
 
 # ------------------------------------------------------------------------------
 # G_DELTA_Q KERNEL MATRIX
-# Used in the right-column cross-section convolution: P_delta_q = W * G_delta_q.
+#
+# Used in the right-column convolution: P_delta_q = W * G_delta_q.
 # Built relative to the integration grid's midpoint so ifftshift in
 # fft_convolve_2d places the kernel peak at the FFT origin.
 # ------------------------------------------------------------------------------
@@ -81,6 +82,31 @@ G_delta_q_kernel_matrix <- function(q_grid, p_grid, Delta_q, Delta_p, hbar=1.0) 
 }
 
 # ------------------------------------------------------------------------------
+# G_DELTA_P KERNEL MATRIX (the conjugate kernel)
+#
+# G_delta_p has width Delta_q in q (broad) and width delta_p in p (squeezed).
+# Used together with G_delta_q to form the joint resolution
+#   P_joint = (1/2) * (P_{delta q} + P_{delta p})
+# which preserves both axes of sub-Planck interference structure
+# simultaneously. See compass-state demonstration.
+# ------------------------------------------------------------------------------
+
+#' G_delta_p kernel evaluated at offset (q,p) from grid midpoint.
+G_delta_p_kernel <- function(q, p, Delta_q, Delta_p, hbar=1.0) {
+  w <- symplectic_kernel_widths(Delta_q, Delta_p, hbar=hbar)
+  (1/pi) * exp(-(q/Delta_q)^2 - (p/w$delta_p)^2)
+}
+
+#' Build the G_delta_p kernel matrix on a (q_grid, p_grid) integration grid.
+G_delta_p_kernel_matrix <- function(q_grid, p_grid, Delta_q, Delta_p, hbar=1.0) {
+  q_mid <- (min(q_grid) + max(q_grid)) / 2
+  p_mid <- (min(p_grid) + max(p_grid)) / 2
+  outer(q_grid, p_grid,
+        FUN = function(q, p) G_delta_p_kernel(q - q_mid, p - p_mid,
+                                              Delta_q, Delta_p, hbar=hbar))
+}
+
+# ------------------------------------------------------------------------------
 # SYMPLECTIC OVERLAY
 # Three nested ellipses: outer A (solid), inner a_q (dashed), inner a_p
 # (dashed). All centered at q_center.
@@ -94,7 +120,11 @@ G_delta_q_kernel_matrix <- function(q_grid, p_grid, Delta_q, Delta_p, hbar=1.0) 
 #' Drawing order: outer A first, then inner a_q and a_p so they appear on
 #' top of the outer.
 #'
-#' @param Delta_q,Delta_p RS-covariance widths.
+#' Visual hierarchy: outer Fermi blob A is drawn with a slightly thicker
+#' line than the inner conjugate quantum blobs a_q, a_p, to emphasize A
+#' as the primary kinematic envelope. All three are solid black.
+#'
+#' @param Delta_q,Delta_p Covariance widths (RS or orbit).
 #' @param q_center Center of the overlay in q (orbit center).
 #' @param hbar Planck constant.
 #' @return A list of three ggplot layers (one per ellipse).
@@ -107,14 +137,47 @@ symplectic_overlay_layers <- function(Delta_q, Delta_p, q_center=0, hbar=1.0) {
     geom_ellipse(data=ellipse_A,
                  aes(x0=x0, y0=y0, a=a, b=b, angle=angle),
                  inherit.aes=FALSE,
-                 color="gray60", linewidth=0.5, linetype="22"),
+                 color="black", linewidth=0.4, linetype="solid"),
     geom_ellipse(data=ellipse_a_q,
                  aes(x0=x0, y0=y0, a=a, b=b, angle=angle),
                  inherit.aes=FALSE,
-                 color="gray40", linewidth=0.4, linetype="22"),
+                 color="black", linewidth=0.25, linetype="solid"),
     geom_ellipse(data=ellipse_a_p,
                  aes(x0=x0, y0=y0, a=a, b=b, angle=angle),
                  inherit.aes=FALSE,
-                 color="gray40", linewidth=0.4, linetype="22")
+                 color="black", linewidth=0.25, linetype="solid")
   )
+}
+
+# ------------------------------------------------------------------------------
+# SYMPLECTIC MARGINAL DENSITY
+#
+# Used in the right column of semiclassical figures:
+#   rho_{delta q}(q) = integral (W_cl * G_{delta q})(q, p) dp
+#
+# Convolves the regularized energy shell with the symplectic kernel and
+# marginalizes over p. The kernel widths are state-specific and supplied
+# via closure (kernel_fn).
+# ------------------------------------------------------------------------------
+
+#' Apply the symplectic kernel to a state's W_matrix and return the 1D
+#' marginal rho(q) on a display grid.
+#'
+#' @param state State bundle from build_semiclassical_state() or
+#'              build_wigner_state() — must have q_int, p_int, dq_int,
+#'              dp_int, W_matrix.
+#' @param kernel_fn Closure with signature kernel_fn(q_grid, p_grid),
+#'                  typically built via:
+#'                    function(q, p) G_delta_q_kernel_matrix(q, p,
+#'                                                           Delta_q, Delta_p)
+#' @param q_display Display grid in q for the output.
+#' @return Numeric vector of rho values on q_display, with NAs replaced by 0.
+symplectic_marginal_density <- function(state, kernel_fn, q_display) {
+  K_mat   <- kernel_fn(state$q_int, state$p_int)
+  conv    <- fft_convolve_2d(state$W_matrix, K_mat,
+                             state$dq_int, state$dp_int)
+  rho_int <- rowSums(conv$P_mat) * state$dp_int
+  rho     <- approx(state$q_int, rho_int, xout=q_display, rule=1)$y
+  rho[is.na(rho)] <- 0
+  rho
 }

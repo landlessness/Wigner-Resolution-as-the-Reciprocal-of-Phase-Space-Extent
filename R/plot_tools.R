@@ -28,6 +28,16 @@ COLUMN_TITLE_CENTER_SEMICLASSICAL <- "Semiclassical Caustics"
 COLUMN_TITLE_RIGHT_HUSIMI         <- "Husimi Resolution"
 COLUMN_TITLE_RIGHT_SYMPLECTIC     <- "Symplectic Resolution"
 
+# Compass-figure-specific labels (used by assemble_compass.R).
+# The compass figure has a different column structure than the original
+# n-indexed Morse/harmonic figures, so it gets its own constants.
+COMPASS_COLUMN_TITLE_LEFT   <- "Phase-Space Cells"
+COMPASS_COLUMN_TITLE_CENTER <- "Cross Sections"
+COMPASS_COLUMN_TITLE_RIGHT  <- "Resolved"
+COMPASS_ROW_LABEL_TOP       <- "Wigner"
+COMPASS_ROW_LABEL_MIDDLE    <- "Husimi"
+COMPASS_ROW_LABEL_BOTTOM    <- "Symplectic"
+
 PANEL_WIDTHS    <- c(1, 1, 1)
 FIGURE_WIDTH_IN <- 7.5
 ROW_HEIGHT_IN   <- 1.8
@@ -35,10 +45,17 @@ FIGURE_PAD_IN   <- 0.5
 
 HEATMAP_LEFT_MARGIN_PT <- 80
 
-# Wigner colormap: asymmetric diverging (gray45 negative -> white zero -> gray10 positive)
-HEATMAP_COLOR_NEG  <- "gray45"
+# Wigner colormap: asymmetric diverging (gray20 negative -> white zero -> gray5 positive)
+HEATMAP_COLOR_NEG  <- "gray20"
 HEATMAP_COLOR_ZERO <- "white"
-HEATMAP_COLOR_POS  <- "gray10"
+HEATMAP_COLOR_POS  <- "gray5"
+
+# Cross-section ribbon fill — used to gently highlight Wigner negativity
+# in the 1D cross-section panels. Decoupled from the heatmap saturation
+# constants because the visual weight needs are different: the heatmap
+# packs many pixels at saturation, while a cross-section ribbon is a
+# single sliver and needs to be subtle to avoid overwhelming the curve.
+CROSS_RIBBON_NEG_FILL <- "gray80"
 
 # Semiclassical colormap: non-negative, single direction
 HEATMAP_COLOR_LOW  <- "white"
@@ -68,7 +85,7 @@ plot_wigner_heatmap <- function(dt_w2d, overlay_layers, df_traj=NULL,
 
   if (!is.null(df_traj))
     p <- p + geom_path(data=df_traj, aes(x=q, y=p), inherit.aes=FALSE,
-                       color="black", linewidth=0.5, linetype="solid")
+                       color="gray30", linewidth=0.5, linetype="solid")
 
   for (layer in overlay_layers) p <- p + layer
 
@@ -80,7 +97,7 @@ plot_wigner_heatmap <- function(dt_w2d, overlay_layers, df_traj=NULL,
     theme(panel.grid.minor=element_blank(),
           panel.background=element_rect(fill="white"),
           axis.text=element_text(size=8),
-          plot.margin=margin(2, 4, 2, 4)) +
+          plot.margin=margin(2, 2, 2, 2)) +
     labs(x=ax_x, y=ax_y)
 }
 
@@ -113,29 +130,44 @@ plot_semiclassical_heatmap <- function(dt_w2d, overlay_layers,
     theme(panel.grid.minor=element_blank(),
           panel.background=element_rect(fill="white"),
           axis.text=element_text(size=8),
-          plot.margin=margin(2, 4, 2, 4)) +
+          plot.margin=margin(2, 2, 2, 2)) +
     labs(x=ax_x, y=ax_y)
 }
 
 # ------------------------------------------------------------------------------
-# WIGNER CROSS-SECTION
+# CROSS-SECTION FILL CONVENTION
+#
+# The 1D cross-section panels visually act as a saturation legend for the
+# 2D heatmap. Two solid fill colors:
+#   positive ribbon (between zero and a positive curve value): HEATMAP_COLOR_POS
+#   negative ribbon (between zero and a negative curve value): HEATMAP_COLOR_NEG
+# These are exactly the saturation endpoints of the heatmap diverging
+# colormap. A cross-section ribbon at full positive height appears the same
+# color as a 2D pixel at full positive saturation.
+# ------------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------
+# WIGNER CROSS-SECTION (signed, two-color fill matching heatmap endpoints)
 # ------------------------------------------------------------------------------
 
 plot_wigner_cross_section <- function(dt, q_lim, y_lim, custom_breaks, label_format, base_font="") {
   ax_x <- expression(italic(q)/italic(q)[0])
   ax_y <- expression(italic(W)[italic(n)](italic(q)*","*0))
+  # Recover the data peak from y_lim (the convention is y_lim = peak*1.1).
+  peak <- y_lim / 1.1
+  y_breaks <- c(-peak, 0, peak)
+  y_labels <- sprintf("%.2f", y_breaks)
   ggplot(dt, aes(x=q, y=W_raw)) +
-    geom_hline(yintercept=0, color="black", linewidth=0.3) +
-    geom_ribbon(aes(ymin=pmin(W_raw,0), ymax=0), fill="gray60", alpha=0.6, color=NA) +
-    geom_ribbon(aes(ymin=0, ymax=pmax(W_raw,0)), fill="gray85", color=NA) +
+    geom_ribbon(aes(ymin=pmin(W_raw,0), ymax=0),
+                fill=CROSS_RIBBON_NEG_FILL, color=NA) +
     geom_path(color="black", linewidth=0.4) +
     coord_cartesian(xlim=q_lim, ylim=c(-y_lim,y_lim), expand=FALSE) +
     scale_x_continuous(breaks=custom_breaks, labels=label_format) +
+    scale_y_continuous(breaks=y_breaks, labels=y_labels) +
     theme_bw(base_family=base_font) +
     theme(panel.grid.minor=element_blank(),
           axis.text=element_text(size=8),
-          axis.text.y=element_blank(), axis.ticks.y=element_blank(),
-          aspect.ratio=1, plot.margin=margin(2,4,2,4)) +
+          aspect.ratio=1, plot.margin=margin(2,2,2,2)) +
     labs(x=ax_x, y=ax_y)
 }
 
@@ -258,7 +290,7 @@ plot_wkb_caustic_cross_section <- function(dt, q_lim, y_lim, custom_breaks,
     theme(panel.grid.minor=element_blank(),
           axis.text=element_text(size=8),
           axis.text.y=element_blank(), axis.ticks.y=element_blank(),
-          aspect.ratio=1, plot.margin=margin(2,4,2,4)) +
+          aspect.ratio=1, plot.margin=margin(2,2,2,2)) +
     labs(x=ax_x, y=ax_y)
 }
 
@@ -269,34 +301,38 @@ plot_wkb_caustic_cross_section <- function(dt, q_lim, y_lim, custom_breaks,
 plot_husimi_cross_section <- function(dt, q_lim, y_lim, custom_breaks, label_format, base_font="") {
   ax_x <- expression(italic(q)/italic(q)[0])
   ax_y <- expression(italic(Q)(italic(q)*","*0))
+  # Recover the data peak from y_lim (the convention is y_lim = peak*1.1).
+  peak <- y_lim / 1.1
+  y_breaks <- c(0, peak)
+  y_labels <- sprintf("%.2g", y_breaks)
   ggplot(dt, aes(x=q, y=Q_husimi)) +
-    geom_hline(yintercept=0, color="black", linewidth=0.3) +
-    geom_ribbon(aes(ymin=0, ymax=pmax(Q_husimi,0)), fill="gray85", color=NA) +
     geom_path(color="black", linewidth=0.4) +
     coord_cartesian(xlim=q_lim, ylim=c(-y_lim,y_lim), expand=FALSE) +
     scale_x_continuous(breaks=custom_breaks, labels=label_format) +
+    scale_y_continuous(breaks=y_breaks, labels=y_labels) +
     theme_bw(base_family=base_font) +
     theme(panel.grid.minor=element_blank(),
           axis.text=element_text(size=8),
-          axis.text.y=element_blank(), axis.ticks.y=element_blank(),
-          aspect.ratio=1, plot.margin=margin(2,4,2,4)) +
+          aspect.ratio=1, plot.margin=margin(2,2,2,2)) +
     labs(x=ax_x, y=ax_y)
 }
 
 plot_symplectic_cross_section <- function(dt, q_lim, y_lim, custom_breaks, label_format, base_font="") {
   ax_x <- expression(italic(q)/italic(q)[0])
   ax_y <- expression(italic(P)[italic(delta*q)](italic(q)*","*0))
+  # Recover the data peak from y_lim (the convention is y_lim = peak*1.1).
+  peak <- y_lim / 1.1
+  y_breaks <- c(0, peak)
+  y_labels <- sprintf("%.2g", y_breaks)
   ggplot(dt, aes(x=q, y=P_sympl)) +
-    geom_hline(yintercept=0, color="black", linewidth=0.3) +
-    geom_ribbon(aes(ymin=0, ymax=pmax(P_sympl,0)), fill="gray85", color=NA) +
     geom_path(color="black", linewidth=0.4) +
     coord_cartesian(xlim=q_lim, ylim=c(-y_lim,y_lim), expand=FALSE) +
     scale_x_continuous(breaks=custom_breaks, labels=label_format) +
+    scale_y_continuous(breaks=y_breaks, labels=y_labels) +
     theme_bw(base_family=base_font) +
     theme(panel.grid.minor=element_blank(),
           axis.text=element_text(size=8),
-          axis.text.y=element_blank(), axis.ticks.y=element_blank(),
-          aspect.ratio=1, plot.margin=margin(2,4,2,4)) +
+          aspect.ratio=1, plot.margin=margin(2,2,2,2)) +
     labs(x=ax_x, y=ax_y)
 }
 
@@ -310,8 +346,8 @@ plot_semiclassical_resolution <- function(dt, q_lim, y_lim, custom_breaks, label
   ax_x <- expression(italic(q)/italic(q)[0])
   ax_y <- expression(rho[italic(delta*q)](italic(q)))
   ggplot(dt, aes(x=q, y=rho_sympl)) +
-    geom_hline(yintercept=0, color="black", linewidth=0.3) +
-    geom_ribbon(aes(ymin=0, ymax=pmax(rho_sympl,0)), fill="gray85", color=NA) +
+    geom_ribbon(aes(ymin=0, ymax=pmax(rho_sympl,0)),
+                fill=HEATMAP_COLOR_POS, color=NA) +
     geom_path(color="black", linewidth=0.4) +
     coord_cartesian(xlim=q_lim, ylim=c(0,y_lim), expand=FALSE) +
     scale_x_continuous(breaks=custom_breaks, labels=label_format) +
@@ -319,7 +355,7 @@ plot_semiclassical_resolution <- function(dt, q_lim, y_lim, custom_breaks, label
     theme(panel.grid.minor=element_blank(),
           axis.text=element_text(size=8),
           axis.text.y=element_blank(), axis.ticks.y=element_blank(),
-          aspect.ratio=1, plot.margin=margin(2,4,2,4)) +
+          aspect.ratio=1, plot.margin=margin(2,2,2,2)) +
     labs(x=ax_x, y=ax_y)
 }
 
@@ -333,8 +369,8 @@ plot_semiclassical_husimi_resolution <- function(dt, q_lim, y_lim, custom_breaks
   ax_x <- expression(italic(q)/italic(q)[0])
   ax_y <- expression(rho[italic(Q)](italic(q)))
   ggplot(dt, aes(x=q, y=rho_husimi)) +
-    geom_hline(yintercept=0, color="black", linewidth=0.3) +
-    geom_ribbon(aes(ymin=0, ymax=pmax(rho_husimi,0)), fill="gray85", color=NA) +
+    geom_ribbon(aes(ymin=0, ymax=pmax(rho_husimi,0)),
+                fill=HEATMAP_COLOR_POS, color=NA) +
     geom_path(color="black", linewidth=0.4) +
     coord_cartesian(xlim=q_lim, ylim=c(0,y_lim), expand=FALSE) +
     scale_x_continuous(breaks=custom_breaks, labels=label_format) +
@@ -342,8 +378,66 @@ plot_semiclassical_husimi_resolution <- function(dt, q_lim, y_lim, custom_breaks
     theme(panel.grid.minor=element_blank(),
           axis.text=element_text(size=8),
           axis.text.y=element_blank(), axis.ticks.y=element_blank(),
-          aspect.ratio=1, plot.margin=margin(2,4,2,4)) +
+          aspect.ratio=1, plot.margin=margin(2,2,2,2)) +
     labs(x=ax_x, y=ax_y)
+}
+
+# ------------------------------------------------------------------------------
+# COLORMAP LEGEND PANEL
+#
+# Builds a small ggplot rendering the diverging Wigner colormap as a vertical
+# colorbar. Used to fill an otherwise-empty panel slot in assembled figures
+# (e.g., the upper-right of compass.pdf) and to tell the reader what the
+# heatmap shading actually represents in physical units.
+#
+# Tick labels show the physical scale (max_abs at top, 0 in the middle,
+# -max_abs at the bottom) so a reader looking at any heatmap can read off
+# the value at any point.
+# ------------------------------------------------------------------------------
+
+#' Build a vertical colormap-legend ggplot panel for the Wigner pipeline.
+#'
+#' @param max_abs   Physical peak magnitude for tick labels at +/- max_abs.
+#' @param y_label   Optional axis label (e.g., "W(q,p)"). Pass NULL for none.
+#' @param base_font Font family for the panel.
+#' @return A ggplot object suitable for placement in a patchwork layout.
+plot_compass_legend <- function(max_abs, y_label=NULL, base_font="") {
+  # 200 horizontal strips covering [-1, 1] in normalized coordinates.
+  n_strips <- 200
+  y_norm   <- seq(-1, 1, length.out=n_strips)
+  # geom_rect xmin/xmax/ymin/ymax build a thin column.
+  dy <- diff(y_norm)[1]
+  rects <- data.table(
+    xmin = 0,                 xmax = 1,
+    ymin = y_norm - dy/2,     ymax = y_norm + dy/2,
+    fill_value = y_norm
+  )
+
+  # Map normalized [-1, 1] back to physical labels.
+  fmt <- function(z) sprintf("%.2f", z * max_abs)
+  tick_norm   <- c(-1, 0, 1)
+  tick_labels <- c(fmt(-1), "0", fmt(1))
+
+  ax_y_expr <- if (is.null(y_label)) NULL else parse(text=y_label)
+
+  ggplot(rects) +
+    geom_rect(aes(xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax,
+                  fill=fill_value), color=NA) +
+    scale_fill_gradient2(low=HEATMAP_COLOR_NEG,
+                         mid=HEATMAP_COLOR_ZERO,
+                         high=HEATMAP_COLOR_POS,
+                         midpoint=0, limits=c(-1, 1), guide="none") +
+    scale_x_continuous(limits=c(0, 1), breaks=NULL, expand=c(0, 0)) +
+    scale_y_continuous(limits=c(-1, 1), breaks=tick_norm, labels=tick_labels,
+                       expand=c(0, 0), position="right") +
+    coord_fixed(ratio=0.25) +    # tall narrow bar; ratio = width/height
+    theme_bw(base_family=base_font) +
+    theme(panel.grid=element_blank(),
+          panel.background=element_rect(fill="white"),
+          axis.text.x=element_blank(), axis.ticks.x=element_blank(),
+          axis.text.y=element_text(size=8),
+          plot.margin=margin(2, 2, 2, 2)) +
+    labs(x=NULL, y=ax_y_expr)
 }
 
 # ------------------------------------------------------------------------------
@@ -358,6 +452,30 @@ attach_row_tag <- function(p, label_str, base_font="") {
                               hjust=1, vjust=0.5),
       plot.tag.position = c(TAG_X_NPC, TAG_Y_NPC),
       plot.margin = margin(2, 4, 2, HEATMAP_LEFT_MARGIN_PT)
+    )
+}
+
+#' Attach a plain-text row label (rotated 90 deg) to the leftmost panel of
+#' a compass figure row. Used by assemble_compass.R for "Wigner", "Husimi",
+#' "Symplectic" labels that are too long to display horizontally.
+#'
+#' Differs from attach_row_tag() in three ways:
+#'   - label is plain text, not parsed as a math expression
+#'   - rotated 90 deg (reads bottom-to-top on the left side)
+#'   - smaller left margin (the rotated text is narrow)
+#'
+#' @param p           Ggplot object (typically the leftmost panel of a row).
+#' @param label_str   Plain text label string.
+#' @param base_font   Font family.
+#' @return Modified ggplot object.
+attach_compass_row_tag <- function(p, label_str, base_font="") {
+  p +
+    labs(tag = label_str) +
+    theme(
+      plot.tag = element_text(size=ROW_LABEL_SIZE_PT, family=base_font,
+                              hjust=0.5, vjust=0.5, angle=90),
+      plot.tag.position = c(-0.22, 0.5),
+      plot.margin = margin(2, 4, 2, 36)
     )
 }
 

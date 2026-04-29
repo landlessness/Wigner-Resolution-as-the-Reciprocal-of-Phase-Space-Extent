@@ -1,15 +1,16 @@
 # ==============================================================================
 # husimi_kernel.R
-# Husimi-specific data: the coherent-state kernel and its visual overlay.
+# Husimi Q-function: fixed coherent-state convolution kernel.
 #
-# This file only contains things unique to the Husimi method:
+# This file provides only the Husimi-specific pieces:
 #   - the kernel matrix builder used by the convolution pipeline
 #   - the overlay-layers builder used as visual annotation on a heatmap
 #
-# Everything else — the Wigner computation, the convolution pipeline, the
-# cross-section extraction, the heatmap rendering — lives in kernel-agnostic
-# files (wigner_tools.R, wigner_state.R, math_tools.R, plot_tools.R) and is
-# shared with the symplectic kernel.
+# Everything else — the Wigner / semiclassical computation, the convolution
+# pipeline, the cross-section extraction, the heatmap rendering — lives in
+# kernel-agnostic files (math_tools.R, wigner_density.R,
+# semiclassical_density.R, plot_tools.R) and is shared with the
+# symplectic kernel.
 #
 # Reference: Husimi 1940 Proc. Phys.-Math. Soc. Japan 22, 264;
 #            Takahashi & Saito PRL 55, 645 (1985);
@@ -17,8 +18,10 @@
 # Author: Brian S. Mulloy
 # ==============================================================================
 
+library(here)
 library(ggplot2)
 library(ggforce)
+source(here("R", "math_tools.R"))
 
 # ------------------------------------------------------------------------------
 # HUSIMI KERNEL
@@ -58,8 +61,36 @@ husimi_overlay_layers <- function(q_center=0) {
   list(
     geom_circle(data=circle_data, aes(x0=x0, y0=y0, r=r),
                 inherit.aes=FALSE,
-                color="gray40",
-                linewidth=0.4,
-                linetype="22")
+                color="black",
+                linewidth=0.25,
+                linetype="solid")
   )
+}
+
+# ------------------------------------------------------------------------------
+# HUSIMI MARGINAL DENSITY
+#
+# Used in the right column of semiclassical figures:
+#   rho_Q(q) = integral (W_cl * G_husimi)(q, p) dp
+#
+# Mirror of symplectic_marginal_density() but with the fixed unit-width
+# Husimi kernel — no state-specific widths to thread through.
+# ------------------------------------------------------------------------------
+
+#' Apply the Husimi kernel to a state's W_matrix and return the 1D
+#' marginal rho_Q(q) on a display grid.
+#'
+#' @param state State bundle from build_semiclassical_state() or
+#'              build_wigner_state() — must have q_int, p_int, dq_int,
+#'              dp_int, W_matrix.
+#' @param q_display Display grid in q for the output.
+#' @return Numeric vector of rho values on q_display.
+husimi_marginal_density <- function(state, q_display) {
+  K_mat   <- husimi_kernel_matrix(state$q_int, state$p_int)
+  conv    <- fft_convolve_2d(state$W_matrix, K_mat,
+                             state$dq_int, state$dp_int)
+  rho_int <- rowSums(conv$P_mat) * state$dp_int
+  rho     <- approx(state$q_int, rho_int, xout=q_display, rule=1)$y
+  rho[is.na(rho)] <- 0
+  rho
 }

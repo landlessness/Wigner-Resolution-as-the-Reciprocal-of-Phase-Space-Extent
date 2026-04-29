@@ -1,12 +1,11 @@
 # ==============================================================================
-# harmonic_potential.R
+# harmonic_system.R
 # Quantum harmonic oscillator: V(q) = q^2/2
 #
 # Eigenstates are analytically known (Hermite-Gaussian functions), so no
-# Schrodinger solver is needed. We expose a faux "soln" object with the
-# same interface as solve_schrodinger() output (energies, psi_matrix,
-# q_grid, dq) so the existing Wigner/Husimi pipeline can be reused
-# unchanged.
+# Schroedinger solver is needed. We expose a faux "soln" object with the
+# same interface as solve_schroedinger() output (energies, psi_matrix,
+# q_grid, dq) so the existing Wigner pipeline can be reused unchanged.
 #
 # Wavefunction:
 #   psi_n(q) = (1/sqrt(2^n n! sqrt(pi))) * H_n(q) * exp(-q^2/2)
@@ -17,10 +16,8 @@
 #
 # Reference: Griffiths Introduction to Quantum Mechanics Ch.2
 #            Wigner 1932 Phys. Rev. 40, 749
+# Author: Brian S. Mulloy
 # ==============================================================================
-
-library(here)
-source(here("R", "math_tools.R"))   # for laguerre_n if needed elsewhere
 
 # ------------------------------------------------------------------------------
 # HERMITE POLYNOMIALS (physicists' convention)
@@ -69,12 +66,12 @@ harmonic_turning_points <- function(E_n) {
 
 # ------------------------------------------------------------------------------
 # FAUX SOLN OBJECT
-# Builds the same structure that solve_schrodinger() returns, but populated
+# Builds the same structure that solve_schroedinger() returns, but populated
 # from analytic formulas. Compatible with build_*_row consumers.
 # ------------------------------------------------------------------------------
 
 #' Build a soln object containing the first n_states harmonic eigenstates
-#' sampled on a uniform q grid. Same interface as solve_schrodinger output.
+#' sampled on a uniform q grid. Same interface as solve_schroedinger output.
 harmonic_soln <- function(n_states, q_min=-25, q_max=25, dq=0.02) {
   q_grid <- seq(q_min, q_max, by=dq)
   nq     <- length(q_grid)
@@ -99,7 +96,7 @@ harmonic_soln <- function(n_states, q_min=-25, q_max=25, dq=0.02) {
 }
 
 # ------------------------------------------------------------------------------
-# Grid parameters used by the plot file.
+# Grid parameters used by the plot files.
 # n=100 has orbit radius sqrt(201) ~ 14.2; grid extends well beyond.
 # dq=0.02 gives ~50 samples per node spacing for n=100 (oversampled).
 # ------------------------------------------------------------------------------
@@ -107,3 +104,26 @@ HARMONIC_Q_MIN    <- -25.0
 HARMONIC_Q_MAX    <-  25.0
 HARMONIC_DQ       <-   0.02
 HARMONIC_N_STATES <- 101    # need n=100 to be available
+
+# ------------------------------------------------------------------------------
+# ENERGY FROM ACTION CAPACITY
+#
+# For the harmonic oscillator the orbit covariance is exact:
+#   Delta_q = sqrt(2E),  Delta_p = sqrt(2E)  =>  A/A_0 = 2E
+# Inverse: E = (A/A_0) / 2.
+#
+# Equivalently in eigenstate terms: A_RS/A_0 = 2n+1, so A/A_0 = 1
+# corresponds to n=0 (the ground state), A/A_0 = 3 to n=1, A/A_0 = 9 to
+# n=4, etc. Continuous A/A_0 between integer levels gives a classical
+# orbit at the corresponding energy with no quantum eigenstate associated.
+# ------------------------------------------------------------------------------
+
+#' Energy at a given action-capacity level, in dimensionless units.
+#'
+#' @param A_over_A0 Target action capacity in units of A_0 = h/2 (positive real).
+#' @return Energy E such that orbit_covariance(harmonic_V, E, tp) yields
+#'         A/A_0 = A_over_A0.
+harmonic_E_at_action_capacity <- function(A_over_A0) {
+  if (A_over_A0 <= 0) stop("A/A_0 must be positive")
+  A_over_A0 / 2
+}
