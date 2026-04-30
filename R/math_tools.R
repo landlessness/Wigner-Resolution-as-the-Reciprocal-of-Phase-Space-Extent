@@ -59,10 +59,11 @@ fft_convolve_2d <- function(W_mat, K_mat, dq, dp) {
 
 # ------------------------------------------------------------------------------
 # CROSS-SECTION EXTRACTION
-# Extracts p=0 slice from a 2D matrix and interpolates onto display grid.
+# Extracts axis-aligned slices from a 2D matrix and interpolates onto a
+# display grid.
 # ------------------------------------------------------------------------------
 
-#' Extract the p=0 slice of a 2D matrix and interpolate to a display grid.
+#' Extract the p=0 slice of a 2D matrix and interpolate to a display grid in q.
 #'
 #' @param mat        2D matrix [nq x np]
 #' @param q_int      Integration grid in q
@@ -72,6 +73,24 @@ fft_convolve_2d <- function(W_mat, K_mat, dq, dp) {
 extract_p0_cross_section <- function(mat, q_int, p_int, q_display) {
   p0_idx <- which.min(abs(p_int))
   cross  <- approx(q_int, mat[, p0_idx], xout=q_display, rule=1)$y
+  cross[is.na(cross)] <- 0
+  cross
+}
+
+#' Extract the q=0 slice of a 2D matrix and interpolate to a display grid in p.
+#'
+#' Symmetric counterpart to extract_p0_cross_section. Returns a 1D vector
+#' indexed by p_display, suitable for plotting the complementary
+#' momentum-resolved cross-section.
+#'
+#' @param mat        2D matrix [nq x np]
+#' @param q_int      Integration grid in q
+#' @param p_int      Integration grid in p
+#' @param p_display  Display grid in p
+#' @return Vector of values on p_display.
+extract_q0_cross_section <- function(mat, q_int, p_int, p_display) {
+  q0_idx <- which.min(abs(q_int))
+  cross  <- approx(p_int, mat[q0_idx, ], xout=p_display, rule=1)$y
   cross[is.na(cross)] <- 0
   cross
 }

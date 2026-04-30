@@ -96,12 +96,17 @@ robertson_schroedinger <- function(sigma_qq, sigma_pp, sigma_qp=0, hbar=1.0) {
 #' @return Same structure as robertson_schroedinger().
 numerical_covariance <- function(psi_vec, q_grid, hbar=1.0) {
   dq       <- diff(q_grid)[1]
-  norm     <- sqrt(sum(psi_vec^2)*dq)
+  # Use abs()^2 (= psi^* psi) for the probability density. For real psi this
+  # is identical to psi^2, but for complex psi (cat states with non-mirror-
+  # symmetric lobes) psi^2 is itself complex and gives wrong moments.
+  norm     <- sqrt(sum(abs(psi_vec)^2)*dq)
   psi_n    <- psi_vec/norm
-  prob     <- psi_n^2
+  prob     <- abs(psi_n)^2                        # always real
   q_mean   <- sum(q_grid*prob)*dq
   sigma_qq <- sum((q_grid-q_mean)^2*prob)*dq
+  # <p^2> = hbar^2 * integral |dpsi/dq|^2 dq. For real psi, dpsi^2 = |dpsi|^2;
+  # for complex psi, the modulus squared is what enters the kinetic energy.
   dpsi     <- diff(psi_n)/dq
-  sigma_pp <- hbar^2*sum(dpsi^2)*dq
+  sigma_pp <- hbar^2*sum(abs(dpsi)^2)*dq
   robertson_schroedinger(sigma_qq, sigma_pp, sigma_qp=0, hbar=hbar)
 }

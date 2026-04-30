@@ -86,10 +86,14 @@ wigner_fft <- function(psi_vec, q_grid, p_grid) {
   nq    <- length(q_grid)
   np    <- length(p_grid)
   dq    <- diff(q_grid)[1]
-  norm  <- sqrt(sum(psi_vec^2)*dq)
+  norm  <- sqrt(sum(abs(psi_vec)^2)*dq)
   if (norm > 0) psi_vec <- psi_vec/norm
 
-  # Build rho[iq, k] = psi[iq+k] * psi[iq-k] for valid indices.
+  # Build rho[iq, k] = psi*(q + k*dq) * psi(q - k*dq) for valid indices.
+  # This matches the standard Wigner convention
+  #   W(q, p) = (1/pi*hbar) * integral_dy psi*(q+y) * psi(q-y) * exp(2ipy/hbar)
+  # so that a coherent state at phase-space location (q0, p0) has Wigner
+  # centered at (q0, p0). The conjugate is on the (q+k*dq) factor.
   iq_grid <- matrix(seq_len(nq), nrow=nq, ncol=nq)
   k_grid  <- matrix(seq_len(nq) - 1, nrow=nq, ncol=nq, byrow=TRUE)
   ip_idx  <- iq_grid + k_grid
@@ -97,26 +101,53 @@ wigner_fft <- function(psi_vec, q_grid, p_grid) {
   valid   <- (ip_idx >= 1) & (ip_idx <= nq) & (im_idx >= 1) & (im_idx <= nq)
   safe_ip <- ifelse(valid, ip_idx, 1)
   safe_im <- ifelse(valid, im_idx, 1)
-  rho     <- psi_vec[safe_ip] * psi_vec[safe_im]
+  rho     <- Conj(psi_vec[safe_ip]) * psi_vec[safe_im]
   rho     <- ifelse(valid, rho, 0)
   dim(rho) <- c(nq, nq)
 
   # FFT along k. Pad to length M (power of 2) for fine p sampling.
+  # Use complex storage so complex psi (cat states with non-mirror-symmetric
+  # lobe placement) work correctly. For real psi, rho is real-valued and the
+  # complex storage just carries zero imaginary parts.
   M <- 2^ceiling(log2(max(2*nq, 4*np)))
-  rho_padded <- matrix(0, nrow=nq, ncol=M)
+  rho_padded <- matrix(complex(real=0, imaginary=0), nrow=nq, ncol=M)
   rho_padded[, 1:nq] <- rho
 
-  fft_full   <- t(mvfft(t(rho_padded)))
-  half       <- M/2 + 1
-  W_native   <- (dq/pi) * (2*Re(fft_full[, 1:half, drop=FALSE]) - rho[, 1])
-  p_native   <- pi * (0:(half-1)) / (M * dq)
+  fft_full <- t(mvfft(t(rho_padded)))
 
-  abs_p <- abs(p_grid)
+  # The DFT gives F_iq(ell) = sum_k rho(q_iq, k*dq) * exp(-2*pi*i*k*ell/M).
+  # Matching the Wigner kernel exp(2*i*p*k*dq) requires p_ell = -pi*ell/(M*dq)
+  # for ell = 0, ..., M-1. By DFT periodicity, ell > M/2 corresponds to
+  # p_ell = +pi*(M-ell)/(M*dq) (positive p).
+  #
+  # The formula W(q, p) = (dq/pi) * (2*Re(sum_k rho * exp(2ipk*dq)) - rho(q,0))
+  # is exact for both real and complex rho; the conjugate symmetry
+  # rho(q,-k) = conj(rho(q,k)) is built in via the 2*Re step.
+  #
+  # We assemble the full p-axis from -pi/(2*dq) to +pi/(2*dq) by interleaving
+  # the negative-p (low-ell) and positive-p (high-ell) halves of the FFT.
+
+  rho0 <- Re(rho[, 1])                      # real-valued |psi|^2 at k=0
+  W_full <- (dq/pi) * (2*Re(fft_full) - matrix(rho0, nrow=nq, ncol=M))
+  # ell index 0,...,M-1.  Convert to p:
+  #   ell = 0           -> p = 0
+  #   ell = 1,...,M/2   -> p = -pi*ell/(M*dq)        (negative p)
+  #   ell = M/2+1,...,M-1 -> p = +pi*(M-ell)/(M*dq)  (positive p)
+  ell_neg <- 0:(M/2)                        # length M/2+1; p <= 0
+  ell_pos <- (M-1):(M/2+1)                  # length M/2-1; p > 0, descending ell
+  p_neg <- -pi * ell_neg / (M * dq)         # 0, -pi/(M*dq), ..., -pi/(2*dq)
+  p_pos <-  pi * (M - ell_pos) / (M * dq)   # +pi/(M*dq), ..., +pi*(M/2-1)/(M*dq)
+
+  # Sort by ascending p: negative p (descending magnitude) first, then positive.
+  p_native <- c(rev(p_neg), p_pos)
+  W_native <- cbind(W_full[, rev(ell_neg + 1), drop=FALSE],
+                    W_full[, ell_pos + 1,       drop=FALSE])
+
   W_mat <- matrix(0, nrow=nq, ncol=np)
   for (iq in seq_len(nq)) {
-    interp <- approx(p_native, W_native[iq, ], xout=abs_p,
+    interp <- approx(p_native, W_native[iq, ], xout=p_grid,
                      rule=2, ties=mean)$y
-    interp[abs_p > p_native[half]] <- 0
+    interp[p_grid < p_native[1] | p_grid > p_native[length(p_native)]] <- 0
     W_mat[iq, ] <- interp
   }
   W_mat
@@ -157,8 +188,14 @@ build_wigner_state <- function(psi_vec, psi_q_grid,
   dp_int <- diff(p_int)[1]
 
   # Interpolate psi onto the integration q grid (zero outside support).
-  psi_int <- approx(psi_q_grid, psi_vec, xout=q_int,
-                    rule=1, yleft=0, yright=0)$y
+  # approx() silently coerces complex y to real, so we interpolate the
+  # real and imaginary parts separately and reassemble. For real psi this
+  # is a no-op (Im(psi) is zero, Im(psi_int) is zero).
+  psi_int_re <- approx(psi_q_grid, Re(psi_vec), xout=q_int,
+                       rule=1, yleft=0, yright=0)$y
+  psi_int_im <- approx(psi_q_grid, Im(psi_vec), xout=q_int,
+                       rule=1, yleft=0, yright=0)$y
+  psi_int <- complex(real=psi_int_re, imaginary=psi_int_im)
 
   # Compute the Wigner matrix.
   cat(sprintf("    Building Wigner on %d x %d grid (dq=%.4f)...\n",
