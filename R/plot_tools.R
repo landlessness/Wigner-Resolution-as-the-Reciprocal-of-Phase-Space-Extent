@@ -337,6 +337,31 @@ plot_symplectic_cross_section <- function(dt, q_lim, y_lim, custom_breaks, label
 }
 
 # ------------------------------------------------------------------------------
+# SYMPLECTIC CROSS-SECTION (a_p variant): P_{delta p}(0, p)
+# Mirror of plot_symplectic_cross_section for the momentum-resolved
+# convolution: cross-section taken at q=0, plotted with p on the x-axis.
+# Used in the column-4 panel of the cat symplectic figure.
+# ------------------------------------------------------------------------------
+
+plot_symplectic_cross_section_p <- function(dt, p_lim, y_lim, custom_breaks, label_format, base_font="") {
+  ax_x <- expression(italic(p)/italic(p)[0])
+  ax_y <- expression(italic(P)[italic(delta*p)](0*","*italic(p)))
+  peak <- y_lim / 1.1
+  y_breaks <- c(0, peak)
+  y_labels <- sprintf("%.2g", y_breaks)
+  ggplot(dt, aes(x=p, y=P_sympl)) +
+    geom_path(color="black", linewidth=0.4) +
+    coord_cartesian(xlim=p_lim, ylim=c(-y_lim,y_lim), expand=FALSE) +
+    scale_x_continuous(breaks=custom_breaks, labels=label_format) +
+    scale_y_continuous(breaks=y_breaks, labels=y_labels) +
+    theme_bw(base_family=base_font) +
+    theme(panel.grid.minor=element_blank(),
+          axis.text=element_text(size=8),
+          aspect.ratio=1, plot.margin=margin(2,2,2,2)) +
+    labs(x=ax_x, y=ax_y)
+}
+
+# ------------------------------------------------------------------------------
 # SEMICLASSICAL RIGHT-COLUMN: rho_{delta q}(q)
 # 1D position density obtained by marginalizing the symplectic-convolved
 # 2D shell over p. Always non-negative.
