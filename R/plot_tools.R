@@ -399,9 +399,13 @@ plot_symplectic_cross_section <- function(dt, q_lim, y_lim, custom_breaks, label
 #'                       linewidth: line weight
 plot_semiclassical_resolution <- function(dt, q_lim, y_lim, custom_breaks,
                                           label_format, base_font="",
-                                          overlays=NULL) {
+                                          overlays=NULL,
+                                          y_label=NULL) {
   ax_x <- expression(italic(q)/italic(q)[0])
-  ax_y <- expression(rho[italic(delta*q)](italic(q)))
+  # Default y-label is the marginal rho_{delta q}(q). Callers plotting a
+  # cross-section P_{delta q}(q, 0) — e.g. the Wigner-symplectic right
+  # column — should pass an explicit cross-section y_label.
+  ax_y <- if (is.null(y_label)) expression(rho[italic(delta*q)](italic(q))) else y_label
   # Y-tick label uses the maximum of all rendered curves (symplectic +
   # any overlays), so the displayed peak number actually reflects what
   # the reader sees on the plot.

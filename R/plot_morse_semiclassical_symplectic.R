@@ -11,14 +11,24 @@
 # the actually-achieved A_orbit/A_0 from orbit_covariance().
 #
 # Three columns:
-#   Left:    regularized 2D energy shell heatmap with QoA overlay
-#   Center:  analytical WKB caustic 1/sqrt(2*(E-V)) — diverges at turning points
+#   Left:    classical orbit at energy E_n with QoA overlay (squeezed kernel
+#            cells). The orbit is a 1D curve (not a heatmap); the QoA cells
+#            are the visual representation of delta_q, delta_p, Delta_q,
+#            Delta_p — the resolution scales determining the convolution.
+#   Center:  oscillating WKB density |psi_WKB|^2 = (A^2/p) cos^2(S/hbar - pi/4),
+#            with n+1 interference lobes between the turning points and
+#            divergences at the turning points where p -> 0 (rendered as
+#            infinity arrows).
 #   Right:   1D position density rho_{delta q}(q), the marginal of
-#            (W_cl * G_{delta q})
+#            (W_cl * G_{delta q}). Airy uniform density rho_Airy(q) overlaid
+#            in dashed gray as the prior-art semiclassical comparator.
 #
 # The pipeline is Schroedinger-free: quantum number -> Bohr-Sommerfeld
 # Morse energy E_n -> turning points -> orbit moments give Delta_q, Delta_p,
-# hence the symplectic kernel widths. No wavefunction needed.
+# hence the symplectic kernel widths. No wavefunction needed for either
+# the symplectic curve or the Airy overlay (Airy is computed directly from
+# V(q), E_n, and the turning points via the Langer/Miller construction;
+# see airy_uniform.R).
 # ==============================================================================
 
 library(here)
@@ -31,8 +41,10 @@ source(here("R", "semiclassical_density.R"))    # build_semiclassical_state
 source(here("R", "symplectic_kernel.R"))        # G_delta_q_kernel_matrix,
                                                 # symplectic_marginal_density,
                                                 # symplectic_overlay_layers
-source(here("R", "schroedinger_solver.R"))      # solve_schroedinger,
-                                                # schroedinger_density
+source(here("R", "airy_uniform.R"))             # airy_uniform_density
+                                                # (prior-art semiclassical
+                                                # comparator for the
+                                                # right-column overlay)
 
 GOLDEN_FILL <- 0.6
 
@@ -44,13 +56,6 @@ file_output_pdf <- file.path(dir_figures, "morse_semiclassical_symplectic.pdf")
 # Quantum numbers for the three rows. Same selection as the Wigner Morse
 # figure: ground state, mid-anharmonic, strongly anharmonic horseshoe.
 target_quantum_numbers <- c(0, 8, 16)
-
-# Solve Schroedinger once for all rows. Used for the dashed |psi_n|^2
-# ground-truth overlay on the right column. Caches across all rows.
-cat("Solving Schroedinger for Morse (used for ground-truth overlay)...\n")
-morse_soln <- solve_schroedinger(morse_V,
-                                 MORSE_Q_MIN, MORSE_Q_MAX, MORSE_DQ,
-                                 n_states=MORSE_N_STATES)
 
 # ------------------------------------------------------------------------------
 
@@ -108,17 +113,21 @@ build_morse_row <- function(n, base_font="") {
   rho_sympl <- symplectic_marginal_density(state, symplectic_kernel_for_state,
                                            q_display)
 
-  # Schroedinger ground-truth density on the display grid. Computed here
-  # (rather than just before the overlay is built) so its peak can
-  # contribute to the right-column y-axis scaling — without this the
-  # overlay can shoot past the panel top in cases where |psi|^2 is more
-  # peaked than the symplectic-resolved density (e.g. ground state).
-  psi_sq <- schroedinger_density(morse_soln, n, q_display)
+  # Airy uniform density on the display grid. Computed here (rather than
+  # just before the overlay is built) so its peak can contribute to the
+  # right-column y-axis scaling — without this the overlay can shoot past
+  # the panel top in cases where rho_Airy is more peaked than the
+  # symplectic-resolved density (e.g. ground state). The Airy density is
+  # the standard prior-art semiclassical comparator: Langer's (1937)
+  # uniform wavefunction extended to bound states by Miller (1968) via
+  # midpoint patching of two single-turning-point Langer functions. See
+  # airy_uniform.R for the construction details and citation chain.
+  rho_airy <- airy_uniform_density(q_display, E_n, morse_V, tp)
 
   # Y-scaling, independent per column.
   # Right column: peak (max of symplectic and overlay densities) fills
   # (GOLDEN_FILL + 0.2) of vertical.
-  rho_peak  <- max(c(rho_sympl, psi_sq), na.rm=TRUE)
+  rho_peak  <- max(c(rho_sympl, rho_airy), na.rm=TRUE)
   y_lim_rho <- rho_peak / (GOLDEN_FILL + 0.2)
 
   # Middle column: y_lim is driven by the peak of the oscillating
@@ -154,14 +163,23 @@ build_morse_row <- function(n, base_font="") {
   overlay_layers <- symplectic_overlay_layers(cov$Delta_q, cov$Delta_p,
                                               q_center=q_center)
 
-  # Schroedinger ground-truth overlay for the right column. psi_sq was
-  # already computed above for y-scaling purposes.
-  schroedinger_overlay <- list(
+  # Airy overlay for the right column. The Airy uniform density is the
+  # textbook prior-art semiclassical resolution of the WKB caustic — the
+  # established alternative against which the symplectic resolution is
+  # contrasted. rho_airy was already computed above for y-scaling.
+  #
+  # This contrasts with the Wigner figure, where the right-column overlay
+  # is the Husimi cross-section: there the alternative phase-space
+  # resolution method is Husimi; here the alternative semiclassical
+  # resolution method is Airy. The architectural parallel is intentional —
+  # each figure contrasts the symplectic kernel against the established
+  # alternative *of the same kind*.
+  airy_overlay <- list(
     list(
-      data      = data.frame(q = q_display, rho = psi_sq),
-      color     = "gray30",
+      data      = data.frame(q = q_display, rho = rho_airy),
+      color     = "gray20",
       linetype  = 11,
-      linewidth = 0.2
+      linewidth = 0.3
     )
   )
 
@@ -200,7 +218,7 @@ build_morse_row <- function(n, base_font="") {
       dt_rho, q_lim=c(q_lo,q_hi), y_lim=y_lim_rho,
       custom_breaks=custom_breaks_q,
       label_format=label_format, base_font=base_font,
-      overlays=schroedinger_overlay)
+      overlays=airy_overlay)
   )
 }
 

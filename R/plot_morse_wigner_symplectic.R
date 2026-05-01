@@ -11,15 +11,19 @@
 #            and the classical orbit at energy E_n drawn on top in gray.
 #            Signed (diverging) colormap.
 #   Center:  W_n(q, 0) cross-section. Signed; oscillates negative for n >= 1.
-#   Right:   rho_{delta q}(q) = integral (W * G_{delta q})(q, p) dp, the
-#            q-marginal of the symplectic-resolved 2D density. Non-negative
-#            everywhere by Hudson's theorem. Schroedinger ground-truth
-#            |psi_n|^2 overlaid in gray dashed (linetype=11, linewidth=0.2).
-#            The marginal is the apples-to-apples comparator for |psi_n|^2,
-#            which is itself the q-marginal of W. The overlay shows the same
-#            resolution-scale story as the semiclassical figure: |psi_n|^2
-#            is evaluated at infinite resolution, while rho_{delta q} is the
-#            convolved density at the orbit's natural scale delta q.
+#            The diagnostic for "Wigner negativity to be resolved."
+#   Right:   P_{delta q}(q, 0) cross-section, the W * G_{delta q} convolution
+#            evaluated at p = 0. Non-negative everywhere by Hudson's theorem.
+#            The Husimi cross-section Q(q, 0) is overlaid in gray dotted.
+#            Both cross-sections are computed via the same kernel-agnostic
+#            apply_kernel_cross_section() helper; only the kernel differs.
+#            The contrast makes the kernel-capacity story visible directly
+#            on the resolved panel.
+#
+# The figure pairs naturally with the Wigner cross-section in the middle
+# column: cross-section in, cross-section out. The resolution-vs-|psi|^2
+# story (which would compare a marginal to a marginal) belongs in the
+# semiclassical-symplectic figure, not here.
 #
 # Pipeline: schroedinger eigenstate -> Wigner via FFT (build_wigner_state) ->
 # orbit-derived covariance from V(q), E_n (NOT from psi covariance — see
@@ -43,11 +47,13 @@ library(patchwork)
 source(here("R", "plot_tools.R"))
 source(here("R", "morse_system.R"))
 source(here("R", "classical_action_tools.R"))   # orbit_covariance,
-# classical_trajectory
+                                                # classical_trajectory
 source(here("R", "wigner_density.R"))           # build_wigner_state,
-# apply_kernel_cross_section
+                                                # apply_kernel_cross_section
 source(here("R", "symplectic_kernel.R"))        # G_delta_q_kernel_matrix,
-# symplectic_overlay_layers
+                                                # symplectic_overlay_layers,
+                                                # symplectic_marginal_density
+source(here("R", "husimi_kernel.R"))            # husimi_marginal_density
 source(here("R", "schroedinger_solver.R"))      # solve_schroedinger
 
 latex_font      <- "CMU Serif"
@@ -108,17 +114,21 @@ build_morse_row <- function(n, base_font="") {
   state   <- build_wigner_state(psi_vec, morse_soln$q_grid,
                                 q_lo, q_hi, p_lo, p_hi, q_display)
 
-  # Apply the symplectic kernel and extract rho_{delta q}(q) on q_display.
-  # We take the q-marginal of W * G_{delta q} (rather than the p=0 cross-
-  # section) because that is the apples-to-apples comparator for |psi_n|^2
-  # — which is itself the q-marginal of W. The marginal is what shows up in
-  # the position-resolution comparison; the p=0 cross-section is
-  # comparable to W(q, 0) (the center column).
+  # Apply both kernels and extract their p=0 cross-sections on q_display.
+  # Both cross-sections are computed via the same kernel-agnostic helper,
+  # apply_kernel_cross_section(); only the kernel closure differs. The
+  # right column then plots both side-by-side, making the kernel-capacity
+  # contrast visible at a glance.
   symplectic_kernel_for_state <- function(q_grid, p_grid) {
     G_delta_q_kernel_matrix(q_grid, p_grid, cov$Delta_q, cov$Delta_p)
   }
-  rho_sympl <- symplectic_marginal_density(state, symplectic_kernel_for_state,
-                                           q_display)
+  husimi_kernel_for_state <- function(q_grid, p_grid) {
+    husimi_kernel_matrix(q_grid, p_grid)
+  }
+  P_cross <- apply_kernel_cross_section(state, symplectic_kernel_for_state,
+                                        q_display)
+  Q_cross <- apply_kernel_cross_section(state, husimi_kernel_for_state,
+                                        q_display)
 
   # ----- Build the three panels -----
 
@@ -149,44 +159,51 @@ build_morse_row <- function(n, base_font="") {
     custom_breaks=custom_breaks_q,
     label_format=label_format, base_font=base_font)
 
-  # RIGHT: rho_{delta q}(q) marginal, non-negative.
-  # Use plot_semiclassical_resolution (positive-only y range, accepts
-  # overlays) — same helper used by the semiclassical-symplectic figure.
-  # The Wigner-resolved marginal is non-negative by Hudson's theorem, so
-  # the negative half of the y-axis is wasted real estate; the positive-
-  # only range gives the curve more vertical room.
+  # RIGHT: P_{delta q}(q, 0) cross-section, non-negative.
+  # Use plot_semiclassical_resolution with an explicit cross-section y-label
+  # — the helper's rendering logic (positive-only y range, ribbon fill,
+  # native overlay support) is exactly what we want for a non-negative
+  # cross-section, but the default y-label refers to the marginal
+  # rho_{delta q}(q). We pass an expression for the cross-section label
+  # P_{delta q}(q, 0) so the panel reads correctly.
   #
-  # Also overlay the exact Schroedinger density |psi_n|^2 in gray dashed,
-  # paralleling the semiclassical figure. Both curves derive from psi_n
-  # (the Wigner FFT input), but |psi_n|^2 represents the infinite-position-
-  # resolution density while rho_{delta q} represents the convolution at the
-  # orbit's natural scale delta q. The peak/trough discrepancy carries the
-  # same resolution-scale story discussed in the body of the manuscript.
-  psi_sq <- schroedinger_density(morse_soln, n, q_display)
+  # The Husimi cross-section Q(q, 0) is overlaid as a dotted gray line.
+  # Husimi and symplectic differ only by kernel: same input W, same
+  # cross-section extraction, different kernel widths. The visual contrast
+  # tells the kernel-capacity story for this row directly on the resolved
+  # panel: the symplectic kernel's orbit-derived widths preserve interior
+  # structure that the fixed-width Husimi kernel smooths.
+  #
+  # We do NOT overlay |psi_n|^2 here. |psi_n|^2 is the q-marginal of W,
+  # not a cross-section, so it would be a different kind of object on the
+  # same axes. The resolution-vs-|psi|^2 story belongs in the semiclassical
+  # figure, whose right column is naturally a marginal.
 
-  # y-limit: max of rho_sympl and psi_sq peaks. Without including psi_sq in
-  # the limit calculation, the overlay can shoot past the panel top in
-  # cases where |psi_n|^2 has a higher peak than the convolved density.
-  # Convention required by plot_semiclassical_resolution: y_lim = peak * 1.1.
-  rho_peak <- max(c(rho_sympl, psi_sq), na.rm=TRUE)
-  if (!is.finite(rho_peak) || rho_peak == 0) rho_peak <- 1
-  y_lim_rho <- rho_peak * 1.1
-  dt_rho <- data.table(q=q_display, rho_sympl=rho_sympl)
+  # y-limit: max of both cross-sections so neither curve clips at the
+  # panel top. Convention required by plot_semiclassical_resolution:
+  # y_lim = peak * 1.1.
+  P_peak <- max(c(P_cross, Q_cross), na.rm=TRUE)
+  if (!is.finite(P_peak) || P_peak == 0) P_peak <- 1
+  y_lim_P <- P_peak * 1.1
+  # plot_semiclassical_resolution reads dt$rho_sympl; we pass the cross-
+  # section under that column name (it's the main solid curve) and use the
+  # explicit y_label parameter to display the correct axis label.
+  dt_P <- data.table(q=q_display, rho_sympl=P_cross)
 
-  schroedinger_overlay <- list(
-    list(
-      data      = data.frame(q = q_display, rho = psi_sq),
-      color     = "gray30",
-      linetype  = 11,
-      linewidth = 0.2
-    )
+  husimi_overlay <- list(
+    data      = data.frame(q = q_display, rho = Q_cross),
+    color     = "gray20",
+    linetype  = 11,
+    linewidth = 0.3
   )
+  overlays <- list(husimi_overlay)
 
   p_right <- plot_semiclassical_resolution(
-    dt_rho, q_lim=c(q_lo,q_hi), y_lim=y_lim_rho,
+    dt_P, q_lim=c(q_lo,q_hi), y_lim=y_lim_P,
     custom_breaks=custom_breaks_q,
     label_format=label_format, base_font=base_font,
-    overlays=schroedinger_overlay)
+    overlays=overlays,
+    y_label=expression(italic(P)[italic(delta*q)](italic(q)*","*0)))
 
   # Row label: quantum number, matching the semiclassical figure's convention.
   row_label <- sprintf("italic(n)==%d", n)
