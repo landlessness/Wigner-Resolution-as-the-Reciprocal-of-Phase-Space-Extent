@@ -57,13 +57,19 @@ husimi_kernel_matrix <- function(q_grid, p_grid) {
 #' @param q_center Center of the circle in q (orbit center).
 #' @return A list of ggplot layers (here: a single geom_circle).
 husimi_overlay_layers <- function(q_center=0) {
-  circle_data <- data.frame(x0=q_center, y0=0, r=1.0)
+  # Parametric path so the unit-circle line weight is respected on every
+  # ggforce/ggplot2 version. (Older ggforce builds silently drop linewidth
+  # on geom_circle.)
+  theta <- seq(0, 2*pi, length.out=361)
+  path_circle <- data.frame(q     = q_center + cos(theta),
+                            p     =             sin(theta),
+                            group = "husimi")
   list(
-    geom_circle(data=circle_data, aes(x0=x0, y0=y0, r=r),
-                inherit.aes=FALSE,
-                color="black",
-                linewidth=0.25,
-                linetype="solid")
+    geom_path(data=path_circle, aes(x=q, y=p, group=group),
+              inherit.aes=FALSE,
+              color="black",
+              linewidth=0.25,
+              linetype="solid")
   )
 }
 
