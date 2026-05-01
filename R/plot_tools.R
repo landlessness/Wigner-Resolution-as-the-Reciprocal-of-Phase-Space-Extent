@@ -105,7 +105,7 @@ plot_wigner_heatmap <- function(dt_w2d, overlay_layers, df_traj=NULL,
 
   if (!is.null(df_traj))
     p <- p + geom_path(data=df_traj, aes(x=q, y=p), inherit.aes=FALSE,
-                       color="gray30", linewidth=0.5, linetype="solid")
+                       color=HEATMAP_COLOR_HIGH, linewidth=0.3, linetype="solid")
 
   for (layer in overlay_layers) p <- p + layer
 
@@ -559,7 +559,7 @@ plot_semiclassical_resolution_split <- function(dt_sympl, dt_comp,
                switch="y",
                labeller=as_labeller(c(sympl=" ", comp=" "))) +
     scale_fill_manual(values=c(sympl=SEMICLASSICAL_RIBBON_FILL,
-                                comp =comp_fill),
+                               comp =comp_fill),
                       guide="none") +
     coord_cartesian(xlim=q_lim, expand=FALSE) +
     scale_x_continuous(breaks=custom_breaks, labels=label_format) +
