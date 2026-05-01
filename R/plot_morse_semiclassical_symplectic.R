@@ -2,10 +2,13 @@
 # plot_morse_semiclassical_symplectic.R
 # Main paper Fig. 2: Symplectic resolution of semiclassical caustics — Morse
 #
-# Three rows parametrized by Fermi-blob action capacity A/A_0:
-#   row 1: A_0       (ground-state-like; harmonic limit recovered)
-#   row 2: 17 A_0    (~equivalent to n=8 in the harmonic limit; mid-anharmonic)
-#   row 3: 33 A_0    (~equivalent to n=16; strongly anharmonic horseshoe)
+# Three rows indexed by quantum number n. The harmonic-limit identity
+# A/A_0 = 2n+1 gives nominal A/A_0 = 1, 17, 33 for n = 0, 8, 16, but Morse
+# anharmonicity makes A_orbit/A_0 deviate appreciably from 2n+1 at high n
+# (the orbit covariance is asymmetric, and the A_orbit(E) curve is bounded
+# above by a peak near but below dissociation). We therefore use n = 0, 8, 16
+# directly — same rows as the Wigner Morse figure — and label each row by
+# the actually-achieved A_orbit/A_0 from orbit_covariance().
 #
 # Three columns:
 #   Left:    regularized 2D energy shell heatmap with QoA overlay
@@ -13,9 +16,9 @@
 #   Right:   1D position density rho_{delta q}(q), the marginal of
 #            (W_cl * G_{delta q})
 #
-# The pipeline is Schroedinger-free: action capacity -> energy via
-# bisection on the orbit-derived A(E), then orbit moments give Delta_q,
-# Delta_p, hence the symplectic kernel widths. No wavefunction needed.
+# The pipeline is Schroedinger-free: quantum number -> Bohr-Sommerfeld
+# Morse energy E_n -> turning points -> orbit moments give Delta_q, Delta_p,
+# hence the symplectic kernel widths. No wavefunction needed.
 # ==============================================================================
 
 library(here)
@@ -36,28 +39,29 @@ dir_figures     <- here("figures")
 if (!dir.exists(dir_figures)) dir.create(dir_figures, recursive=TRUE)
 file_output_pdf <- file.path(dir_figures, "morse_semiclassical_symplectic.pdf")
 
-# Action-capacity levels for the three rows, in units of A_0 = h/2.
-# In the harmonic limit A/A_0 = 2n+1, so A_0, 17 A_0, 33 A_0 correspond
-# to n = 0, 8, 16 — same rows as the Wigner Morse figure.
-target_action_capacity_levels <- c(1, 17, 33)
+# Quantum numbers for the three rows. Same selection as the Wigner Morse
+# figure: ground state, mid-anharmonic, strongly anharmonic horseshoe.
+target_quantum_numbers <- c(0, 8, 16)
 
 # ------------------------------------------------------------------------------
 
-build_morse_row <- function(A_over_A0, base_font="") {
+build_morse_row <- function(n, base_font="") {
 
-  # Energy from action capacity by bisection on the orbit covariance.
-  E_n <- morse_E_at_action_capacity(A_over_A0)
+  # Bohr-Sommerfeld energy at quantum number n. For Morse the BS spectrum
+  # is exact, so E_n is also the analytic Schroedinger eigenvalue.
+  E_n <- morse_E_BS(n)
   tp  <- morse_turning_points(E_n)
   q_minus <- tp$q_minus
   q_plus  <- tp$q_plus
 
-  cat(sprintf("\n== A/A_0=%g | E_n=%.4f | q-=%.4f | q+=%.4f ==\n",
-              A_over_A0, E_n, q_minus, q_plus))
+  cat(sprintf("\n== n=%d | E_n=%.4f | q-=%.4f | q+=%.4f ==\n",
+              n, E_n, q_minus, q_plus))
 
   # Orbit-derived covariance sizes the symplectic kernel.
   cov <- orbit_covariance(morse_V, E_n, tp)
   cat(sprintf("  A_orbit/A0=%.4f | <q>=%.4f | Delta_q=%.3f Delta_p=%.3f\n",
               cov$A_over_A0, cov$q_mean, cov$Delta_q, cov$Delta_p))
+  cat(sprintf("  (harmonic-limit nominal A/A0 = 2n+1 = %d)\n", 2*n+1))
 
   # Display window — same convention as the Wigner Morse figure.
   q_center <- (q_plus + q_minus) / 2
@@ -111,8 +115,14 @@ build_morse_row <- function(A_over_A0, base_font="") {
   overlay_layers <- symplectic_overlay_layers(cov$Delta_q, cov$Delta_p,
                                               q_center=q_center)
 
+  # Row label: actually-achieved A_orbit/A_0 to two decimal places. This
+  # tells the reader the kinematic envelope size that the symplectic
+  # overlay is expressing — not the (inaccurate-for-Morse) harmonic-limit
+  # nominal value.
+  row_label <- sprintf("%.2f~italic(A)[0]", cov$A_over_A0)
+
   list(
-    sprintf("%g~italic(A)[0]", A_over_A0),
+    row_label,
     plot_semiclassical_heatmap(
       state$heatmap_dt, overlay_layers,
       q_lim=c(q_lo,q_hi), p_lim=c(p_lo,p_hi),
@@ -133,11 +143,11 @@ build_morse_row <- function(A_over_A0, base_font="") {
 }
 
 cat("Computing Morse semiclassical-symplectic grid...\n")
-rows    <- lapply(target_action_capacity_levels,
-                  function(A) build_morse_row(A, base_font=latex_font))
+rows    <- lapply(target_quantum_numbers,
+                  function(n) build_morse_row(n, base_font=latex_font))
 p_final <- assemble_grid(rows,
                          COLUMN_TITLE_CENTER_SEMICLASSICAL,
                          COLUMN_TITLE_RIGHT_SYMPLECTIC,
                          base_font=latex_font)
 
-save_figure(p_final, file_output_pdf, length(target_action_capacity_levels))
+save_figure(p_final, file_output_pdf, length(target_quantum_numbers))

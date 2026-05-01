@@ -130,22 +130,30 @@ G_delta_p_kernel_matrix <- function(q_grid, p_grid, Delta_q, Delta_p, hbar=1.0) 
 #' @return A list of three ggplot layers (one per ellipse).
 symplectic_overlay_layers <- function(Delta_q, Delta_p, q_center=0, hbar=1.0) {
   w <- symplectic_kernel_widths(Delta_q, Delta_p, hbar=hbar)
-  ellipse_A   <- data.frame(x0=q_center, y0=0, a=Delta_q,   b=Delta_p,   angle=0)
-  ellipse_a_q <- data.frame(x0=q_center, y0=0, a=w$delta_q, b=Delta_p,   angle=0)
-  ellipse_a_p <- data.frame(x0=q_center, y0=0, a=Delta_q,   b=w$delta_p, angle=0)
+  # Build ellipse paths directly with geom_path. Older ggforce versions on
+  # some R installs drop linewidth on geom_ellipse and warn about it; we
+  # construct the parametric paths ourselves so the line weights are
+  # respected exactly. Each path has its own group id so the three are
+  # rendered as separate closed curves.
+  theta <- seq(0, 2*pi, length.out=361)
+  ellipse_path <- function(a, b, group_id) {
+    data.frame(q     = q_center + a * cos(theta),
+               p     =            b * sin(theta),
+               group = group_id)
+  }
+  path_A   <- ellipse_path(Delta_q,   Delta_p,   "A")
+  path_a_q <- ellipse_path(w$delta_q, Delta_p,   "a_q")
+  path_a_p <- ellipse_path(Delta_q,   w$delta_p, "a_p")
   list(
-    geom_ellipse(data=ellipse_A,
-                 aes(x0=x0, y0=y0, a=a, b=b, angle=angle),
-                 inherit.aes=FALSE,
-                 color="black", linewidth=0.4, linetype="solid"),
-    geom_ellipse(data=ellipse_a_q,
-                 aes(x0=x0, y0=y0, a=a, b=b, angle=angle),
-                 inherit.aes=FALSE,
-                 color="black", linewidth=0.25, linetype="solid"),
-    geom_ellipse(data=ellipse_a_p,
-                 aes(x0=x0, y0=y0, a=a, b=b, angle=angle),
-                 inherit.aes=FALSE,
-                 color="black", linewidth=0.25, linetype="solid")
+    geom_path(data=path_A,   aes(x=q, y=p, group=group),
+              inherit.aes=FALSE,
+              color="black", linewidth=0.4,  linetype="solid"),
+    geom_path(data=path_a_q, aes(x=q, y=p, group=group),
+              inherit.aes=FALSE,
+              color="black", linewidth=0.25, linetype="solid"),
+    geom_path(data=path_a_p, aes(x=q, y=p, group=group),
+              inherit.aes=FALSE,
+              color="black", linewidth=0.25, linetype="solid")
   )
 }
 
