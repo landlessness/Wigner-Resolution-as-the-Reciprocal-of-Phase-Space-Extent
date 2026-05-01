@@ -271,7 +271,18 @@ plot_wkb_caustic_cross_section <- function(dt, q_lim, y_lim, custom_breaks,
                 color="black", linewidth=0.4)
   }
 
-  # Vertical infinity arrows at every turning point
+  # Vertical infinity arrows at turning points. Special handling: in the
+  # 4-turning-point sub-barrier case, if the inner pair is closer than a
+  # fraction of the panel width, two ∞ text labels would clash visually.
+  # In that case we still draw arrows at every turning point (the arrows
+  # mark physical caustic locations and cannot be moved), but collapse
+  # the inner pair's two labels into a single "∞" glyph centered between
+  # them in the forbidden barrier region. This is a typography choice for
+  # readability, not a physics one.
+  inner_label_clash <- length(turning_points) == 4 &&
+    (turning_points[3] - turning_points[2]) < 0.20 * diff(q_lim)
+
+  # Arrows: always at every turning point (physical caustic locations).
   for (tp_q in turning_points) {
     p <- p + annotate("segment", x=tp_q, xend=tp_q, y=0, yend=y_lim,
                       color="black", linewidth=0.4,
@@ -279,24 +290,34 @@ plot_wkb_caustic_cross_section <- function(dt, q_lim, y_lim, custom_breaks,
                                   ends="last", type="closed"))
   }
 
-  # Infinity text annotations: place each just outside its vertical line.
-  # For the leftmost arrow, label goes left of it; rightmost, right of it.
-  # For inner pairs (sub-barrier case), labels go on the outer side of
-  # each so they appear in the forbidden barrier region.
-  if (length(turning_points) >= 2) {
+  # Labels: usually at every turning point with hjust pushing the label
+  # outside (left or right) so it doesn't sit on the arrow itself.
+  # Exception: when the inner pair is too close to fit two labels, we
+  # emit a single centered label between them and skip the per-tp labels
+  # for tp[2] and tp[3].
+  if (inner_label_clash) {
+    # Outer two labels as usual
+    p <- p + annotate("text", x=turning_points[1], y=y_lim*0.92,
+                      label="infinity", parse=TRUE,
+                      color="black", size=4, hjust=1.3, family=base_font)
+    p <- p + annotate("text", x=turning_points[4], y=y_lim*0.92,
+                      label="infinity", parse=TRUE,
+                      color="black", size=4, hjust=-0.3, family=base_font)
+    # One centered ∞ label for the merged inner pair, sitting between
+    # the two inner arrows in the forbidden barrier region.
+    barrier_q <- 0.5 * (turning_points[2] + turning_points[3])
+    p <- p + annotate("text", x=barrier_q, y=y_lim*0.92,
+                      label="infinity", parse=TRUE,
+                      color="black", size=4, hjust=0.5, family=base_font)
+  } else if (length(turning_points) >= 2) {
     n_tp <- length(turning_points)
     for (k in seq_along(turning_points)) {
       tp_q <- turning_points[k]
-      # Determine "outside" direction:
-      # leftmost (k==1): outside = left  -> hjust = 1.3
-      # rightmost (k==n): outside = right -> hjust = -0.3
-      # inner-left (k==2 of 4): outside = right (toward forbidden zone) -> hjust = -0.3
-      # inner-right (k==3 of 4): outside = left  -> hjust = 1.3
-      if (k == 1)            hj <- 1.3
-      else if (k == n_tp)    hj <- -0.3
-      else if (k == 2 && n_tp == 4) hj <- -0.3
-      else if (k == 3 && n_tp == 4) hj <- 1.3
-      else                   hj <- 1.3
+      if (k == 1)                       hj <- 1.3
+      else if (k == n_tp)               hj <- -0.3
+      else if (k == 2 && n_tp == 4)     hj <- -0.3
+      else if (k == 3 && n_tp == 4)     hj <- 1.3
+      else                              hj <- 1.3
       p <- p + annotate("text", x=tp_q, y=y_lim*0.92,
                         label="infinity", parse=TRUE,
                         color="black", size=4, hjust=hj, family=base_font)
