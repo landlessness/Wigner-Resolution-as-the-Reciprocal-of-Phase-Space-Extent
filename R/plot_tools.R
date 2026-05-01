@@ -74,7 +74,7 @@ HEATMAP_COLOR_HIGH <- "gray55"
 # symplectic-resolved density). Matches the conventional gray-fill /
 # black-line look for non-negative probability densities; both panels
 # share this single constant so they stay visually consistent.
-SEMICLASSICAL_RIBBON_FILL <- "gray85"
+SEMICLASSICAL_RIBBON_FILL <- "gray60"
 
 ROW_LABEL_SIZE_PT <- 11
 # Row-label tag is RIGHT-aligned (hjust=1 in attach_row_tag), with its
@@ -417,8 +417,26 @@ plot_semiclassical_resolution <- function(dt, q_lim, y_lim, custom_breaks,
   y_labels <- c("0", sprintf("%.2g", rho_peak))
   p <- ggplot(dt, aes(x=q, y=rho_sympl)) +
     geom_ribbon(aes(ymin=0, ymax=pmax(rho_sympl,0)),
-                fill=SEMICLASSICAL_RIBBON_FILL, color=NA) +
-    geom_path(color="black", linewidth=0.4)
+                fill=SEMICLASSICAL_RIBBON_FILL, color=NA)
+
+  # Overlay fills are drawn after the symplectic ribbon (so they sit on
+  # top of it via alpha-blending) but before the symplectic line and the
+  # overlay lines (so those line elements remain on top of all fills).
+  # Each overlay may optionally specify `fill` (color) and `fill_alpha`
+  # (transparency 0-1); when omitted, no fill is drawn for that overlay.
+  if (!is.null(overlays)) {
+    for (ov in overlays) {
+      if (!is.null(ov$fill)) {
+        fa <- if (is.null(ov$fill_alpha)) 0.3 else ov$fill_alpha
+        p <- p + geom_ribbon(data=ov$data,
+                             aes(x=q, ymin=0, ymax=pmax(rho,0)),
+                             inherit.aes=FALSE,
+                             fill=ov$fill, color=NA, alpha=fa)
+      }
+    }
+  }
+
+  p <- p + geom_path(color="black", linewidth=0.4)
 
   if (!is.null(overlays)) {
     for (ov in overlays) {
@@ -440,6 +458,100 @@ plot_semiclassical_resolution <- function(dt, q_lim, y_lim, custom_breaks,
           axis.text=element_text(size=8),
           aspect.ratio=1, plot.margin=margin(2,2,2,2)) +
     labs(x=ax_x, y=ax_y)
+}
+
+# ------------------------------------------------------------------------------
+# SPLIT RIGHT-COLUMN: SYMPLECTIC (top, 80%) + COMPARATOR (bottom, 20%)
+#
+# Vertically stacks two ribbon plots sharing the q-axis:
+#   - top sub-panel: symplectic curve (the result), filled with the
+#     standard SEMICLASSICAL_RIBBON_FILL
+#   - bottom sub-panel: comparator curve (Husimi or Airy), filled with a
+#     lighter gray to signal subordinate visual role
+#
+# Each sub-panel has its own y-axis with independent scaling — the
+# comparison story is about shape, not amplitude (the prose handles
+# amplitude commentary). The bottom sub-panel renders the x-axis text
+# and title; the top sub-panel hides them so the two share a single
+# x-axis legend at the bottom.
+#
+# Returns a patchwork composition. Behaves like a ggplot when passed
+# through wrap_plots() in assemble_grid(); add_column_titles() and the
+# x/y title suppression helpers operate on it correctly.
+# ------------------------------------------------------------------------------
+
+#' Split right-column panel: symplectic on top, comparator on bottom.
+#'
+#' Implemented as a single ggplot with `facet_grid` (rather than patchwork)
+#' so all the existing layout machinery — column titles, axis-title
+#' suppression, aspect.ratio — operates on it without special handling.
+#' Each facet has its own y-axis range (via scales="free_y"); space="free"
+#' allocates row heights proportional to `panel_heights`.
+#'
+#' @param dt_sympl    data.table with columns q, rho_sympl (the main result).
+#' @param dt_comp     data.table with columns q, rho_comp (the comparator).
+#' @param q_lim       Shared x-axis limits.
+#' @param custom_breaks,label_format  X-axis tick spec.
+#' @param y_label_top    Expression or string for the top sub-panel y-label.
+#' @param y_label_bottom Expression or string for the bottom sub-panel y-label.
+#' @param base_font   Font family.
+#' @param comp_fill   Fill color for the comparator ribbon (default
+#'                    "gray85" — lighter than SEMICLASSICAL_RIBBON_FILL).
+#' @return A ggplot.
+plot_semiclassical_resolution_split <- function(dt_sympl, dt_comp,
+                                                q_lim,
+                                                custom_breaks, label_format,
+                                                y_label_top, y_label_bottom,
+                                                base_font="",
+                                                comp_fill="gray85") {
+  ax_x <- expression(italic(q)/italic(q)[0])
+
+  # Combine into a single data frame with a facet-key column. Each row's
+  # rho holds the appropriate density (symplectic or comparator). The
+  # facet column is an ordered factor with the symplectic facet first
+  # (top); facet_grid will respect this ordering.
+  df <- rbind(
+    data.frame(q=dt_sympl$q, rho=dt_sympl$rho_sympl,
+               facet="sympl", stringsAsFactors=FALSE),
+    data.frame(q=dt_comp$q,  rho=dt_comp$rho_comp,
+               facet="comp",  stringsAsFactors=FALSE)
+  )
+  df$facet <- factor(df$facet, levels=c("sympl", "comp"))
+
+  # Per-facet fill mapping. We use a manual scale_fill_manual so each
+  # facet gets its own ribbon fill color while sharing the same plot.
+  df$fill_key <- df$facet
+
+  # Per-facet y-axis labels via labeller. facet_grid uses strip text for
+  # facet labels; we hide the strip and use a y-axis title strategy
+  # instead — but facet_grid doesn't support per-facet y-axis titles
+  # natively. Workaround: place the labels via strip.text (rotated) on
+  # the left, with the strip styled to look like a y-axis label.
+  facet_labels <- c(sympl=as.character(deparse(y_label_top)),
+                    comp =as.character(deparse(y_label_bottom)))
+
+  ggplot(df, aes(x=q, y=rho, fill=fill_key)) +
+    geom_ribbon(aes(ymin=0, ymax=pmax(rho,0)), color=NA) +
+    geom_path(color="black", linewidth=0.4) +
+    facet_grid(facet ~ .,
+               scales="free_y", space="fixed",
+               switch="y",
+               labeller=as_labeller(c(sympl=" ", comp=" "))) +
+    scale_fill_manual(values=c(sympl=SEMICLASSICAL_RIBBON_FILL,
+                                comp =comp_fill),
+                      guide="none") +
+    coord_cartesian(xlim=q_lim, expand=FALSE) +
+    scale_x_continuous(breaks=custom_breaks, labels=label_format) +
+    theme_bw(base_family=base_font) +
+    theme(panel.grid.minor=element_blank(),
+          axis.text=element_text(size=8),
+          strip.background=element_blank(),
+          strip.placement="outside",
+          strip.text.y.left=element_blank(),
+          panel.spacing.y=unit(2, "pt"),
+          aspect.ratio=NULL,
+          plot.margin=margin(2,2,2,2)) +
+    labs(x=ax_x, y=NULL)
 }
 
 # ------------------------------------------------------------------------------
