@@ -30,9 +30,18 @@ morse_turning_points <- function(E_n) {
        q_plus  = -log(1 - sqrt(E_n/De)) / alpha)
 }
 
-# Schroedinger solver grid parameters
-MORSE_Q_MIN    <- -2.0
-MORSE_Q_MAX    <- 50.0
+# Schroedinger solver grid parameters.
+# The left boundary q_min must be chosen so that V(q_min) substantially
+# exceeds the highest bound-state energy of interest (D_e = 12.5 here).
+# For Morse, V(q) = D_e*(1-e^{-alpha*q})^2 grows exponentially for q<0:
+#   V(-5)  = D_e*(1-e^1)^2  ≈ 36.9
+#   V(-10) = D_e*(1-e^2)^2  ≈ 510
+# At q_min=-10 the wavefunction is rejected by an effectively infinite
+# wall and the spectrum matches the analytic Morse formula to ~1e-4.
+# (Earlier value q_min=-2 had V(-2)≈3, leaking states with E>3 through
+# the left boundary and shifting their energies by ~5%.)
+MORSE_Q_MIN    <- -10.0
+MORSE_Q_MAX    <-  20.0
 MORSE_DQ       <-  0.01
 MORSE_N_STATES <- 18
 
