@@ -180,11 +180,13 @@ Figure~\ref{fig:morse_wigner_symplectic} shows three states: the ground state ($
 \begin{figure}[t!]
 \centering
 \includegraphics[width=\linewidth]{figures/morse_semiclassical_symplectic.pdf}
-\caption{\textbf{Morse potential, semiclassical.} Same eigenstates as Fig.~\ref{fig:morse_wigner_symplectic}. \textit{Left:} Regularized 2D classical energy shell with the symplectic quantum of action overlaid; the shell deforms from circle ($n=0$) to horseshoe ($n=16$) as the orbit explores the soft-wall region. The kernel structure is drawn centered on the orbit; the convolution is translation-invariant. \textit{Center:} Analytical WKB density, asymmetric across the orbit because the period spends more time near the slow soft-wall turning point. The divergences at both turning points are rendered as infinity arrows. \textit{Right:} Symplectic resolution $\rho_{\delta q}(q)$. The infinities are replaced by finite peaks; the soft-wall accumulation is preserved as a higher peak on the right, faithfully tracking the classical $1/p(q)$ distribution away from the turning points.}
+\caption{\textbf{Morse potential, semiclassical.} Same eigenstates as Fig.~\ref{fig:morse_wigner_symplectic}. \textit{Left:} Classical orbit at energy $E_n$ with the symplectic quantum of action overlaid; the orbit deforms from circle ($n=0$) to horseshoe ($n=16$) as it explores the soft-wall region. The kernel structure is drawn centered on the orbit; the convolution is translation-invariant. \textit{Center:} Oscillating WKB density $|\psi_\text{WKB}(q)|^2 = (A^2/p)\cos^2(S/\hbar - \pi/4)$, with $n+1$ interference lobes between the turning points (Bohr--Sommerfeld phase advances by $\pi(n+1/2)$ over the half-orbit) and divergences at the turning points where $p \to 0$, rendered as infinity arrows. \textit{Right:} Symplectic resolution $\rho_{\delta q}(q)$ with the exact Schr\"odinger density $|\psi_n(q)|^2$ overlaid (gray). The $n+1$ oscillation lobes are preserved; the divergences are replaced by finite peaks. The Schr\"odinger overlay shows higher peaks and deeper troughs than $\rho_{\delta q}$ at every $n$ because $|\psi_n|^2$ is evaluated at infinite position resolution; the symplectic resolution reports the same density coarse-grained at the orbit's natural scale $\delta q = \hbar/\Delta p$ (see body text).}
 \label{fig:morse_semiclassical_symplectic}
 \end{figure}
 
-Figure~\ref{fig:morse_semiclassical_symplectic} demonstrates that the symplectic resolution captures the asymmetric classical dwell-time distribution that defines Morse semiclassics. Where the harmonic-oscillator caustic was symmetric, the Morse caustic is dramatically lopsided: the classical particle spends much longer near the soft-wall turning point than the steep-wall one, and the WKB density correspondingly accumulates more probability there. Both features --- the asymmetry and the divergences --- are preserved by the symplectic kernel, which adapts its anisotropy to the state's classical envelope while bounding the divergences via $\Delta p$.
+Figure~\ref{fig:morse_semiclassical_symplectic} demonstrates that the symplectic resolution preserves the $n+1$ quantum interference lobes of $|\psi_\text{WKB}|^2$ while replacing the turning-point divergences with finite peaks. The Morse anharmonicity is preserved on both axes: the lobe envelope is asymmetric (the period spends longer near the slow soft-wall turning point, so the WKB envelope $1/p(q)$ accumulates more amplitude there), and the symplectic kernel inherits this anisotropy by adapting its $\delta q$ to the state's $\Delta p$.
+
+The exact Schr\"odinger density (gray overlay in the right column) shows higher peaks and deeper troughs than the symplectic resolution at every $n$. This is expected, not approximation error: $|\psi_n|^2$ is evaluated at infinite position resolution, which by Heisenberg requires unbounded momentum spread. The symplectic resolution sets a finite scale $\delta q = \hbar/\Delta p$ fixed by the orbit's own moments, saturating the symplectic-capacity bound at $h/2$ \cite{degosson2009,gromov1985}; the resulting density is the $|\psi_n|^2$ content coarse-grained at the finest resolution any physical state of this orbit can support.
 
 \subsection{Double-Well Potential}
 
@@ -214,25 +216,21 @@ Figure~\ref{fig:double_well_semiclassical_symplectic} provides a sharp test of w
 
 The contrast with Fig.~\ref{fig:double_well_wigner_symplectic} demonstrates that the symplectic kernel is not introducing artifacts: it preserves quantum coherence when given quantum input, and produces classical-with-resolution when given classical input. Both pictures together show the kernel honestly represents whatever density structure it convolves.
 
-\subsection{Tunneling as Kinematic Shadow}
+\subsection{Tunneling}
 \label{sec:tunneling}
 
-\emph{[Working draft --- this section needs revision against the double-well semiclassical figure once it is updated to overlay $|\psi_0|^2$ and Husimi.]}
+The double-well's lowest eigenstate has its action capacity $A$ spanning both wells coherently while the classical orbit decomposes into two disconnected loops. The Robertson--Schr\"odinger covariance reports a single $\Delta q$ that envelops both wells regardless of orbit connectivity; the kernel widths $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$ follow from this delocalized covariance. Figure~\ref{fig:tunneling_symplectic} compares the symplectic resolution of Wigner and classical input against $|\psi_0|^2$ and $P_\text{WKB}$ on a logarithmic scale.
 
-The symplectic resolution of classical input, $\rho_{\delta q}^\text{cl}(q)$, is non-zero in the classically forbidden barrier region. This is not a numerical artifact: the kernel width $\delta q = \hbar/\Delta p$ is set by the state's full momentum spread, which for a tunneling doublet is large enough that $\delta q$ is comparable to or smaller than the barrier width. The Heisenberg-mandated position spread of a state with given momentum content leaks across the barrier, producing a kinematic shadow of tunneling from purely classical input.
+\begin{figure}[t!]
+\centering
+\includegraphics[width=\linewidth]{figures/tunneling_symplectic.pdf}
+\caption{\textbf{Tunneling, symplectic resolution.} Lowest eigenstate of the double-well, $n=0$. Position on horizontal axis; density on logarithmic vertical axis; faint $V(q)$ in the background; vertical dotted lines mark the four classical turning points. \textit{Black solid:} symplectic resolution of Wigner input, $\rho_{\delta q}^\text{Wigner}(q) = \int (W * G_{\delta q})\, dp$. \textit{Black dashed:} symplectic resolution of classical input, $\rho_{\delta q}^\text{cl}(q) = \int (W_\text{cl} * G_{\delta q})\, dp$. \textit{Gray solid:} exact wavefunction density $|\psi_0(q)|^2$. \textit{Gray dot-dashed:} WKB density $P_\text{WKB}(q)$, identically zero in the classically forbidden barrier region. In the barrier interior the three densities order as $\rho_{\delta q}^\text{Wigner}(q) > |\psi_0(q)|^2 > \rho_{\delta q}^\text{cl}(q)$. The Wigner-input curve lies above $|\psi_0|^2$ because convolution at scale $\delta q$ broadens the wavefunction's exponential tails. The classical-input curve lies below $|\psi_0|^2$ because $W_\text{cl}$ has zero density in the barrier and the kernel's Gaussian tails decay faster than the quantum exponential. The exact density is bracketed between the two symplectic resolutions; their separation is the barrier-region signature of inter-well coherence preserved by the Wigner function and absent from $W_\text{cl}$.}
+\label{fig:tunneling_symplectic}
+\end{figure}
 
-This is distinct from dynamical tunneling. The functional form of the leakage is Gaussian, set by $\delta q$, not exponential, set by the WKB barrier integral $\kappa = \sqrt{2(V-E)}$. The decay rates do not match, and no phase coherence between wells is reproduced --- the classical input contains no phase information. What the construction captures is the kinematic prerequisite for tunneling: that a state confined within action capacity $A$ must have non-zero density wherever $\delta q$ reaches.
+Outside the barrier, all curves track the well-region peaks. Inside the barrier the symplectic resolution orders the densities as $\rho_{\delta q}^\text{Wigner}(q) > |\psi_0(q)|^2 > \rho_{\delta q}^\text{cl}(q)$. The Wigner-input resolution lies above the exact density because convolution at scale $\delta q$ broadens the wavefunction's exponential decay. The classical-input resolution lies below the exact density because $W_\text{cl}$ has zero support in the barrier and the kernel's Gaussian tails decay faster than the quantum exponential. The exact density is bracketed between the two symplectic resolutions; their separation isolates the inter-well coherence that distinguishes $W$ from $W_\text{cl}$. WKB has no support in the barrier at all.
 
-The gap between $\rho_{\delta q}^\text{Wigner}(q)$ and $\rho_{\delta q}^\text{cl}(q)$ in the barrier region therefore has a cleaner physical meaning than the previous draft assigned to it: it is specifically the coherence and phase contribution to tunneling, separated from the kinematic Heisenberg contribution that even classical input reproduces. The exact density $|\psi_0(q)|^2$ is bracketed between the two: kinematic shadow below, Wigner-coherence-broadened above.
-
-\paragraph*{Open questions for revision.}
-\begin{itemize}
-  \item How quantitative is the kinematic-shadow / true-tunneling correspondence? Compare the $\delta q$-Gaussian decay against $e^{-\kappa q}$ for the $n=0$ doublet.
-  \item Does the bracketing of $|\psi_0|^2$ hold across the doublet ($n=0, 1$) and break for higher states where $\delta q$ exceeds the barrier width?
-  \item Is ``kinematic shadow of tunneling'' the right phrase, or does the de~Gosson / Zurek literature offer a tighter term?
-\end{itemize}
-
-This subsection should resolve to one paragraph plus an inline reference to the revised double-well semiclassical figure (overlaying $|\psi_0|^2$ and Husimi on the right column). No separate tunneling figure.
+The Husimi resolution at the same eigenstate (Appendix, Fig.~\ref{fig:tunneling_husimi}) preserves the sign of the Wigner/classical separation but not its magnitude or the bracketing of $|\psi_0|^2$. Both Husimi curves lie above the exact density with reduced Wigner/classical separation: the kernel width $q_0$ exceeds $\delta q$ for this state, broadening both inputs to the same scale and compressing the formalism-dependent structure that the symplectic kernel resolves.
 
 \section{Discussion}
 
@@ -291,13 +289,6 @@ The Husimi Q-function applies a fixed coherent-state kernel of unit width in bot
 \includegraphics[width=\linewidth]{figures/double_well_semiclassical_husimi.pdf}
 \caption{\textbf{Double-well potential, Husimi (classical input).} Same eigenstates as Fig.~\ref{fig:double_well_semiclassical_symplectic}. The Husimi unit circle sits in the classically forbidden barrier region for sub-barrier states ($n=0, 2$), producing a single broad envelope that flattens the well structure as $n$ grows. By $n=2$ the resolved density is essentially a single mound with no separation between the wells, and by $n=7$ the interior caustic feature visible in the symplectic version (Fig.~\ref{fig:double_well_semiclassical_symplectic}) has been smoothed away entirely. The kernel-capacity mismatch is more severe here than for the harmonic or Morse potentials because the barrier introduces an additional sub-orbit length scale that the unit-width kernel cannot resolve.}
 \label{fig:double_well_semiclassical_husimi}
-\end{figure}
-
-\begin{figure}[t!]
-\centering
-\includegraphics[width=\linewidth]{figures/tunneling_husimi.pdf}
-\caption{\textbf{Tunneling, Husimi resolution.} Same lowest eigenstate of the double-well as Fig.~\ref{fig:tunneling_symplectic}. \textit{Black solid:} Husimi resolution of Wigner input, $\rho_Q^\text{Wigner}(q)$. \textit{Black dashed:} Husimi resolution of classical input, $\rho_Q^\text{cl}(q)$. \textit{Gray solid:} exact wavefunction density $|\psi_0(q)|^2$. \textit{Gray dot-dashed:} WKB density $P_\text{WKB}(q)$. In the barrier interior the ordering is $\rho_Q^\text{Wigner}(q) > \rho_Q^\text{cl}(q) > |\psi_0(q)|^2$: both Husimi resolutions lie above the exact density rather than bracketing it, and the Wigner/classical separation is reduced relative to Fig.~\ref{fig:tunneling_symplectic}. The fixed kernel width $q_0$ exceeds $\delta q$ for this state, broadening both inputs to the same scale and compressing the formalism-dependent separation that the symplectic kernel resolves.}
-\label{fig:tunneling_husimi}
 \end{figure}
 
 \bibliography{main}
