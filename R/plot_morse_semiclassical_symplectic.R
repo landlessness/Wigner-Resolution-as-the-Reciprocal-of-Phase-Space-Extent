@@ -180,8 +180,8 @@ build_morse_row <- function(n, base_font="") {
   airy_overlay <- list(
     list(
       data       = data.frame(q = q_display, rho = rho_airy),
-      color      = "gray70",
-      linewidth  = 0.3
+      color      = "gray30",
+      linewidth  = 0.35
     )
   )
 
