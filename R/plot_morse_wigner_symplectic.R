@@ -160,41 +160,27 @@ build_morse_row <- function(n, base_font="") {
     label_format=label_format, base_font=base_font)
 
   # RIGHT: P_{delta q}(q, 0) cross-section, non-negative.
-  # Use plot_semiclassical_resolution with an explicit cross-section y-label
-  # — the helper's rendering logic (positive-only y range, ribbon fill,
-  # native overlay support) is exactly what we want for a non-negative
-  # cross-section, but the default y-label refers to the marginal
-  # rho_{delta q}(q). We pass an expression for the cross-section label
-  # P_{delta q}(q, 0) so the panel reads correctly.
-  #
-  # The Husimi cross-section Q(q, 0) is overlaid as a dotted gray line.
-  # Husimi and symplectic differ only by kernel: same input W, same
-  # cross-section extraction, different kernel widths. The visual contrast
-  # tells the kernel-capacity story for this row directly on the resolved
-  # panel: the symplectic kernel's orbit-derived widths preserve interior
-  # structure that the fixed-width Husimi kernel smooths.
+  # Husimi cross-section overlaid with semi-transparent fill so the
+  # kernel-capacity contrast is visible: where Husimi extends beyond the
+  # symplectic peaks, a lighter-gray fill region is visible above the
+  # symplectic ribbon. The dashed line marks the upper boundary of the
+  # Husimi fill.
   #
   # We do NOT overlay |psi_n|^2 here. |psi_n|^2 is the q-marginal of W,
   # not a cross-section, so it would be a different kind of object on the
   # same axes. The resolution-vs-|psi|^2 story belongs in the semiclassical
   # figure, whose right column is naturally a marginal.
-
-  # y-limit: max of both cross-sections so neither curve clips at the
-  # panel top. Convention required by plot_semiclassical_resolution:
-  # y_lim = peak * 1.1.
   P_peak <- max(c(P_cross, Q_cross), na.rm=TRUE)
   if (!is.finite(P_peak) || P_peak == 0) P_peak <- 1
   y_lim_P <- P_peak * 1.1
-  # plot_semiclassical_resolution reads dt$rho_sympl; we pass the cross-
-  # section under that column name (it's the main solid curve) and use the
-  # explicit y_label parameter to display the correct axis label.
   dt_P <- data.table(q=q_display, rho_sympl=P_cross)
 
   husimi_overlay <- list(
-    data      = data.frame(q = q_display, rho = Q_cross),
-    color     = "gray20",
-    linetype  = 11,
-    linewidth = 0.3
+    data       = data.frame(q = q_display, rho = Q_cross),
+    color      = "gray70",
+    linewidth  = 0.2,
+    fill       = "gray85",
+    fill_alpha = 0.5
   )
   overlays <- list(husimi_overlay)
 

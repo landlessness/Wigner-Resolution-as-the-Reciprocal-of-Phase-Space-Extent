@@ -124,12 +124,10 @@ build_morse_row <- function(n, base_font="") {
   # airy_uniform.R for the construction details and citation chain.
   rho_airy <- airy_uniform_density(q_display, E_n, morse_V, tp)
 
-  # Y-scaling, independent per column.
-  # Right column: peak (max of symplectic and overlay densities) fills
-  # (GOLDEN_FILL + 0.2) of vertical.
-  rho_peak  <- max(c(rho_sympl, rho_airy), na.rm=TRUE)
-  y_lim_rho <- rho_peak / (GOLDEN_FILL + 0.2)
-
+  # Y-scaling for middle column. The right-column scaling is handled
+  # internally by plot_semiclassical_resolution_split (independent y-axes
+  # for the two sub-panels).
+  #
   # Middle column: y_lim is driven by the peak of the oscillating
   # |psi_WKB|^2 within the orbit (excluding the divergent cells right
   # at the turning points, which are rendered separately by the
@@ -159,6 +157,11 @@ build_morse_row <- function(n, base_font="") {
   dt_caustic <- data.table(q=q_display, wkb_density=state$wkb_density)
   dt_rho     <- data.table(q=q_display, rho_sympl=rho_sympl)
 
+  # Y-scaling for the right column: include both symplectic and the
+  # Airy overlay in the peak so neither curve clips at the panel top.
+  rho_peak  <- max(c(rho_sympl, rho_airy), na.rm=TRUE)
+  y_lim_rho <- rho_peak / (GOLDEN_FILL + 0.2)
+
   # QoA overlay (centered on orbit, same as Wigner figure).
   overlay_layers <- symplectic_overlay_layers(cov$Delta_q, cov$Delta_p,
                                               q_center=q_center)
@@ -176,10 +179,11 @@ build_morse_row <- function(n, base_font="") {
   # alternative *of the same kind*.
   airy_overlay <- list(
     list(
-      data      = data.frame(q = q_display, rho = rho_airy),
-      color     = "gray20",
-      linetype  = 11,
-      linewidth = 0.3
+      data       = data.frame(q = q_display, rho = rho_airy),
+      color      = "gray70",
+      linewidth  = 0.3 #,
+      # fill       = "gray85",
+      # fill_alpha = 0.5
     )
   )
 
@@ -201,11 +205,6 @@ build_morse_row <- function(n, base_font="") {
       custom_breaks_p=custom_breaks_p,
       label_format=label_format, base_font=base_font,
       overlay_layers=overlay_layers,
-      # De-emphasize the orbit so the QoA overlay reads as the primary
-      # content. Same gray (HEATMAP_COLOR_HIGH = "gray55") used by the
-      # earlier heatmap saturation peak — the eye sees the same orbit
-      # weight either way, but the line form is honest about the orbit
-      # being a 1D curve rather than a 2D regularized band.
       orbit_color=HEATMAP_COLOR_HIGH,
       orbit_linewidth=0.3),
     plot_wkb_caustic_cross_section(
