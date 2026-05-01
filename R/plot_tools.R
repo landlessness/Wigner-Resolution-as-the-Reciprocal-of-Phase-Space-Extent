@@ -23,10 +23,12 @@ library(patchwork)
 # ------------------------------------------------------------------------------
 
 COLUMN_TITLE_LEFT                 <- "Phase-Space Cells"
+COLUMN_TITLE_LEFT_ORBIT           <- "Classical Orbit"
 COLUMN_TITLE_CENTER_WIGNER        <- "Wigner Negativity"
 COLUMN_TITLE_CENTER_SEMICLASSICAL <- "Semiclassical Caustics"
 COLUMN_TITLE_RIGHT_HUSIMI         <- "Husimi Resolution"
 COLUMN_TITLE_RIGHT_SYMPLECTIC     <- "Symplectic Resolution"
+COLUMN_TITLE_RIGHT_AIRY           <- "Airy Approximation"
 
 # Compass-figure-specific labels (used by assemble_compass.R).
 # The compass figure has a different column structure than the original
@@ -43,7 +45,10 @@ FIGURE_WIDTH_IN <- 7.5
 ROW_HEIGHT_IN   <- 1.8
 FIGURE_PAD_IN   <- 0.5
 
-HEATMAP_LEFT_MARGIN_PT <- 80
+# Left margin reserved for the row-label tag. Sized to fit the longest
+# expected label (e.g. "25.38 A_0") at ROW_LABEL_SIZE_PT in a serif body
+# font, with a small gutter to the panel.
+HEATMAP_LEFT_MARGIN_PT <- 65
 
 # Wigner colormap: asymmetric diverging (gray20 negative -> white zero -> gray5 positive)
 HEATMAP_COLOR_NEG  <- "gray20"
@@ -57,12 +62,27 @@ HEATMAP_COLOR_POS  <- "gray5"
 # single sliver and needs to be subtle to avoid overwhelming the curve.
 CROSS_RIBBON_NEG_FILL <- "gray80"
 
-# Semiclassical colormap: non-negative, single direction
+# Semiclassical colormap: non-negative, single direction. The "high" stop
+# is a mid-gray rather than near-black so that the QoA overlay lines (drawn
+# in true black) read clearly on top of the energy shell. The shell is
+# the *trajectory* — secondary to the QoA structure, which is the figure's
+# physical message — so it visually recedes.
 HEATMAP_COLOR_LOW  <- "white"
-HEATMAP_COLOR_HIGH <- "gray10"
+HEATMAP_COLOR_HIGH <- "gray55"
+
+# Semiclassical 1D-density ribbon fill (middle WKB caustic and right
+# symplectic-resolved density). Matches the conventional gray-fill /
+# black-line look for non-negative probability densities; both panels
+# share this single constant so they stay visually consistent.
+SEMICLASSICAL_RIBBON_FILL <- "gray85"
 
 ROW_LABEL_SIZE_PT <- 11
-TAG_X_NPC <- -0.18
+# Row-label tag is RIGHT-aligned (hjust=1 in attach_row_tag), with its
+# right edge anchored at TAG_X_NPC (npc within the panel). With right
+# alignment, the *trailing* element of the label (e.g. "A_0") column-
+# aligns vertically across rows regardless of label length, while the
+# leading numeric digit grows leftward into the margin gutter.
+TAG_X_NPC <- -0.05
 TAG_Y_NPC <-  0.5
 
 # ------------------------------------------------------------------------------
@@ -221,7 +241,7 @@ identify_allowed_segments <- function(wkb_density) {
 plot_wkb_caustic_cross_section <- function(dt, q_lim, y_lim, custom_breaks,
                                            label_format, base_font="", ...) {
   ax_x <- expression(italic(q)/italic(q)[0])
-  ax_y <- expression(italic(P)[WKB](italic(q)))
+  ax_y <- expression(group("|", italic(psi)[WKB](italic(q)), "|")^2)
 
   # Auto-detect turning points from the data
   turning_points <- detect_wkb_turning_points(dt$q, dt$wkb_density)
@@ -245,7 +265,7 @@ plot_wkb_caustic_cross_section <- function(dt, q_lim, y_lim, custom_breaks,
     p <- p +
       geom_ribbon(data=dt_seg[is.finite(wkb_density)],
                   aes(x=q, ymin=0, ymax=wkb_capped),
-                  fill="gray85", color=NA) +
+                  fill=SEMICLASSICAL_RIBBON_FILL, color=NA) +
       geom_path(data=dt_seg[is.finite(wkb_density) & wkb_density <= clip_y],
                 aes(x=q, y=wkb_density),
                 color="black", linewidth=0.4)
@@ -283,13 +303,32 @@ plot_wkb_caustic_cross_section <- function(dt, q_lim, y_lim, custom_breaks,
     }
   }
 
+  # Y-tick labels for the (possibly oscillating) WKB density:
+  # - 0 at bottom (the curve dips to 0 at every cos^2 zero for the
+  #   oscillating density; for the smooth caustic, 0 is also the
+  #   forbidden-region value).
+  # - the peak amplitude of the curve below y_lim (the largest finite
+  #   value the renderer will actually show — gives the reader a
+  #   concrete amplitude scale before the curve runs into the
+  #   infinity arrows at the turning points).
+  finite_dens <- dt$wkb_density[is.finite(dt$wkb_density) & dt$wkb_density > 0
+                                & dt$wkb_density < y_lim]
+  peak_below  <- if (length(finite_dens) > 0) max(finite_dens, na.rm=TRUE) else NA
+  if (is.finite(peak_below)) {
+    y_breaks <- c(0, peak_below)
+    y_labels <- c("0", sprintf("%.2g", peak_below))
+  } else {
+    y_breaks <- c(0)
+    y_labels <- c("0")
+  }
+
   p +
     coord_cartesian(xlim=q_lim, ylim=c(0,y_lim), expand=FALSE) +
     scale_x_continuous(breaks=custom_breaks, labels=label_format) +
+    scale_y_continuous(breaks=y_breaks, labels=y_labels) +
     theme_bw(base_family=base_font) +
     theme(panel.grid.minor=element_blank(),
           axis.text=element_text(size=8),
-          axis.text.y=element_blank(), axis.ticks.y=element_blank(),
           aspect.ratio=1, plot.margin=margin(2,2,2,2)) +
     labs(x=ax_x, y=ax_y)
 }
@@ -342,19 +381,59 @@ plot_symplectic_cross_section <- function(dt, q_lim, y_lim, custom_breaks, label
 # 2D shell over p. Always non-negative.
 # ------------------------------------------------------------------------------
 
-plot_semiclassical_resolution <- function(dt, q_lim, y_lim, custom_breaks, label_format, base_font="") {
+#' Right-column symplectic-resolved density, with optional comparator
+#' overlay curves.
+#'
+#' Each overlay is drawn on top of the ribbon and main symplectic curve.
+#' Used to compare the symplectic resolution against ground-truth
+#' (Schroedinger exact) and prior-art (Airy uniform) densities.
+#'
+#' @param dt           data.table with columns q, rho_sympl
+#' @param q_lim,y_lim  axis limits
+#' @param custom_breaks,label_format  x-axis ticks
+#' @param base_font    font family
+#' @param overlays     OPTIONAL list of named lists, each with fields:
+#'                       data:      data.frame with columns q, rho
+#'                       linetype:  ggplot linetype string ("dashed", ...)
+#'                       color:     line color
+#'                       linewidth: line weight
+plot_semiclassical_resolution <- function(dt, q_lim, y_lim, custom_breaks,
+                                          label_format, base_font="",
+                                          overlays=NULL) {
   ax_x <- expression(italic(q)/italic(q)[0])
   ax_y <- expression(rho[italic(delta*q)](italic(q)))
-  ggplot(dt, aes(x=q, y=rho_sympl)) +
+  # Y-tick label uses the maximum of all rendered curves (symplectic +
+  # any overlays), so the displayed peak number actually reflects what
+  # the reader sees on the plot.
+  rho_peak <- max(dt$rho_sympl, na.rm=TRUE)
+  if (!is.null(overlays)) {
+    for (ov in overlays) rho_peak <- max(rho_peak, max(ov$data$rho, na.rm=TRUE))
+  }
+  y_breaks <- c(0, rho_peak)
+  y_labels <- c("0", sprintf("%.2g", rho_peak))
+  p <- ggplot(dt, aes(x=q, y=rho_sympl)) +
     geom_ribbon(aes(ymin=0, ymax=pmax(rho_sympl,0)),
-                fill=HEATMAP_COLOR_POS, color=NA) +
-    geom_path(color="black", linewidth=0.4) +
+                fill=SEMICLASSICAL_RIBBON_FILL, color=NA) +
+    geom_path(color="black", linewidth=0.4)
+
+  if (!is.null(overlays)) {
+    for (ov in overlays) {
+      lt <- if (is.null(ov$linetype)) "solid" else ov$linetype
+      p <- p + geom_path(data=ov$data, aes(x=q, y=rho),
+                         inherit.aes=FALSE,
+                         color=ov$color,
+                         linewidth=ov$linewidth,
+                         linetype=lt)
+    }
+  }
+
+  p +
     coord_cartesian(xlim=q_lim, ylim=c(0,y_lim), expand=FALSE) +
     scale_x_continuous(breaks=custom_breaks, labels=label_format) +
+    scale_y_continuous(breaks=y_breaks, labels=y_labels) +
     theme_bw(base_family=base_font) +
     theme(panel.grid.minor=element_blank(),
           axis.text=element_text(size=8),
-          axis.text.y=element_blank(), axis.ticks.y=element_blank(),
           aspect.ratio=1, plot.margin=margin(2,2,2,2)) +
     labs(x=ax_x, y=ax_y)
 }
@@ -368,17 +447,110 @@ plot_semiclassical_resolution <- function(dt, q_lim, y_lim, custom_breaks, label
 plot_semiclassical_husimi_resolution <- function(dt, q_lim, y_lim, custom_breaks, label_format, base_font="") {
   ax_x <- expression(italic(q)/italic(q)[0])
   ax_y <- expression(rho[italic(Q)](italic(q)))
+  rho_peak <- max(dt$rho_husimi, na.rm=TRUE)
+  y_breaks <- c(0, rho_peak)
+  y_labels <- c("0", sprintf("%.2g", rho_peak))
   ggplot(dt, aes(x=q, y=rho_husimi)) +
     geom_ribbon(aes(ymin=0, ymax=pmax(rho_husimi,0)),
-                fill=HEATMAP_COLOR_POS, color=NA) +
+                fill=SEMICLASSICAL_RIBBON_FILL, color=NA) +
     geom_path(color="black", linewidth=0.4) +
     coord_cartesian(xlim=q_lim, ylim=c(0,y_lim), expand=FALSE) +
     scale_x_continuous(breaks=custom_breaks, labels=label_format) +
+    scale_y_continuous(breaks=y_breaks, labels=y_labels) +
     theme_bw(base_family=base_font) +
     theme(panel.grid.minor=element_blank(),
           axis.text=element_text(size=8),
-          axis.text.y=element_blank(), axis.ticks.y=element_blank(),
           aspect.ratio=1, plot.margin=margin(2,2,2,2)) +
+    labs(x=ax_x, y=ax_y)
+}
+
+# ------------------------------------------------------------------------------
+# SEMICLASSICAL RIGHT-COLUMN (Airy variant): rho_Airy(q)
+# 1D position density from the Berry-Mount/Langer uniform Airy
+# approximation. Always non-negative; replaces the WKB caustic divergence
+# at turning points with a finite Airy-function lobe. Same overlay
+# protocol as plot_semiclassical_resolution: pass `overlays` to draw a
+# Schroedinger ground-truth or other comparator on top.
+# ------------------------------------------------------------------------------
+
+plot_airy_resolution <- function(dt, q_lim, y_lim, custom_breaks,
+                                 label_format, base_font="",
+                                 overlays=NULL) {
+  ax_x <- expression(italic(q)/italic(q)[0])
+  ax_y <- expression(rho[Airy](italic(q)))
+  rho_peak <- max(dt$rho_airy, na.rm=TRUE)
+  if (!is.null(overlays)) {
+    for (ov in overlays) rho_peak <- max(rho_peak, max(ov$data$rho, na.rm=TRUE))
+  }
+  y_breaks <- c(0, rho_peak)
+  y_labels <- c("0", sprintf("%.2g", rho_peak))
+  p <- ggplot(dt, aes(x=q, y=rho_airy)) +
+    geom_ribbon(aes(ymin=0, ymax=pmax(rho_airy,0)),
+                fill=SEMICLASSICAL_RIBBON_FILL, color=NA) +
+    geom_path(color="black", linewidth=0.4)
+
+  if (!is.null(overlays)) {
+    for (ov in overlays) {
+      lt <- if (is.null(ov$linetype)) "solid" else ov$linetype
+      p <- p + geom_path(data=ov$data, aes(x=q, y=rho),
+                         inherit.aes=FALSE,
+                         color=ov$color,
+                         linewidth=ov$linewidth,
+                         linetype=lt)
+    }
+  }
+
+  p +
+    coord_cartesian(xlim=q_lim, ylim=c(0,y_lim), expand=FALSE) +
+    scale_x_continuous(breaks=custom_breaks, labels=label_format) +
+    scale_y_continuous(breaks=y_breaks, labels=y_labels) +
+    theme_bw(base_family=base_font) +
+    theme(panel.grid.minor=element_blank(),
+          axis.text=element_text(size=8),
+          aspect.ratio=1, plot.margin=margin(2,2,2,2)) +
+    labs(x=ax_x, y=ax_y)
+}
+
+# ------------------------------------------------------------------------------
+# CLASSICAL ORBIT PHASE-SPACE PANEL
+# Black orbit on white. No heatmap. Same coord/axis convention as
+# plot_semiclassical_heatmap so it slots into the same left-column
+# position. Used by figures whose left column should show the
+# deterministic classical orbit.
+#
+# Optional overlay_layers (e.g. the QoA cells from
+# symplectic_overlay_layers()) draw on top of the orbit. The symplectic
+# figure uses overlay_layers to show the action-capacity geometry; the
+# Airy figure passes overlay_layers=NULL since the Airy method has no
+# such geometry to show.
+# ------------------------------------------------------------------------------
+
+plot_classical_orbit_phase_space <- function(df_traj,
+                                             q_lim, p_lim,
+                                             custom_breaks_q, custom_breaks_p,
+                                             label_format, base_font="",
+                                             overlay_layers=NULL,
+                                             orbit_color="black",
+                                             orbit_linewidth=0.4) {
+  ax_x <- expression(italic(q)/italic(q)[0])
+  ax_y <- expression(italic(p)/italic(p)[0])
+
+  p <- ggplot(df_traj, aes(x=q, y=p, group=group)) +
+    geom_path(color=orbit_color, linewidth=orbit_linewidth, linetype="solid")
+
+  if (!is.null(overlay_layers)) {
+    for (layer in overlay_layers) p <- p + layer
+  }
+
+  p +
+    coord_fixed(xlim=q_lim, ylim=p_lim, expand=FALSE) +
+    scale_x_continuous(breaks=custom_breaks_q, labels=label_format) +
+    scale_y_continuous(breaks=custom_breaks_p, labels=label_format) +
+    theme_bw(base_family=base_font) +
+    theme(panel.grid.minor=element_blank(),
+          panel.background=element_rect(fill="white"),
+          axis.text=element_text(size=8),
+          plot.margin=margin(2, 2, 2, 2)) +
     labs(x=ax_x, y=ax_y)
 }
 
@@ -508,7 +680,8 @@ suppress_y_titles <- function(...) {
 # GRID ASSEMBLY
 # ------------------------------------------------------------------------------
 
-assemble_grid <- function(rows, title_center, title_right, base_font="") {
+assemble_grid <- function(rows, title_center, title_right, base_font="",
+                          title_left=COLUMN_TITLE_LEFT) {
   num_rows <- length(rows)
   plot_list <- list()
 
@@ -523,7 +696,7 @@ assemble_grid <- function(rows, title_center, title_right, base_font="") {
 
     if (i == 1) {
       panels <- add_column_titles(p_left, p_center, p_right,
-                                  COLUMN_TITLE_LEFT,
+                                  title_left,
                                   title_center,
                                   title_right)
       p_left <- panels[[1]]; p_center <- panels[[2]]; p_right <- panels[[3]]

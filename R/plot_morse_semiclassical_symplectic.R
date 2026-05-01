@@ -31,6 +31,8 @@ source(here("R", "semiclassical_density.R"))    # build_semiclassical_state
 source(here("R", "symplectic_kernel.R"))        # G_delta_q_kernel_matrix,
                                                 # symplectic_marginal_density,
                                                 # symplectic_overlay_layers
+source(here("R", "schroedinger_solver.R"))      # solve_schroedinger,
+                                                # schroedinger_density
 
 GOLDEN_FILL <- 0.6
 
@@ -42,6 +44,13 @@ file_output_pdf <- file.path(dir_figures, "morse_semiclassical_symplectic.pdf")
 # Quantum numbers for the three rows. Same selection as the Wigner Morse
 # figure: ground state, mid-anharmonic, strongly anharmonic horseshoe.
 target_quantum_numbers <- c(0, 8, 16)
+
+# Solve Schroedinger once for all rows. Used for the dashed |psi_n|^2
+# ground-truth overlay on the right column. Caches across all rows.
+cat("Solving Schroedinger for Morse (used for ground-truth overlay)...\n")
+morse_soln <- solve_schroedinger(morse_V,
+                                 MORSE_Q_MIN, MORSE_Q_MAX, MORSE_DQ,
+                                 n_states=MORSE_N_STATES)
 
 # ------------------------------------------------------------------------------
 
@@ -78,9 +87,18 @@ build_morse_row <- function(n, base_font="") {
   label_format    <- function(x) sprintf("%.1f", x)
   q_display       <- seq(q_lo, q_hi, length.out=500)
 
-  # Build the semiclassical state: regularized 2D energy shell + 1D WKB.
+  # Build the semiclassical state: oscillating WKB phase-space lift +
+  # oscillating WKB density. The lift is the input the symplectic kernel
+  # operates on; |psi_WKB|^2 feeds the middle column. The lift itself is
+  # not drawn (the left column shows the classical orbit with the QoA
+  # overlay representing the convolution that turns the lift into the
+  # right column's resolved density).
   state <- build_semiclassical_state(E_n, morse_V,
-                                     q_lo, q_hi, p_lo, p_hi, q_display)
+                                     q_lo, q_hi, p_lo, p_hi, q_display,
+                                     q_minus=q_minus, q_plus=q_plus)
+
+  # Classical orbit trajectory for the left column.
+  df_traj <- classical_trajectory(morse_V, E_n, tp)
 
   # Apply symplectic kernel and marginalize. Closure binds Delta_q, Delta_p
   # for this state.
@@ -90,23 +108,44 @@ build_morse_row <- function(n, base_font="") {
   rho_sympl <- symplectic_marginal_density(state, symplectic_kernel_for_state,
                                            q_display)
 
+  # Schroedinger ground-truth density on the display grid. Computed here
+  # (rather than just before the overlay is built) so its peak can
+  # contribute to the right-column y-axis scaling — without this the
+  # overlay can shoot past the panel top in cases where |psi|^2 is more
+  # peaked than the symplectic-resolved density (e.g. ground state).
+  psi_sq <- schroedinger_density(morse_soln, n, q_display)
+
   # Y-scaling, independent per column.
-  # Right column: density peak fills (GOLDEN_FILL + 0.2) of vertical.
-  rho_peak  <- max(rho_sympl, na.rm=TRUE)
+  # Right column: peak (max of symplectic and overlay densities) fills
+  # (GOLDEN_FILL + 0.2) of vertical.
+  rho_peak  <- max(c(rho_sympl, psi_sq), na.rm=TRUE)
   y_lim_rho <- rho_peak / (GOLDEN_FILL + 0.2)
 
-  # Middle column: caustic bowl floor at orbit center sits at
-  # (1 - GOLDEN_FILL) of vertical; infinity arrows handle the divergences
-  # at the turning points.
-  q_center_idx <- which.min(abs(q_display - q_center))
-  caustic_floor <- state$wkb_density[q_center_idx]
-  if (!is.finite(caustic_floor) || caustic_floor <= 0) {
-    finite_caustic <- state$wkb_density[is.finite(state$wkb_density) &
-                                          state$wkb_density > 0]
-    caustic_floor <- if (length(finite_caustic) > 0)
-      min(finite_caustic, na.rm=TRUE) else 1
+  # Middle column: y_lim is driven by the peak of the oscillating
+  # |psi_WKB|^2 within the orbit (excluding the divergent cells right
+  # at the turning points, which are rendered separately by the
+  # infinity arrows). This is the largest finite amplitude the curve
+  # will display; setting y_lim above it gives the oscillation lobes
+  # room to breathe and leaves headroom for the infinity arrows. We
+  # use the maximum finite value within the strictly-allowed region
+  # (q_minus + small_pad, q_plus - small_pad) so a near-turning-point
+  # spike doesn't dominate the scale.
+  inside_pad   <- 0.02 * (q_plus - q_minus)
+  inside_mask  <- (q_display > q_minus + inside_pad) &
+                  (q_display < q_plus  - inside_pad)
+  finite_inside <- state$wkb_density[inside_mask &
+                                     is.finite(state$wkb_density) &
+                                     state$wkb_density > 0]
+  if (length(finite_inside) > 0) {
+    osc_peak     <- max(finite_inside)
+    y_lim_caustic <- osc_peak / GOLDEN_FILL
+  } else {
+    # Fallback: smooth envelope at orbit center
+    q_center_idx <- which.min(abs(q_display - q_center))
+    caustic_floor <- state$wkb_density_smooth[q_center_idx]
+    if (!is.finite(caustic_floor) || caustic_floor <= 0) caustic_floor <- 1
+    y_lim_caustic <- caustic_floor / (1 - GOLDEN_FILL)
   }
-  y_lim_caustic <- caustic_floor / (1 - GOLDEN_FILL)
 
   dt_caustic <- data.table(q=q_display, wkb_density=state$wkb_density)
   dt_rho     <- data.table(q=q_display, rho_sympl=rho_sympl)
@@ -115,20 +154,41 @@ build_morse_row <- function(n, base_font="") {
   overlay_layers <- symplectic_overlay_layers(cov$Delta_q, cov$Delta_p,
                                               q_center=q_center)
 
-  # Row label: actually-achieved A_orbit/A_0 to two decimal places. This
-  # tells the reader the kinematic envelope size that the symplectic
-  # overlay is expressing — not the (inaccurate-for-Morse) harmonic-limit
-  # nominal value.
-  row_label <- sprintf("%.2f~italic(A)[0]", cov$A_over_A0)
+  # Schroedinger ground-truth overlay for the right column. psi_sq was
+  # already computed above for y-scaling purposes.
+  schroedinger_overlay <- list(
+    list(
+      data      = data.frame(q = q_display, rho = psi_sq),
+      color     = "gray30",
+      linewidth = 0.2
+    )
+  )
+
+  # Row label: quantum number. We index rows by n (not A_orbit/A_0) for
+  # consistency across all bound-state figures in the manuscript — Wigner,
+  # symplectic, Husimi, and Airy versions of the Morse and double-well
+  # figures should all use the same row index so a reader comparing two
+  # figures can match rows by n at a glance. The achieved A_orbit/A_0
+  # values are reported to the console (above) and belong in the figure
+  # caption rather than the row label itself.
+  row_label <- sprintf("italic(n)==%d", n)
 
   list(
     row_label,
-    plot_semiclassical_heatmap(
-      state$heatmap_dt, overlay_layers,
+    plot_classical_orbit_phase_space(
+      df_traj,
       q_lim=c(q_lo,q_hi), p_lim=c(p_lo,p_hi),
       custom_breaks_q=custom_breaks_q,
       custom_breaks_p=custom_breaks_p,
-      label_format=label_format, base_font=base_font),
+      label_format=label_format, base_font=base_font,
+      overlay_layers=overlay_layers,
+      # De-emphasize the orbit so the QoA overlay reads as the primary
+      # content. Same gray (HEATMAP_COLOR_HIGH = "gray55") used by the
+      # earlier heatmap saturation peak — the eye sees the same orbit
+      # weight either way, but the line form is honest about the orbit
+      # being a 1D curve rather than a 2D regularized band.
+      orbit_color=HEATMAP_COLOR_HIGH,
+      orbit_linewidth=0.3),
     plot_wkb_caustic_cross_section(
       dt_caustic, q_lim=c(q_lo,q_hi), y_lim=y_lim_caustic,
       custom_breaks=custom_breaks_q,
@@ -138,7 +198,8 @@ build_morse_row <- function(n, base_font="") {
     plot_semiclassical_resolution(
       dt_rho, q_lim=c(q_lo,q_hi), y_lim=y_lim_rho,
       custom_breaks=custom_breaks_q,
-      label_format=label_format, base_font=base_font)
+      label_format=label_format, base_font=base_font,
+      overlays=schroedinger_overlay)
   )
 }
 

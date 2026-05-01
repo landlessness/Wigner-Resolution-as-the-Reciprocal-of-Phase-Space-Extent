@@ -78,3 +78,59 @@ solve_schroedinger <- function(V_fn, q_min, q_max, dq=0.01,
 
   list(energies=energies, psi_matrix=psi_mat, q_grid=q_grid, dq=dq)
 }
+
+# ------------------------------------------------------------------------------
+# EIGENSTATE DENSITY ON A DISPLAY GRID
+# ------------------------------------------------------------------------------
+
+#' Probability density |psi_n(q)|^2 of the n-th Schroedinger eigenstate,
+#' interpolated to a display grid.
+#'
+#' Uses the soln object returned by solve_schroedinger() (or by analytic-
+#' eigenstate equivalents like harmonic_soln() that mirror the same struct).
+#' The wavefunction is already L2-normalized on the solver grid; this
+#' function returns its modulus squared on q_display, with linear inter-
+#' polation and zero-padding outside the solver grid.
+#'
+#' @param soln       Output of solve_schroedinger() — list with fields
+#'                   energies, psi_matrix, q_grid, dq.
+#' @param n          Quantum number (0-indexed).
+#' @param q_display  Output grid in q.
+#' @return Numeric vector of |psi_n|^2 on q_display.
+schroedinger_density <- function(soln, n, q_display) {
+  if (n < 0 || n >= length(soln$energies))
+    stop(sprintf("n=%d outside available [0, %d]", n, length(soln$energies)-1))
+  psi_n  <- soln$psi_matrix[, n + 1]   # column n+1 = state n (0-indexed)
+  psi_disp <- approx(soln$q_grid, psi_n, xout=q_display,
+                     rule=1, yleft=0, yright=0)$y
+  psi_disp[is.na(psi_disp)] <- 0
+  psi_disp^2
+}
+
+# ------------------------------------------------------------------------------
+# EIGENSTATE DENSITY ON A DISPLAY GRID
+# ------------------------------------------------------------------------------
+
+#' Probability density |psi_n(q)|^2 of the n-th Schroedinger eigenstate,
+#' interpolated to a display grid.
+#'
+#' Uses the soln object returned by solve_schroedinger() (or by the
+#' analytic-eigenstate equivalents like harmonic_soln()). The wavefunction
+#' is already L2-normalized on the solver grid; this function returns its
+#' modulus squared on q_display, with linear interpolation and zero-padding
+#' outside the solver grid.
+#'
+#' @param soln       Output of solve_schroedinger() — list with fields
+#'                   energies, psi_matrix, q_grid, dq.
+#' @param n          Quantum number (0-indexed).
+#' @param q_display  Output grid in q.
+#' @return Numeric vector of |psi_n|^2 on q_display.
+schroedinger_density <- function(soln, n, q_display) {
+  if (n < 0 || n >= length(soln$energies))
+    stop(sprintf("n=%d outside available [0, %d]", n, length(soln$energies)-1))
+  psi_n  <- soln$psi_matrix[, n + 1]   # column n+1 = state n (0-indexed)
+  psi_disp <- approx(soln$q_grid, psi_n, xout=q_display,
+                     rule=1, yleft=0, yright=0)$y
+  psi_disp[is.na(psi_disp)] <- 0
+  psi_disp^2
+}
