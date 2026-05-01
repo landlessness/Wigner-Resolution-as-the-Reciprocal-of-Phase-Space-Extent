@@ -181,9 +181,7 @@ build_morse_row <- function(n, base_font="") {
     list(
       data       = data.frame(q = q_display, rho = rho_airy),
       color      = "gray70",
-      linewidth  = 0.3 #,
-      # fill       = "gray85",
-      # fill_alpha = 0.5
+      linewidth  = 0.3
     )
   )
 
