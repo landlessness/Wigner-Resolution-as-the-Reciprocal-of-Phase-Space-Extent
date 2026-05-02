@@ -23,22 +23,9 @@ library(patchwork)
 # ------------------------------------------------------------------------------
 
 COLUMN_TITLE_LEFT                 <- "Phase-Space Cells"
-COLUMN_TITLE_LEFT_ORBIT           <- "Classical Orbit"
 COLUMN_TITLE_CENTER_WIGNER        <- "Wigner Negativity"
 COLUMN_TITLE_CENTER_SEMICLASSICAL <- "Semiclassical Caustics"
-COLUMN_TITLE_RIGHT_HUSIMI         <- "Husimi Resolution"
 COLUMN_TITLE_RIGHT_SYMPLECTIC     <- "Symplectic Resolution"
-COLUMN_TITLE_RIGHT_AIRY           <- "Airy Approximation"
-
-# Compass-figure-specific labels (used by assemble_compass.R).
-# The compass figure has a different column structure than the original
-# n-indexed Morse/harmonic figures, so it gets its own constants.
-COMPASS_COLUMN_TITLE_LEFT   <- "Phase-Space Cells"
-COMPASS_COLUMN_TITLE_CENTER <- "Cross Sections"
-COMPASS_COLUMN_TITLE_RIGHT  <- "Resolved"
-COMPASS_ROW_LABEL_TOP       <- "Wigner"
-COMPASS_ROW_LABEL_MIDDLE    <- "Husimi"
-COMPASS_ROW_LABEL_BOTTOM    <- "Symplectic"
 
 PANEL_WIDTHS    <- c(1, 1, 1)
 FIGURE_WIDTH_IN <- 7.5
@@ -68,7 +55,7 @@ CROSS_RIBBON_NEG_FILL <- "gray80"
 # the *trajectory* — secondary to the QoA structure, which is the figure's
 # physical message — so it visually recedes.
 HEATMAP_COLOR_LOW  <- "white"
-HEATMAP_COLOR_HIGH <- "gray55"
+HEATMAP_COLOR_HIGH <- "gray70"
 
 # Semiclassical 1D-density ribbon fill (middle WKB caustic and right
 # symplectic-resolved density). Matches the conventional gray-fill /
@@ -355,48 +342,6 @@ plot_wkb_caustic_cross_section <- function(dt, q_lim, y_lim, custom_breaks,
 }
 
 # ------------------------------------------------------------------------------
-# HUSIMI / SYMPLECTIC CROSS-SECTIONS (Wigner pipeline)
-# ------------------------------------------------------------------------------
-
-plot_husimi_cross_section <- function(dt, q_lim, y_lim, custom_breaks, label_format, base_font="") {
-  ax_x <- expression(italic(q)/italic(q)[0])
-  ax_y <- expression(italic(Q)(italic(q)*","*0))
-  # Recover the data peak from y_lim (the convention is y_lim = peak*1.1).
-  peak <- y_lim / 1.1
-  y_breaks <- c(0, peak)
-  y_labels <- sprintf("%.2g", y_breaks)
-  ggplot(dt, aes(x=q, y=Q_husimi)) +
-    geom_path(color="black", linewidth=0.4) +
-    coord_cartesian(xlim=q_lim, ylim=c(-y_lim,y_lim), expand=FALSE) +
-    scale_x_continuous(breaks=custom_breaks, labels=label_format) +
-    scale_y_continuous(breaks=y_breaks, labels=y_labels) +
-    theme_bw(base_family=base_font) +
-    theme(panel.grid.minor=element_blank(),
-          axis.text=element_text(size=8),
-          aspect.ratio=1, plot.margin=margin(2,2,2,2)) +
-    labs(x=ax_x, y=ax_y)
-}
-
-plot_symplectic_cross_section <- function(dt, q_lim, y_lim, custom_breaks, label_format, base_font="") {
-  ax_x <- expression(italic(q)/italic(q)[0])
-  ax_y <- expression(italic(P)[italic(delta*q)](italic(q)*","*0))
-  # Recover the data peak from y_lim (the convention is y_lim = peak*1.1).
-  peak <- y_lim / 1.1
-  y_breaks <- c(0, peak)
-  y_labels <- sprintf("%.2g", y_breaks)
-  ggplot(dt, aes(x=q, y=P_sympl)) +
-    geom_path(color="black", linewidth=0.4) +
-    coord_cartesian(xlim=q_lim, ylim=c(-y_lim,y_lim), expand=FALSE) +
-    scale_x_continuous(breaks=custom_breaks, labels=label_format) +
-    scale_y_continuous(breaks=y_breaks, labels=y_labels) +
-    theme_bw(base_family=base_font) +
-    theme(panel.grid.minor=element_blank(),
-          axis.text=element_text(size=8),
-          aspect.ratio=1, plot.margin=margin(2,2,2,2)) +
-    labs(x=ax_x, y=ax_y)
-}
-
-# ------------------------------------------------------------------------------
 # SEMICLASSICAL RIGHT-COLUMN: rho_{delta q}(q)
 # 1D position density obtained by marginalizing the symplectic-convolved
 # 2D shell over p. Always non-negative.
@@ -427,13 +372,12 @@ plot_semiclassical_resolution <- function(dt, q_lim, y_lim, custom_breaks,
   # cross-section P_{delta q}(q, 0) — e.g. the Wigner-symplectic right
   # column — should pass an explicit cross-section y_label.
   ax_y <- if (is.null(y_label)) expression(rho[italic(delta*q)](italic(q))) else y_label
-  # Y-tick label uses the maximum of all rendered curves (symplectic +
-  # any overlays), so the displayed peak number actually reflects what
-  # the reader sees on the plot.
+  # Y-tick label is set from the symplectic peak alone, since the panel
+  # y_lim is sized to fit that curve. Overlay curves (e.g. Airy at low n)
+  # may spike far above y_lim; they're allowed to clip out of the panel,
+  # but their off-panel peak should not become a tick label that sits
+  # outside the visible window.
   rho_peak <- max(dt$rho_sympl, na.rm=TRUE)
-  if (!is.null(overlays)) {
-    for (ov in overlays) rho_peak <- max(rho_peak, max(ov$data$rho, na.rm=TRUE))
-  }
   y_breaks <- c(0, rho_peak)
   y_labels <- c("0", sprintf("%.2g", rho_peak))
   p <- ggplot(dt, aes(x=q, y=rho_sympl)) +
@@ -458,173 +402,6 @@ plot_semiclassical_resolution <- function(dt, q_lim, y_lim, custom_breaks,
   }
 
   p <- p + geom_path(color="black", linewidth=0.4)
-
-  if (!is.null(overlays)) {
-    for (ov in overlays) {
-      lt <- if (is.null(ov$linetype)) "solid" else ov$linetype
-      p <- p + geom_path(data=ov$data, aes(x=q, y=rho),
-                         inherit.aes=FALSE,
-                         color=ov$color,
-                         linewidth=ov$linewidth,
-                         linetype=lt)
-    }
-  }
-
-  p +
-    coord_cartesian(xlim=q_lim, ylim=c(0,y_lim), expand=FALSE) +
-    scale_x_continuous(breaks=custom_breaks, labels=label_format) +
-    scale_y_continuous(breaks=y_breaks, labels=y_labels) +
-    theme_bw(base_family=base_font) +
-    theme(panel.grid.minor=element_blank(),
-          axis.text=element_text(size=8),
-          aspect.ratio=1, plot.margin=margin(2,2,2,2)) +
-    labs(x=ax_x, y=ax_y)
-}
-
-# ------------------------------------------------------------------------------
-# SPLIT RIGHT-COLUMN: SYMPLECTIC (top, 80%) + COMPARATOR (bottom, 20%)
-#
-# Vertically stacks two ribbon plots sharing the q-axis:
-#   - top sub-panel: symplectic curve (the result), filled with the
-#     standard SEMICLASSICAL_RIBBON_FILL
-#   - bottom sub-panel: comparator curve (Husimi or Airy), filled with a
-#     lighter gray to signal subordinate visual role
-#
-# Each sub-panel has its own y-axis with independent scaling — the
-# comparison story is about shape, not amplitude (the prose handles
-# amplitude commentary). The bottom sub-panel renders the x-axis text
-# and title; the top sub-panel hides them so the two share a single
-# x-axis legend at the bottom.
-#
-# Returns a patchwork composition. Behaves like a ggplot when passed
-# through wrap_plots() in assemble_grid(); add_column_titles() and the
-# x/y title suppression helpers operate on it correctly.
-# ------------------------------------------------------------------------------
-
-#' Split right-column panel: symplectic on top, comparator on bottom.
-#'
-#' Implemented as a single ggplot with `facet_grid` (rather than patchwork)
-#' so all the existing layout machinery — column titles, axis-title
-#' suppression, aspect.ratio — operates on it without special handling.
-#' Each facet has its own y-axis range (via scales="free_y"); space="free"
-#' allocates row heights proportional to `panel_heights`.
-#'
-#' @param dt_sympl    data.table with columns q, rho_sympl (the main result).
-#' @param dt_comp     data.table with columns q, rho_comp (the comparator).
-#' @param q_lim       Shared x-axis limits.
-#' @param custom_breaks,label_format  X-axis tick spec.
-#' @param y_label_top    Expression or string for the top sub-panel y-label.
-#' @param y_label_bottom Expression or string for the bottom sub-panel y-label.
-#' @param base_font   Font family.
-#' @param comp_fill   Fill color for the comparator ribbon (default
-#'                    "gray85" — lighter than SEMICLASSICAL_RIBBON_FILL).
-#' @return A ggplot.
-plot_semiclassical_resolution_split <- function(dt_sympl, dt_comp,
-                                                q_lim,
-                                                custom_breaks, label_format,
-                                                y_label_top, y_label_bottom,
-                                                base_font="",
-                                                comp_fill="gray85") {
-  ax_x <- expression(italic(q)/italic(q)[0])
-
-  # Combine into a single data frame with a facet-key column. Each row's
-  # rho holds the appropriate density (symplectic or comparator). The
-  # facet column is an ordered factor with the symplectic facet first
-  # (top); facet_grid will respect this ordering.
-  df <- rbind(
-    data.frame(q=dt_sympl$q, rho=dt_sympl$rho_sympl,
-               facet="sympl", stringsAsFactors=FALSE),
-    data.frame(q=dt_comp$q,  rho=dt_comp$rho_comp,
-               facet="comp",  stringsAsFactors=FALSE)
-  )
-  df$facet <- factor(df$facet, levels=c("sympl", "comp"))
-
-  # Per-facet fill mapping. We use a manual scale_fill_manual so each
-  # facet gets its own ribbon fill color while sharing the same plot.
-  df$fill_key <- df$facet
-
-  # Per-facet y-axis labels via labeller. facet_grid uses strip text for
-  # facet labels; we hide the strip and use a y-axis title strategy
-  # instead — but facet_grid doesn't support per-facet y-axis titles
-  # natively. Workaround: place the labels via strip.text (rotated) on
-  # the left, with the strip styled to look like a y-axis label.
-  facet_labels <- c(sympl=as.character(deparse(y_label_top)),
-                    comp =as.character(deparse(y_label_bottom)))
-
-  ggplot(df, aes(x=q, y=rho, fill=fill_key)) +
-    geom_ribbon(aes(ymin=0, ymax=pmax(rho,0)), color=NA) +
-    geom_path(color="black", linewidth=0.4) +
-    facet_grid(facet ~ .,
-               scales="free_y", space="fixed",
-               switch="y",
-               labeller=as_labeller(c(sympl=" ", comp=" "))) +
-    scale_fill_manual(values=c(sympl=SEMICLASSICAL_RIBBON_FILL,
-                               comp =comp_fill),
-                      guide="none") +
-    coord_cartesian(xlim=q_lim, expand=FALSE) +
-    scale_x_continuous(breaks=custom_breaks, labels=label_format) +
-    theme_bw(base_family=base_font) +
-    theme(panel.grid.minor=element_blank(),
-          axis.text=element_text(size=8),
-          strip.background=element_blank(),
-          strip.placement="outside",
-          strip.text.y.left=element_blank(),
-          panel.spacing.y=unit(2, "pt"),
-          aspect.ratio=NULL,
-          plot.margin=margin(2,2,2,2)) +
-    labs(x=ax_x, y=NULL)
-}
-
-# ------------------------------------------------------------------------------
-# SEMICLASSICAL RIGHT-COLUMN (Husimi variant): rho_Q(q)
-# 1D position density obtained by marginalizing the Husimi-convolved
-# 2D shell over p. Always non-negative.
-# ------------------------------------------------------------------------------
-
-plot_semiclassical_husimi_resolution <- function(dt, q_lim, y_lim, custom_breaks, label_format, base_font="") {
-  ax_x <- expression(italic(q)/italic(q)[0])
-  ax_y <- expression(rho[italic(Q)](italic(q)))
-  rho_peak <- max(dt$rho_husimi, na.rm=TRUE)
-  y_breaks <- c(0, rho_peak)
-  y_labels <- c("0", sprintf("%.2g", rho_peak))
-  ggplot(dt, aes(x=q, y=rho_husimi)) +
-    geom_ribbon(aes(ymin=0, ymax=pmax(rho_husimi,0)),
-                fill=SEMICLASSICAL_RIBBON_FILL, color=NA) +
-    geom_path(color="black", linewidth=0.4) +
-    coord_cartesian(xlim=q_lim, ylim=c(0,y_lim), expand=FALSE) +
-    scale_x_continuous(breaks=custom_breaks, labels=label_format) +
-    scale_y_continuous(breaks=y_breaks, labels=y_labels) +
-    theme_bw(base_family=base_font) +
-    theme(panel.grid.minor=element_blank(),
-          axis.text=element_text(size=8),
-          aspect.ratio=1, plot.margin=margin(2,2,2,2)) +
-    labs(x=ax_x, y=ax_y)
-}
-
-# ------------------------------------------------------------------------------
-# SEMICLASSICAL RIGHT-COLUMN (Airy variant): rho_Airy(q)
-# 1D position density from the Berry-Mount/Langer uniform Airy
-# approximation. Always non-negative; replaces the WKB caustic divergence
-# at turning points with a finite Airy-function lobe. Same overlay
-# protocol as plot_semiclassical_resolution: pass `overlays` to draw a
-# Schroedinger ground-truth or other comparator on top.
-# ------------------------------------------------------------------------------
-
-plot_airy_resolution <- function(dt, q_lim, y_lim, custom_breaks,
-                                 label_format, base_font="",
-                                 overlays=NULL) {
-  ax_x <- expression(italic(q)/italic(q)[0])
-  ax_y <- expression(rho[Airy](italic(q)))
-  rho_peak <- max(dt$rho_airy, na.rm=TRUE)
-  if (!is.null(overlays)) {
-    for (ov in overlays) rho_peak <- max(rho_peak, max(ov$data$rho, na.rm=TRUE))
-  }
-  y_breaks <- c(0, rho_peak)
-  y_labels <- c("0", sprintf("%.2g", rho_peak))
-  p <- ggplot(dt, aes(x=q, y=rho_airy)) +
-    geom_ribbon(aes(ymin=0, ymax=pmax(rho_airy,0)),
-                fill=SEMICLASSICAL_RIBBON_FILL, color=NA) +
-    geom_path(color="black", linewidth=0.4)
 
   if (!is.null(overlays)) {
     for (ov in overlays) {
@@ -692,64 +469,6 @@ plot_classical_orbit_phase_space <- function(df_traj,
 }
 
 # ------------------------------------------------------------------------------
-# COLORMAP LEGEND PANEL
-#
-# Builds a small ggplot rendering the diverging Wigner colormap as a vertical
-# colorbar. Used to fill an otherwise-empty panel slot in assembled figures
-# (e.g., the upper-right of compass.pdf) and to tell the reader what the
-# heatmap shading actually represents in physical units.
-#
-# Tick labels show the physical scale (max_abs at top, 0 in the middle,
-# -max_abs at the bottom) so a reader looking at any heatmap can read off
-# the value at any point.
-# ------------------------------------------------------------------------------
-
-#' Build a vertical colormap-legend ggplot panel for the Wigner pipeline.
-#'
-#' @param max_abs   Physical peak magnitude for tick labels at +/- max_abs.
-#' @param y_label   Optional axis label (e.g., "W(q,p)"). Pass NULL for none.
-#' @param base_font Font family for the panel.
-#' @return A ggplot object suitable for placement in a patchwork layout.
-plot_compass_legend <- function(max_abs, y_label=NULL, base_font="") {
-  # 200 horizontal strips covering [-1, 1] in normalized coordinates.
-  n_strips <- 200
-  y_norm   <- seq(-1, 1, length.out=n_strips)
-  # geom_rect xmin/xmax/ymin/ymax build a thin column.
-  dy <- diff(y_norm)[1]
-  rects <- data.table(
-    xmin = 0,                 xmax = 1,
-    ymin = y_norm - dy/2,     ymax = y_norm + dy/2,
-    fill_value = y_norm
-  )
-
-  # Map normalized [-1, 1] back to physical labels.
-  fmt <- function(z) sprintf("%.2f", z * max_abs)
-  tick_norm   <- c(-1, 0, 1)
-  tick_labels <- c(fmt(-1), "0", fmt(1))
-
-  ax_y_expr <- if (is.null(y_label)) NULL else parse(text=y_label)
-
-  ggplot(rects) +
-    geom_rect(aes(xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax,
-                  fill=fill_value), color=NA) +
-    scale_fill_gradient2(low=HEATMAP_COLOR_NEG,
-                         mid=HEATMAP_COLOR_ZERO,
-                         high=HEATMAP_COLOR_POS,
-                         midpoint=0, limits=c(-1, 1), guide="none") +
-    scale_x_continuous(limits=c(0, 1), breaks=NULL, expand=c(0, 0)) +
-    scale_y_continuous(limits=c(-1, 1), breaks=tick_norm, labels=tick_labels,
-                       expand=c(0, 0), position="right") +
-    coord_fixed(ratio=0.25) +    # tall narrow bar; ratio = width/height
-    theme_bw(base_family=base_font) +
-    theme(panel.grid=element_blank(),
-          panel.background=element_rect(fill="white"),
-          axis.text.x=element_blank(), axis.ticks.x=element_blank(),
-          axis.text.y=element_text(size=8),
-          plot.margin=margin(2, 2, 2, 2)) +
-    labs(x=NULL, y=ax_y_expr)
-}
-
-# ------------------------------------------------------------------------------
 # ROW LABEL via PATCHWORK TAG
 # ------------------------------------------------------------------------------
 
@@ -761,30 +480,6 @@ attach_row_tag <- function(p, label_str, base_font="") {
                               hjust=1, vjust=0.5),
       plot.tag.position = c(TAG_X_NPC, TAG_Y_NPC),
       plot.margin = margin(2, 4, 2, HEATMAP_LEFT_MARGIN_PT)
-    )
-}
-
-#' Attach a plain-text row label (rotated 90 deg) to the leftmost panel of
-#' a compass figure row. Used by assemble_compass.R for "Wigner", "Husimi",
-#' "Symplectic" labels that are too long to display horizontally.
-#'
-#' Differs from attach_row_tag() in three ways:
-#'   - label is plain text, not parsed as a math expression
-#'   - rotated 90 deg (reads bottom-to-top on the left side)
-#'   - smaller left margin (the rotated text is narrow)
-#'
-#' @param p           Ggplot object (typically the leftmost panel of a row).
-#' @param label_str   Plain text label string.
-#' @param base_font   Font family.
-#' @return Modified ggplot object.
-attach_compass_row_tag <- function(p, label_str, base_font="") {
-  p +
-    labs(tag = label_str) +
-    theme(
-      plot.tag = element_text(size=ROW_LABEL_SIZE_PT, family=base_font,
-                              hjust=0.5, vjust=0.5, angle=90),
-      plot.tag.position = c(-0.22, 0.5),
-      plot.margin = margin(2, 4, 2, 36)
     )
 }
 
@@ -830,6 +525,50 @@ assemble_grid <- function(rows, title_center, title_right, base_font="",
     p_right  <- row[[4]]
 
     p_left <- attach_row_tag(p_left, label, base_font=base_font)
+
+    if (i == 1) {
+      panels <- add_column_titles(p_left, p_center, p_right,
+                                  title_left,
+                                  title_center,
+                                  title_right)
+      p_left <- panels[[1]]; p_center <- panels[[2]]; p_right <- panels[[3]]
+    }
+    if (i != num_rows) {
+      lst <- suppress_x_titles(p_left, p_center, p_right)
+      p_left <- lst[[1]]; p_center <- lst[[2]]; p_right <- lst[[3]]
+    }
+    if (i != ceiling(num_rows/2)) {
+      lst <- suppress_y_titles(p_left, p_center, p_right)
+      p_left <- lst[[1]]; p_center <- lst[[2]]; p_right <- lst[[3]]
+    }
+
+    plot_list <- c(plot_list, list(p_left, p_center, p_right))
+  }
+
+  wrap_plots(plot_list, ncol=3, widths=PANEL_WIDTHS) +
+    theme(plot.margin=margin(10,10,10,10))
+}
+
+# ------------------------------------------------------------------------------
+# UNLABELED GRID ASSEMBLY
+# Variant of assemble_grid for figures with no per-row text labels in the
+# left margin. Each row is a 3-element list [p_left, p_center, p_right].
+# Column titles still appear on the first row; x-axis titles still suppressed
+# on non-final rows; y-axis titles still suppressed on rows other than the
+# middle. The reclaimed left-margin space goes to the leftmost panel.
+# ------------------------------------------------------------------------------
+
+assemble_grid_unlabeled <- function(rows, title_center, title_right,
+                                    base_font="",
+                                    title_left=COLUMN_TITLE_LEFT) {
+  num_rows <- length(rows)
+  plot_list <- list()
+
+  for (i in seq_along(rows)) {
+    row      <- rows[[i]]
+    p_left   <- row[[1]]
+    p_center <- row[[2]]
+    p_right  <- row[[3]]
 
     if (i == 1) {
       panels <- add_column_titles(p_left, p_center, p_right,
