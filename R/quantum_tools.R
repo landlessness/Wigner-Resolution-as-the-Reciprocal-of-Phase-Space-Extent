@@ -96,12 +96,15 @@ robertson_schroedinger <- function(sigma_qq, sigma_pp, sigma_qp=0, hbar=1.0) {
 #' @return Same structure as robertson_schroedinger().
 numerical_covariance <- function(psi_vec, q_grid, hbar=1.0) {
   dq       <- diff(q_grid)[1]
-  norm     <- sqrt(sum(psi_vec^2)*dq)
+  # Re-normalize and compute |psi|^2. Works for both real and complex psi.
+  norm     <- sqrt(sum(abs(psi_vec)^2)*dq)
   psi_n    <- psi_vec/norm
-  prob     <- psi_n^2
+  prob     <- as.numeric(abs(psi_n)^2)
   q_mean   <- sum(q_grid*prob)*dq
   sigma_qq <- sum((q_grid-q_mean)^2*prob)*dq
   dpsi     <- diff(psi_n)/dq
-  sigma_pp <- hbar^2*sum(dpsi^2)*dq
-  robertson_schroedinger(sigma_qq, sigma_pp, sigma_qp=0, hbar=hbar)
+  sigma_pp <- hbar^2*sum(abs(dpsi)^2)*dq
+  rs       <- robertson_schroedinger(sigma_qq, sigma_pp, sigma_qp=0, hbar=hbar)
+  rs$q_mean <- q_mean
+  rs
 }

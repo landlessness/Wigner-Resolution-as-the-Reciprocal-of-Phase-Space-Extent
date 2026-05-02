@@ -65,37 +65,6 @@ harmonic_turning_points <- function(E_n) {
 }
 
 # ------------------------------------------------------------------------------
-# FAUX SOLN OBJECT
-# Builds the same structure that solve_schroedinger() returns, but populated
-# from analytic formulas. Compatible with build_*_row consumers.
-# ------------------------------------------------------------------------------
-
-#' Build a soln object containing the first n_states harmonic eigenstates
-#' sampled on a uniform q grid. Same interface as solve_schroedinger output.
-harmonic_soln <- function(n_states, q_min=-25, q_max=25, dq=0.02) {
-  q_grid <- seq(q_min, q_max, by=dq)
-  nq     <- length(q_grid)
-  energies   <- (0:(n_states-1)) + 0.5
-  psi_matrix <- matrix(0, nrow=nq, ncol=n_states)
-
-  for (j in seq_len(n_states)) {
-    n_val <- j - 1
-    psi   <- harmonic_psi(n_val, q_grid)
-    norm  <- sqrt(sum(psi^2)*dq)
-    if (norm > 0) psi <- psi/norm
-    psi_matrix[, j] <- psi
-  }
-
-  cat(sprintf("  Harmonic analytic: %d grid points, %d states\n", nq, n_states))
-  for (j in seq_len(n_states)) {
-    cat(sprintf("    n=%d: E=%.6f norm=%.6f\n",
-                j-1, energies[j], sum(psi_matrix[,j]^2)*dq))
-  }
-
-  list(energies=energies, psi_matrix=psi_matrix, q_grid=q_grid, dq=dq)
-}
-
-# ------------------------------------------------------------------------------
 # Grid parameters used by the plot files.
 # n=100 has orbit radius sqrt(201) ~ 14.2; grid extends well beyond.
 # dq=0.02 gives ~50 samples per node spacing for n=100 (oversampled).

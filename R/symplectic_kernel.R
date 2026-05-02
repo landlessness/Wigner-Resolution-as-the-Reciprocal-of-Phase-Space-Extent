@@ -82,31 +82,6 @@ G_delta_q_kernel_matrix <- function(q_grid, p_grid, Delta_q, Delta_p, hbar=1.0) 
 }
 
 # ------------------------------------------------------------------------------
-# G_DELTA_P KERNEL MATRIX (the conjugate kernel)
-#
-# G_delta_p has width Delta_q in q (broad) and width delta_p in p (squeezed).
-# Used together with G_delta_q to form the joint resolution
-#   P_joint = (1/2) * (P_{delta q} + P_{delta p})
-# which preserves both axes of sub-Planck interference structure
-# simultaneously. See compass-state demonstration.
-# ------------------------------------------------------------------------------
-
-#' G_delta_p kernel evaluated at offset (q,p) from grid midpoint.
-G_delta_p_kernel <- function(q, p, Delta_q, Delta_p, hbar=1.0) {
-  w <- symplectic_kernel_widths(Delta_q, Delta_p, hbar=hbar)
-  (1/pi) * exp(-(q/Delta_q)^2 - (p/w$delta_p)^2)
-}
-
-#' Build the G_delta_p kernel matrix on a (q_grid, p_grid) integration grid.
-G_delta_p_kernel_matrix <- function(q_grid, p_grid, Delta_q, Delta_p, hbar=1.0) {
-  q_mid <- (min(q_grid) + max(q_grid)) / 2
-  p_mid <- (min(p_grid) + max(p_grid)) / 2
-  outer(q_grid, p_grid,
-        FUN = function(q, p) G_delta_p_kernel(q - q_mid, p - p_mid,
-                                              Delta_q, Delta_p, hbar=hbar))
-}
-
-# ------------------------------------------------------------------------------
 # SYMPLECTIC OVERLAY
 # Three nested ellipses: outer A (solid), inner a_q (dashed), inner a_p
 # (dashed). All centered at q_center.
