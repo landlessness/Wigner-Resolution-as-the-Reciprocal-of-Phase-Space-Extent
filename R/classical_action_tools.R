@@ -141,14 +141,26 @@ classical_action <- function(V_fn, E, turning_points, hbar=1.0, n_pts=1001) {
 #' @param turning_points list(q_minus, q_plus) or sorted numeric vector.
 #' @param hbar Planck constant in chosen units.
 #' @param n_pts Number of grid points per orbit segment for quadrature.
-#' @return Named list with the same fields as robertson_schroedinger():
-#'         Delta_q, Delta_p, delta_q, delta_p, A_over_A0, plus an extra
-#'         flag heisenberg_satisfied for the diagnostic A >= h/2.
-#'         A warning is issued if the semiclassical envelope falls below
-#'         the Heisenberg bound; this can happen at low quantum numbers
-#'         in anharmonic potentials and indicates the regime where the
-#'         semiclassical approximation breaks down. The returned widths
-#'         remain operationally usable.
+#' @return Named list with fields:
+#'         Delta_q, Delta_p   — moment-derived widths (clamped to QoA
+#'                              floor if necessary)
+#'         delta_q, delta_p   — kernel widths derived from Delta_q,
+#'                              Delta_p via Heisenberg saturation
+#'         A_over_A0          — operational moment-product / hbar
+#'                              (= 1 if clamped, == raw if not)
+#'         A_over_A0_raw      — raw orbit moment-product / hbar before
+#'                              clamping (diagnostic; reflects what the
+#'                              classical orbit actually reports)
+#'         q_mean             — orbit-averaged position
+#'         clamped            — TRUE iff the QoA floor was activated
+#'
+#' When the raw orbit moment-product A_orbit < A_0, the QoA's minimum
+#' resolution overrides: Delta_q and Delta_p are scaled uniformly so
+#' the moment-product hits A_0 exactly. This preserves the orbit's
+#' aspect ratio (directional squeezing) while enforcing the de Gosson
+#' resolution floor (Gromov's non-squeezing theorem). A `message()` is
+#' logged when the clamp activates, recording the raw A/A_0 and the
+#' scale factor applied.
 orbit_covariance <- function(V_fn, E, turning_points, hbar=1.0, n_pts=10001) {
   tp <- .normalize_turning_points(turning_points)
 
@@ -164,10 +176,19 @@ orbit_covariance <- function(V_fn, E, turning_points, hbar=1.0, n_pts=10001) {
     q_seq   <- seq(tp[k], tp[k+1], length.out=n_pts)
     dq      <- diff(q_seq)[1]
     p_sq    <- pmax(2*(E - V_fn(q_seq)), 0)
-    # Floor avoids 1/0 at turning points; the 1/sqrt singularity is
-    # integrable so trapezoidal converges as floor -> 0.
-    p_pos   <- sqrt(pmax(p_sq, 1e-15))
-    inv_p   <- 1 / p_pos
+    p_pos   <- sqrt(p_sq)
+    # The 1/sqrt singularity at turning points is integrable; the trapezoidal
+    # rule converges WITHOUT a hard 1/sqrt-amplified floor on p_sq. Setting
+    # inv_p to 0 wherever p_sq is at or below floating-point noise relative
+    # to its orbital maximum is the open-interval trapezoidal treatment of
+    # the integrable endpoint singularity. (A naive `p_sq > 0` test fails
+    # because `2*(E - V(q_turn))` evaluates to O(eps_mach) when q_turn is
+    # irrational, so endpoint cells with p_sq ~ 1e-16 produce 1/p ~ 1e8 and
+    # dominate the sum. A relative threshold tied to max(p_sq) along the
+    # orbit defends against this without affecting interior accuracy.)
+    p_sq_max <- max(p_sq)
+    inv_p_threshold <- p_sq_max * .Machine$double.eps * 1e3
+    inv_p   <- ifelse(p_sq > inv_p_threshold, 1/p_pos, 0)
 
     # Period of this segment: T_seg = 2 * int dq/|p|
     T_seg   <- 2 * sum(inv_p) * dq
@@ -198,25 +219,51 @@ orbit_covariance <- function(V_fn, E, turning_points, hbar=1.0, n_pts=10001) {
   delta_p  <- hbar / Delta_q
 
   # A_0 = pi * hbar (= h/2). Fermi-blob area A = pi * Delta_q * Delta_p.
-  # Diagnostic: at low quantum numbers in anharmonic potentials, A may
-  # come out fractionally below h/2 (the orbit is tighter than the
-  # quantum minimum-uncertainty state). Issue a warning but do not cap.
-  A_over_A0 <- (Delta_q * Delta_p) / hbar
-  heisenberg_satisfied <- A_over_A0 >= 1
-  if (!heisenberg_satisfied) warning(sprintf(
-    paste("orbit_covariance: A/A0 = %.4f < 1 at E = %.4f.",
-          "Semiclassical regime breaks down at low quantum numbers in",
-          "anharmonic potentials; widths remain usable but the symplectic",
-          "interpretation as conjugate quantum blobs is operative only",
-          "when A >= h/2."), A_over_A0, E))
+  #
+  # The QoA acts as a microscope with a fixed minimum resolution: the
+  # smallest blob it can render has area h/2 (the de Gosson quantum-of-
+  # action cell, fixed by Gromov's non-squeezing theorem). When the
+  # classical orbit's moment-product reads sub-resolution
+  # (A_orbit < A_0), the QoA cannot render a blob smaller than its own
+  # resolution floor — it returns a blob of area exactly A_0,
+  # regardless of what the orbit reports.
+  #
+  # We implement the floor by scaling Delta_q and Delta_p uniformly so
+  # their product hits hbar exactly when the raw moment-product is
+  # below it. The aspect ratio (directional information about which
+  # axis is squeezed) is preserved; only the overall scale is bumped
+  # to the QoA minimum. Above the floor, no clamp activates and the
+  # orbit moments pass through unchanged.
+  #
+  # The check is loosened by a small tolerance to absorb finite-grid
+  # quadrature error: at the harmonic ground state A/A0 = 1 exactly,
+  # but numerical evaluation lands at 1 - O(1/n_pts^2) which would
+  # otherwise trip the clamp spuriously.
+  A_over_A0_raw <- (Delta_q * Delta_p) / hbar
+  heisenberg_tol <- 1e-3
+  clamped        <- A_over_A0_raw < 1 - heisenberg_tol
+  if (clamped) {
+    scale   <- sqrt(1 / A_over_A0_raw)
+    Delta_q <- Delta_q * scale
+    Delta_p <- Delta_p * scale
+    delta_q <- hbar / Delta_p
+    delta_p <- hbar / Delta_q
+    message(sprintf(paste(
+      "orbit_covariance: A_orbit/A_0 = %.4f at E = %.4f.",
+      "Sub-resolution; QoA clamped to floor (A = A_0 exactly).",
+      "Aspect ratio preserved; Delta_q and Delta_p uniformly",
+      "scaled by %.4f."), A_over_A0_raw, E, scale))
+  }
+  A_over_A0 <- (Delta_q * Delta_p) / hbar  # = 1 if clamped, else == raw
 
   list(
-    Delta_q              = Delta_q,
-    Delta_p              = Delta_p,
-    delta_q              = delta_q,
-    delta_p              = delta_p,
-    A_over_A0            = A_over_A0,
-    q_mean               = q_mean,
-    heisenberg_satisfied = heisenberg_satisfied
+    Delta_q       = Delta_q,
+    Delta_p       = Delta_p,
+    delta_q       = delta_q,
+    delta_p       = delta_p,
+    A_over_A0     = A_over_A0,
+    A_over_A0_raw = A_over_A0_raw,
+    q_mean        = q_mean,
+    clamped       = clamped
   )
 }
