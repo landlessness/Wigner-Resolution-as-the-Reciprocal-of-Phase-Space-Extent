@@ -14,7 +14,7 @@
 
 \AddToHook{shipout/background}{
   \begin{tikzpicture}[remember picture, overlay]
-    \node [rotate=90, color=gray!80, font=\fontfamily{FiraMono-TLF}\selectfont\footnotesize] at ([xshift=1.2cm]current page.west) {WORKING DRAFT \quad $\bullet$ \quad \DTMnow \quad $\bullet$ \quad doi.org/10.17605/OSF.IO/EV8H6 \quad $\bullet$ \quad Brian S. Mulloy \quad $\bullet$ \quad bmulloy@umich.edu};
+    \node [rotate=-90, color=gray!80, font=\fontfamily{FiraMono-TLF}\selectfont\footnotesize] at ([xshift=-1.2cm]current page.east) {WORKING DRAFT \quad $\bullet$ \quad \DTMnow \quad $\bullet$ \quad doi.org/10.17605/OSF.IO/EV8H6 \quad $\bullet$ \quad Brian S. Mulloy \quad $\bullet$ \quad bmulloy@umich.edu};
   \end{tikzpicture}
 }
 % --------------------------------------------------------
@@ -52,12 +52,12 @@ forbid the state from being concentrated at a point. A point is a region of zero
 \label{fig:quantum_of_action}
 \end{figure}
 
-De Gosson identified the state's extent in phase space as the Fermi blob \cite{degosson2012fermi}, the elliptical region with semi-axes $\Delta q = \sqrt{2}\sigma_q$ and $\Delta p = \sqrt{2}\sigma_p$ and area
+De Gosson identified the state's extent in phase space as the Fermi blob \cite{degosson2012fermi}, the elliptical region defined by its covariance with semi-axes $\Delta q = \sqrt{2}\sigma_q$ and $\Delta p = \sqrt{2}\sigma_p$. Its covariance area,
 \begin{equation}
 A = \pi \Delta q \Delta p \ge h/2,
 \label{eq:fermi_blob_area}
 \end{equation}
-saturated by minimum-uncertainty Gaussians. A Fermi blob of area $A > h/2$ is not featureless. Its interior holds two conjugate quantum blobs \cite{degosson2009,degossoncharlyne2022},
+is distinct from the system's dynamical action, saturating at $h/2$ only for the exact harmonic ground state. A Fermi blob of covariance area $A > h/2$ is not featureless. Its interior holds two conjugate quantum blobs \cite{degosson2009,degossoncharlyne2022},
 \begin{equation}
 a_q = \pi\,\delta q\,\Delta p = h/2, \qquad a_p = \pi\,\Delta q\,\delta p = h/2,
 \label{eq:quantum_blobs}
@@ -67,25 +67,27 @@ each carrying half the Planck quantum of action and together summing to $h$ (Fig
 \delta q = \hbar/\Delta p, \qquad \delta p = \hbar/\Delta q
 \label{eq:reciprocal}
 \end{equation}
-are reciprocal to the Fermi-blob semi-axes, fixed by the same Heisenberg constant in Eq.~(\ref{eq:hup}). As the action capacity $A$ grows, $\Delta p$ and $\Delta q$ grow and $\delta q$ and $\delta p$ shrink: the uncertainty principles bind the state at both scales. Gromov's non-squeezing theorem \cite{gromov1985} forbids any canonical transformation from compressing a quantum blob below $h/2$. The Planck quantum is the floor of phase space.
+are reciprocal to the Fermi-blob semi-axes, fixed by the same Heisenberg constant in Eq.~(\ref{eq:hup}). As the action capacity $A$ grows, $\Delta p$ and $\Delta q$ grow and $\delta q$ and $\delta p$ shrink: the uncertainty principles bind the state at both scales. Gromov's non-squeezing theorem \cite{gromov1985} forbids any canonical transformation from compressing a quantum blob below $h/2$. Planck's quantum of action is the floor of phase space.
 
 % ======================================================================
 % SLICE 2 --- FORMALISM PROBLEMS
 % ======================================================================
 
-Two pathologies arise when formalisms probe the state at a point. The WKB density \cite{berry1977,langer1937}
+
+
+Two pathologies arise when formalisms breach this floor. The WKB density \cite{berry1977,langer1937}
 \begin{equation}
-|\psi_\text{WKB}(q)|^2 = \frac{A^2}{p(q)}\cos^2\!\left(S(q)/\hbar - \pi/4\right)
+|\psi_\text{WKB}(q)|^2 = \frac{N^2}{p(q)}\cos^2\!\left(S(q)/\hbar - \pi/4\right)
 \label{eq:wkb}
 \end{equation}
-diverges at every classical turning point, where $p(q) \to 0$. The Wigner--Weyl distribution \cite{wigner1932}
+diverges at every classical turning point. The Wigner--Weyl distribution \cite{wigner1932}
 \begin{equation}
 W(q,p) = \frac{1}{\pi\hbar}\int_{-\infty}^{\infty} \psi^*(q+y)\,\psi(q-y)\,e^{2ipy/\hbar}\, dy
 \label{eq:wigner}
 \end{equation}
 takes negative values for any state beyond the ground state. Connection formulas and Airy uniformization \cite{langer1937,berry1977} patch the caustic locally; the Husimi $Q$-function \cite{husimi1940} smooths Wigner with a fixed coherent-state kernel of unit width and erases every scale below it. Each remedy treats one symptom in one formalism.
 
-The two pathologies share a single root. WKB evaluates density at a precise $q$; Wigner evaluates it at an exact $(q,p)$. Each assumes a zero-area point measurement ($\delta q \to 0$ or $\delta p \to 0$), which by Eq.~(\ref{eq:reciprocal}) demands an unphysical, infinite conjugate spread ($\Delta p \to \infty$ or $\Delta q \to \infty$) and an unbounded action capacity ($A \to \infty$). The mathematical infinities of the caustics and the negativities of Wigner emerge precisely because the formalisms are driven into this forbidden limit.
+The two pathologies share a single root. WKB evaluates density at a precise $q$; Wigner evaluates it at an exact $(q,p)$. Each assumes a zero-area point measurement ($\delta q \to 0$ or $\delta p \to 0$), which by Eq.~(\ref{eq:reciprocal}) demands an unphysical, infinite conjugate spread ($\Delta p \to \infty$ or $\Delta q \to \infty$) and an unbounded covariance area ($A \to \infty$). The mathematical infinities of the caustics and the negativities of Wigner emerge precisely because the formalisms are driven into this forbidden limit.
 
 % ======================================================================
 % SLICE 3 --- PHYSICS
@@ -102,19 +104,19 @@ G_{\delta p}(q,p) = \frac{1}{\pi}\exp\!\left(-\frac{q^2}{\Delta q^2} - \frac{p^2
 \end{equation}
 $G_{\delta q}$ squeezed along position and $G_{\delta p}$ along momentum. Each saturates the symplectic-capacity bound at $h/2$.
 
-For the classical microcanonical density $W_\text{cl}(q,p) \propto \delta(H - E)$ at the Bohr--Sommerfeld energy $E_n$, the orbit's time-averaged second moments give $\Delta q = \sqrt{2\langle (q-\langle q\rangle)^2\rangle_\text{orbit}}$ and $\Delta p = \sqrt{2\langle p^2\rangle_\text{orbit}}$. The marginal of the convolution over $p$ is
-\begin{equation}
-\rho_{\delta q}(q) = \int (W_\text{cl} * G_{\delta q})(q,p)\, dp,
-\label{eq:rho_marginal}
-\end{equation}
-finite at the turning points where $|\psi_\text{WKB}|^2$ diverges and strictly positive everywhere because the kernel's Gaussian tails are. Figure~\ref{fig:semiclassical} shows three systems. The harmonic ground state collapses to a single Gaussian. The Morse oscillator at $n=8$ preserves the $n+1$ Bohr--Sommerfeld interference lobes; the WKB caustics become finite peaks. For the symmetric double-well sub-barrier doublet, per-well Langer--Airy constructions place artificial maxima at the inner turning points; $\rho_{\delta q}(q)$ is everywhere finite and seamlessly resolves the physical barrier penetration.
-
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{figures/semiclassical.pdf}
 \caption{\textbf{Semiclassical resolution.} Rows: harmonic ground state, Morse $n=8$, symmetric double-well sub-barrier doublet at $A_\text{BS}/A_0 \approx 1.976$. \textit{Left:} Classical orbit at $E_n$ with the conjugate quantum blobs overlaid. \textit{Center:} WKB density with caustic divergences (rendered as infinity arrows) at every classical turning point. \textit{Right:} Resolved density $\rho_{\delta q}(q)$ with the per-orbit Airy uniform density \cite{langer1937} overlaid. The Morse row preserves the $n+1$ WKB lobes; divergences become finite peaks. Per-well Airy lobe maxima clip the panel at every inner turning point of the double-well; $\rho_{\delta q}$ is everywhere finite.}
 \label{fig:semiclassical}
 \end{figure}
+
+For the classical microcanonical density $W_\text{cl}(q,p) \propto \delta(H - E)$ at the Bohr--Sommerfeld energy $E_n$, the orbit's time-averaged second moments give $\Delta q = \sqrt{2\langle (q-\langle q\rangle)^2\rangle_\text{orbit}}$ and $\Delta p = \sqrt{2\langle p^2\rangle_\text{orbit}}$. The marginal of the convolution over $p$ is
+\begin{equation}
+\rho_{\delta q}(q) = \int (W_\text{cl} * G_{\delta q})(q,p)\, dp,
+\label{eq:rho_marginal}
+\end{equation}
+finite at the turning points where $|\psi_\text{WKB}|^2$ diverges, and strictly positive everywhere due to the kernel's Gaussian tails. Figure~\ref{fig:semiclassical} shows three systems. The harmonic ground state collapses to a single Gaussian. The Morse oscillator at $n=8$ preserves the $n+1$ Bohr--Sommerfeld interference lobes; the WKB caustics become finite peaks. For the symmetric double-well sub-barrier doublet, per-well Langer--Airy constructions place artificial maxima at the inner turning points; $\rho_{\delta q}(q)$ is everywhere finite and seamlessly resolves the physical barrier penetration.
 
 \begin{figure}[!htbp]
 \centering
@@ -137,13 +139,14 @@ is non-negative everywhere by Hudson's theorem \cite{hudson1974}, because $G_{\d
 \label{fig:cats}
 \end{figure}
 
-A cat state has no classical orbit and no Bohr--Sommerfeld action \cite{schleich2001}. Its conjugate widths come from the wavefunction's covariance alone, with $\Delta q = \sqrt{2\langle (q-\langle q\rangle)^2\rangle_\psi}$ and $\Delta p = \sqrt{2\langle p^2\rangle_\psi}$. Figure~\ref{fig:cats} shows four cat configurations. Each row's Wigner cross-section dips below zero --- the central interference fringe of the 2-cat, the pair-fringe envelopes of the 3-cat, the chessboard of the axis-aligned compass, and the sub-Planck chessboard of the rotated compass. The chessboard scale Zurek identifies \cite{zurek2001} is the conjugate quantum-blob width $\delta q = \hbar/\Delta p$. At resolution $\delta q$, every cross-section is non-negative.
+A cat state has no classical orbit and no Bohr--Sommerfeld action \cite{schleich2001}. Its conjugate widths come from the wavefunction's covariance alone, with $\Delta q = \sqrt{2\langle (q-\langle q\rangle)^2\rangle_\psi}$ and $\Delta p = \sqrt{2\langle p^2\rangle_\psi}$. Figure~\ref{fig:cats} shows four cat configurations. Each row's Wigner cross-section dips below zero --- the central interference fringe of the 2-cat, the pair-fringe envelopes of the 3-cat, the chessboard of the axis-aligned compass, and the sub-Planck chessboard of the rotated compass. The scale of the chessboard identified by Zurek \cite{zurek2001} is the conjugate quantum-blob width $\delta q = \hbar/\Delta p$. At resolution $\delta q$, every cross-section is non-negative.
 
 % ======================================================================
 % SLICE 4 --- CLOSING
 % ======================================================================
 
-A quantum state is not a point in phase space and cannot be probed as one. Caustics and Wigner negativity are mathematical artifacts of forcing formalisms to assume otherwise. The physical reality of the state is governed by finite action, partitioned by the uncertainty principles into de Gosson's Fermi and conjugate quantum blobs. By respecting this geometric floor of phase space, the conjugate resolution guarantees the state remains everywhere finite and non-negative. 
+A quantum state is not a point in phase space and cannot be probed as one. Caustics and Wigner negativity are mathematical artifacts of ignoring this physical reality. The state possesses finite action, partitioned by the uncertainty principles into de Gosson's Fermi and conjugate quantum blobs. By respecting this geometric floor, the conjugate resolution ensures the state is everywhere finite and non-negative.
+
 \medskip
 All numerical data, figure-generating code, and reproducibility scaffolding for this paper are available at \url{https://doi.org/10.17605/OSF.IO/EV8H6}.
 
