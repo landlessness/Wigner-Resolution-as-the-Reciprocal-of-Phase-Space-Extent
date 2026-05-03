@@ -64,7 +64,7 @@ A Fermi blob of area $A > h/2$ is not featureless. Its interior holds two conjug
 a_q = \pi\,\delta q\,\Delta p = h/2, \qquad a_p = \pi\,\Delta q\,\delta p = h/2,
 \label{eq:quantum_blobs}
 \end{equation}
-each carrying half the Planck quantum of action and together summing to $h$. The narrow widths
+each carrying half the Planck quantum of action and together summing to $h$ (Fig.~\ref{fig:quantum_of_action}). The narrow widths
 \begin{equation}
 \delta q = \hbar/\Delta p, \qquad \delta p = \hbar/\Delta q
 \label{eq:reciprocal}
@@ -78,8 +78,14 @@ are reciprocal to the Fermi-blob semi-axes, fixed by the same Heisenberg constan
 Two pathologies follow from evaluating the state at a point. The WKB density \cite{berry1977,langer1937}
 \begin{equation}
 |\psi_\text{WKB}(q)|^2 = \frac{A^2}{p(q)}\cos^2\!\left(S(q)/\hbar - \pi/4\right)
+\label{eq:wkb}
 \end{equation}
-diverges at every classical turning point, where $p(q) \to 0$. The Wigner--Weyl distribution \cite{wigner1932} takes negative values for any state beyond the ground state. Connection formulas and Airy uniformization \cite{langer1937,berry1977} patch the caustic locally; the Husimi $Q$-function \cite{husimi1940} smooths Wigner with a fixed coherent-state kernel of unit width and erases every scale below it. Each remedy treats one symptom in one formalism.
+diverges at every classical turning point, where $p(q) \to 0$. The Wigner--Weyl distribution \cite{wigner1932}
+\begin{equation}
+W(q,p) = \frac{1}{\pi\hbar}\int_{-\infty}^{\infty} \psi^*(q+y)\,\psi(q-y)\,e^{2ipy/\hbar}\, dy
+\label{eq:wigner}
+\end{equation}
+takes negative values for any state beyond the ground state. Connection formulas and Airy uniformization \cite{langer1937,berry1977} patch the caustic locally; the Husimi $Q$-function \cite{husimi1940} smooths Wigner with a fixed coherent-state kernel of unit width and erases every scale below it. Each remedy treats one symptom in one formalism.
 
 The two pathologies share a single root. WKB asks for the density at the value of $q$; Wigner asks for the density at the point $(q,p)$. Each is a pointwise evaluation: a question posed at a phase-space region of zero area, in violation of Eq.~(\ref{eq:hup}). The pathologies are what the formalisms produce when the question is unphysical.
 
@@ -96,7 +102,7 @@ G_{\delta q}(q,p) = \frac{1}{\pi}\exp\!\left(-\frac{q^2}{\delta q^2} - \frac{p^2
 G_{\delta p}(q,p) = \frac{1}{\pi}\exp\!\left(-\frac{q^2}{\Delta q^2} - \frac{p^2}{\delta p^2}\right),
 \label{eq:Gdp}
 \end{equation}
-$G_{\delta q}$ squeezed along position and $G_{\delta p}$ along momentum (Fig.~\ref{fig:quantum_of_action}). Each saturates the symplectic-capacity bound at $h/2$.
+$G_{\delta q}$ squeezed along position and $G_{\delta p}$ along momentum. Each saturates the symplectic-capacity bound at $h/2$.
 
 For the classical microcanonical density $W_\text{cl}(q,p) \propto \delta(H - E)$ at the Bohr--Sommerfeld energy $E_n$, the orbit's time-averaged second moments give $\Delta q = \sqrt{2\langle (q-\langle q\rangle)^2\rangle_\text{orbit}}$ and $\Delta p = \sqrt{2\langle p^2\rangle_\text{orbit}}$. The marginal of the convolution over $p$ is
 \begin{equation}
@@ -119,7 +125,7 @@ finite at the turning points where $|\psi_\text{WKB}|^2$ diverges and strictly p
 \label{fig:wigner}
 \end{figure}
 
-The same kernel applies in the wave formalism, with $\Delta q$ and $\Delta p$ now read from the wavefunction's Robertson--Schr\"odinger covariance directly. The convolved Wigner density
+The same kernel applies in the wave formalism, with $\Delta q = \sqrt{2\langle (q-\langle q\rangle)^2\rangle_{\psi_n}}$ and $\Delta p = \sqrt{2\langle p^2\rangle_{\psi_n}}$ from the eigenstate's Robertson--Schr\"odinger covariance. The convolved Wigner density
 \begin{equation}
 P_{\delta q}(q,p) = (W * G_{\delta q})(q,p)
 \label{eq:Pdq}
@@ -133,7 +139,7 @@ is non-negative everywhere by Hudson's theorem \cite{hudson1974}, because $G_{\d
 \label{fig:cats}
 \end{figure}
 
-A cat state has no classical orbit and no Bohr--Sommerfeld action. Its conjugate widths come from the wavefunction's covariance directly \cite{schleich2001}, with $\Delta q = \sqrt{2\langle (q-\langle q\rangle)^2\rangle_\psi}$ and $\Delta p = \sqrt{2\langle p^2\rangle_\psi}$. Figure~\ref{fig:cats} shows four cat configurations. Each row's Wigner cross-section dips below zero --- the central interference fringe of the 2-cat, the pair-fringe envelopes of the 3-cat, the chessboard of the axis-aligned compass, and the sub-Planck chessboard of the rotated compass \cite{zurek2001} whose scale $\delta q = \hbar/\Delta p$ is the conjugate quantum-blob width. At resolution $\delta q$, every cross-section is non-negative.
+A cat state has no classical orbit and no Bohr--Sommerfeld action \cite{schleich2001}. Its conjugate widths come from the wavefunction's covariance alone, with $\Delta q = \sqrt{2\langle (q-\langle q\rangle)^2\rangle_\psi}$ and $\Delta p = \sqrt{2\langle p^2\rangle_\psi}$. Figure~\ref{fig:cats} shows four cat configurations. Each row's Wigner cross-section dips below zero --- the central interference fringe of the 2-cat, the pair-fringe envelopes of the 3-cat, the chessboard of the axis-aligned compass, and the sub-Planck chessboard of the rotated compass. The chessboard scale Zurek identifies \cite{zurek2001} is the conjugate quantum-blob width $\delta q = \hbar/\Delta p$. At resolution $\delta q$, every cross-section is non-negative.
 
 % ======================================================================
 % SLICE 4 --- CLOSING
