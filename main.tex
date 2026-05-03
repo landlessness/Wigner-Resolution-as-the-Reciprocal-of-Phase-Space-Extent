@@ -24,7 +24,7 @@
 \title{Uncertainty Principles and Finite Action in Phase Space}
 
 \begin{abstract}
-Quantum states occupy finite action cells in phase space. The uncertainty principles of Heisenberg, Robertson--Schr\"odinger, and de Gosson partition each cell into a conjugate pair of squeezed action areas, each bounded by $h/2$, totaling Planck's quantum of action $h$. Pointwise evaluation ignores this structure and produces semiclassical caustics and Wigner negativity. Evaluated at the resolution of the conjugate cells, the state is everywhere finite and everywhere non-negative.
+Quantum states occupy finite action cells in phase space. The uncertainty principles of Heisenberg, Robertson--Schr\"odinger, and de Gosson partition each cell into a conjugate pair of squeezed action areas, each bounded by $h/2$, totaling Planck's quantum of action $h$. Assuming sub-Planck pointwise measurements ignores this physical structure, producing semiclassical caustics and Wigner negativity. Probed at the resolution of its conjugate cells, the state is everywhere finite and everywhere non-negative.
 \end{abstract}
 
 \author{Brian S. Mulloy\orcidlink{0000-0002-1803-3172}}
@@ -38,12 +38,12 @@ Quantum states occupy finite action cells in phase space. The uncertainty princi
 % SLICE 1 --- PHYSICS
 % ======================================================================
 
-A quantum state occupies a finite region of phase space. The Heisenberg and Robertson--Schr\"odinger uncertainty principles \cite{robertson1929,schrodinger1930},
+A quantum state occupies a finite region of phase space. The Heisenberg and Robertson--Schr"odinger uncertainty principles \cite{robertson1929,schrodinger1930},
 \begin{equation}
 \sigma_q \sigma_p \ge \hbar/2,
 \label{eq:hup}
 \end{equation}
-forbid the state from being concentrated at a point. A point is a region of zero phase-space area, of unbounded action; the state has neither.
+forbid the state from being concentrated at a point. A point is a region of zero phase-space area, in direct violation of this bound.
 
 \begin{figure}[t]
 \centering
@@ -52,14 +52,12 @@ forbid the state from being concentrated at a point. A point is a region of zero
 \label{fig:quantum_of_action}
 \end{figure}
 
-The state's extent in phase space is its Fermi blob \cite{degosson2012fermi}, the elliptical region with semi-axes $\Delta q = \sqrt{2}\sigma_q$ and $\Delta p = \sqrt{2}\sigma_p$ and area
+De Gosson identified the state's extent in phase space as the Fermi blob \cite{degosson2012fermi}, the elliptical region with semi-axes $\Delta q = \sqrt{2}\sigma_q$ and $\Delta p = \sqrt{2}\sigma_p$ and area
 \begin{equation}
 A = \pi \Delta q \Delta p \ge h/2,
 \label{eq:fermi_blob_area}
 \end{equation}
-saturated by minimum-uncertainty Gaussians.
-
-A Fermi blob of area $A > h/2$ is not featureless. Its interior holds two conjugate quantum blobs \cite{degosson2009,degossoncharlyne2022},
+saturated by minimum-uncertainty Gaussians. A Fermi blob of area $A > h/2$ is not featureless. Its interior holds two conjugate quantum blobs \cite{degosson2009,degossoncharlyne2022},
 \begin{equation}
 a_q = \pi\,\delta q\,\Delta p = h/2, \qquad a_p = \pi\,\Delta q\,\delta p = h/2,
 \label{eq:quantum_blobs}
@@ -75,7 +73,7 @@ are reciprocal to the Fermi-blob semi-axes, fixed by the same Heisenberg constan
 % SLICE 2 --- FORMALISM PROBLEMS
 % ======================================================================
 
-Two pathologies follow from evaluating the state at a point. The WKB density \cite{berry1977,langer1937}
+Two pathologies arise when formalisms probe the state at a point. The WKB density \cite{berry1977,langer1937}
 \begin{equation}
 |\psi_\text{WKB}(q)|^2 = \frac{A^2}{p(q)}\cos^2\!\left(S(q)/\hbar - \pi/4\right)
 \label{eq:wkb}
@@ -87,13 +85,13 @@ W(q,p) = \frac{1}{\pi\hbar}\int_{-\infty}^{\infty} \psi^*(q+y)\,\psi(q-y)\,e^{2i
 \end{equation}
 takes negative values for any state beyond the ground state. Connection formulas and Airy uniformization \cite{langer1937,berry1977} patch the caustic locally; the Husimi $Q$-function \cite{husimi1940} smooths Wigner with a fixed coherent-state kernel of unit width and erases every scale below it. Each remedy treats one symptom in one formalism.
 
-The two pathologies share a single root. WKB asks for the density at the value of $q$; Wigner asks for the density at the point $(q,p)$. Each is a pointwise evaluation: a question posed at a phase-space region of zero area, in violation of Eq.~(\ref{eq:hup}). The pathologies are what the formalisms produce when the question is unphysical.
+The two pathologies share a single root. WKB evaluates density at a precise $q$; Wigner evaluates it at an exact $(q,p)$. Each assumes a zero-area point measurement ($\delta q \to 0$ or $\delta p \to 0$), which by Eq.~(\ref{eq:reciprocal}) demands an unphysical, infinite conjugate spread ($\Delta p \to \infty$ or $\Delta q \to \infty$) and an unbounded action capacity ($A \to \infty$). The mathematical infinities of the caustics and the negativities of Wigner emerge precisely because the formalisms are driven into this forbidden limit.
 
 % ======================================================================
 % SLICE 3 --- PHYSICS
 % ======================================================================
 
-The two conjugate quantum blobs are the densities the state can be evaluated against. The corresponding kernels of phase-space area $h/2$ are
+The two conjugate quantum blobs define the fundamental physical measurement limits of the state. The corresponding kernels of phase-space area $h/2$ are
 \begin{equation}
 G_{\delta q}(q,p) = \frac{1}{\pi}\exp\!\left(-\frac{q^2}{\delta q^2} - \frac{p^2}{\Delta p^2}\right),
 \label{eq:Gdq}
@@ -109,7 +107,7 @@ For the classical microcanonical density $W_\text{cl}(q,p) \propto \delta(H - E)
 \rho_{\delta q}(q) = \int (W_\text{cl} * G_{\delta q})(q,p)\, dp,
 \label{eq:rho_marginal}
 \end{equation}
-finite at the turning points where $|\psi_\text{WKB}|^2$ diverges and strictly positive everywhere because the kernel's Gaussian tails are. Figure~\ref{fig:semiclassical} shows three systems. The harmonic ground state collapses to a single Gaussian. The Morse oscillator at $n=8$ preserves the $n+1$ Bohr--Sommerfeld interference lobes; the WKB caustics become finite peaks. The symmetric double-well at the lowest sub-barrier doublet has four turning points, four caustic divergences, and the per-well Langer--Airy construction places artificial maxima at each inner turning point and clips the panel; $\rho_{\delta q}(q)$ is finite throughout and resolves the two-well structure smoothly.
+finite at the turning points where $|\psi_\text{WKB}|^2$ diverges and strictly positive everywhere because the kernel's Gaussian tails are. Figure~\ref{fig:semiclassical} shows three systems. The harmonic ground state collapses to a single Gaussian. The Morse oscillator at $n=8$ preserves the $n+1$ Bohr--Sommerfeld interference lobes; the WKB caustics become finite peaks. For the symmetric double-well sub-barrier doublet, per-well Langer--Airy constructions place artificial maxima at the inner turning points; $\rho_{\delta q}(q)$ is everywhere finite and seamlessly resolves the physical barrier penetration.
 
 \begin{figure}[!htbp]
 \centering
@@ -121,7 +119,7 @@ finite at the turning points where $|\psi_\text{WKB}|^2$ diverges and strictly p
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{figures/wigner.pdf}
-\caption{\textbf{Wigner resolution.} Same three systems as Fig.~\ref{fig:semiclassical}, evaluated as Schr\"odinger eigenstates: harmonic $n=0$, Morse $n=8$, double-well $n=1$ (antisymmetric lower-doublet partner with exact node $\psi_1(0) = 0$). Kernel widths from the Robertson--Schr\"odinger covariance of $\psi_n$. \textit{Left:} Wigner distribution $W_n(q,p)$. \textit{Center:} Cross-section $W_n(q,0)$. The double-well row reaches $W_1(0,0) = -0.32$; the wavefunction's exact node lies at the deepest Wigner negativity. \textit{Right:} $P_{\delta q}(q,0)$ with Husimi $Q(q,0)$ overlaid. Husimi's fixed width $q_0 = 1$ exceeds $\delta q$ for the Morse row and collapses the multi-lobe structure into a single peak; $\delta q$ tracks the wavefunction. At the double-well node $P_{\delta q}$ is strictly positive (numerically $5\times 10^{-6}$ relative to peak $\sim 0.08$).}
+\caption{\textbf{Wigner resolution.} Same three systems as Fig.~\ref{fig:semiclassical}, evaluated as Schr\"odinger eigenstates: harmonic $n=0$, Morse $n=8$, double-well $n=1$ (antisymmetric lower-doublet partner with exact node $\psi_1(0) = 0$). Kernel widths from the Robertson--Schr\"odinger covariance of $\psi_n$. \textit{Left:} Wigner distribution $W_n(q,p)$. \textit{Center:} Cross-section $W_n(q,0)$. The double-well row reaches $W_1(0,0) = -0.32$; the wavefunction's exact node lies at the deepest Wigner negativity. \textit{Right:} $P_{\delta q}(q,0)$ with Husimi $Q(q,0)$ overlaid. Husimi's fixed width $q_0 = 1$ exceeds $\delta q$ for the Morse row and smooths the multi-lobe structure into two broad peaks at the turning points; $\delta q$ tracks the wavefunction. At the double-well node $P_{\delta q}$ is strictly positive (numerically $5\times 10^{-6}$ relative to peak $\sim 0.08$).}
 \label{fig:wigner}
 \end{figure}
 
@@ -130,7 +128,7 @@ The same kernel applies in the wave formalism, with $\Delta q = \sqrt{2\langle (
 P_{\delta q}(q,p) = (W * G_{\delta q})(q,p)
 \label{eq:Pdq}
 \end{equation}
-is non-negative everywhere by Hudson's theorem \cite{hudson1974}, because $G_{\delta q}$ saturates the symplectic positivity condition. Figure~\ref{fig:wigner} shows the three systems as eigenstates. The Morse row at $n=8$ has $n+1$ alternating-sign Wigner lobes; $P_{\delta q}$ preserves the lobe envelope and is non-negative throughout, while Husimi smooths it into a single peak. The double-well antisymmetric partner $\psi_1$ has an exact wavefunction node at $q=0$, which coincides with $W_1(0,0) = -0.32$, the deepest point of the Wigner negativity --- the same zero-area question, asked of two different densities. At resolution $\delta q$, $P_{\delta q}(q,0)$ is strictly positive throughout, including across the node and through the barrier where the Gaussian tails extend from each well.
+is non-negative everywhere by Hudson's theorem \cite{hudson1974}, because $G_{\delta q}$ saturates the symplectic positivity condition. Figure~\ref{fig:wigner} shows the three systems as eigenstates. The Morse row at $n=8$ has $n+1$ alternating-sign Wigner lobes; $P_{\delta q}$ preserves the lobe envelope and is non-negative throughout, while Husimi smooths away the interior interference, leaving only two broad peaks at the classical turning points. The double-well antisymmetric partner $\psi_1$ has an exact wavefunction node at $q=0$, which coincides with $W_1(0,0) = -0.32$, the deepest point of the Wigner negativity --- the same unphysical point-measurement failing in two different formalisms. At resolution $\delta q$, $P_{\delta q}(q,0)$ is strictly positive throughout, including across the node and through the barrier where the Gaussian tails extend from each well.
 
 \begin{figure}[!htbp]
 \centering
@@ -145,8 +143,7 @@ A cat state has no classical orbit and no Bohr--Sommerfeld action \cite{schleich
 % SLICE 4 --- CLOSING
 % ======================================================================
 
-A quantum state is not a point in phase space and cannot answer a question asked at one. It has finite action, partitioned by the uncertainty principles into a Fermi blob and two conjugate quantum blobs. Caustics and Wigner negativity are two formalisms producing the same unphysical answer. At the resolution of the conjugate quantum blobs, the state is everywhere finite and everywhere non-negative.
-
+A quantum state is not a point in phase space and cannot be probed as one. Caustics and Wigner negativity are mathematical artifacts of forcing formalisms to assume otherwise. The physical reality of the state is governed by finite action, partitioned by the uncertainty principles into de Gosson's Fermi and conjugate quantum blobs. By respecting this geometric floor of phase space, the conjugate resolution guarantees the state remains everywhere finite and non-negative. 
 \medskip
 All numerical data, figure-generating code, and reproducibility scaffolding for this paper are available at \url{https://doi.org/10.17605/OSF.IO/EV8H6}.
 
