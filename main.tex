@@ -24,7 +24,7 @@
 \title{Uncertainty Principles and Finite Action in Phase Space}
 
 \begin{abstract}
-Quantum states occupy finite action cells in phase space. The uncertainty principles of Heisenberg, Robertson--Schr\"odinger, and de Gosson partition each cell into a conjugate pair of squeezed action areas, each bounded by $h/2$, totaling Planck's quantum of action $h$. Assuming sub-Planck pointwise measurements ignores this physical structure, producing semiclassical caustics and Wigner negativity. Probed at the resolution of its conjugate cells, the state is everywhere finite and everywhere non-negative.
+Quantum states occupy finite action cells in phase space. The uncertainty principles of Heisenberg, Robertson--Schr\"odinger, and de Gosson combine to partition cells into conjugate pairs of squeezed action areas, each bounded by $h/2$, totaling Planck's quantum of action $h$. Assuming sub-Planck pointwise measurements ignores this physical structure, producing semiclassical caustics and Wigner negativity. Probed at the resolution of its conjugate cells, the state is everywhere finite and everywhere non-negative.
 \end{abstract}
 
 \author{Brian S. Mulloy\orcidlink{0000-0002-1803-3172}}
@@ -67,7 +67,7 @@ each carrying half the Planck quantum of action and together summing to $h$ (Fig
 \delta q = \hbar/\Delta p, \qquad \delta p = \hbar/\Delta q
 \label{eq:reciprocal}
 \end{equation}
-are reciprocal to the Fermi-blob semi-axes, fixed by the same Heisenberg constant in Eq.~(\ref{eq:hup}). As the action capacity $A$ grows, $\Delta q$ and $\Delta p$ grow and $\delta q$ and $\delta p$ shrink: the uncertainty principles bind the state at both scales. Gromov's non-squeezing theorem \cite{gromov1985} forbids any canonical transformation from compressing a quantum blob below $h/2$. The Planck quantum is the floor of phase space.
+are reciprocal to the Fermi-blob semi-axes, fixed by the same Heisenberg constant in Eq.~(\ref{eq:hup}). As the action capacity $A$ grows, $\Delta p$ and $\Delta q$ grow and $\delta q$ and $\delta p$ shrink: the uncertainty principles bind the state at both scales. Gromov's non-squeezing theorem \cite{gromov1985} forbids any canonical transformation from compressing a quantum blob below $h/2$. The Planck quantum is the floor of phase space.
 
 % ======================================================================
 % SLICE 2 --- FORMALISM PROBLEMS
@@ -91,7 +91,7 @@ The two pathologies share a single root. WKB evaluates density at a precise $q$;
 % SLICE 3 --- PHYSICS
 % ======================================================================
 
-The two conjugate quantum blobs define the fundamental physical measurement limits of the state. The corresponding kernels of phase-space area $h/2$ are
+The two conjugate quantum blobs define the fundamental physical measurement limits of the state. Because pointwise evaluation ignores this floor, we inject the physical measurement limits back into the formalisms using a convolution kernel. The corresponding kernels of phase-space area $h/2$ are
 \begin{equation}
 G_{\delta q}(q,p) = \frac{1}{\pi}\exp\!\left(-\frac{q^2}{\delta q^2} - \frac{p^2}{\Delta p^2}\right),
 \label{eq:Gdq}
