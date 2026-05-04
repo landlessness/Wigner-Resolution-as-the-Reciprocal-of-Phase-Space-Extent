@@ -90,6 +90,15 @@ robertson_schroedinger <- function(sigma_qq, sigma_pp, sigma_qp=0, hbar=1.0) {
 #' derivative; for high quantum numbers use a fine grid to avoid Nyquist
 #' aliasing of psi's oscillations.
 #'
+#' Cross-covariance sigma_qp = (1/2)<q*p + p*q> - <q><p> is set to zero.
+#' This is exact for every state in the manuscript: real eigenstates of a
+#' real Hamiltonian (harmonic, Morse, double-well) have <p>=0 and
+#' <qp+pq>=0 by parity; the symmetric cat-state configurations used in
+#' Fig. 4 (2-cat on +/-p axis, equilateral 3-cat, axis and rotated 4-cat
+#' compasses) all have sigma_qp = 0 by their phase-space symmetry.
+#' Asymmetric states would require the off-diagonal moment to be
+#' computed numerically; this routine does not do so.
+#'
 #' @param psi_vec Wavefunction sampled on q_grid (will be re-normalized).
 #' @param q_grid Uniform position grid.
 #' @param hbar Planck constant in chosen units.

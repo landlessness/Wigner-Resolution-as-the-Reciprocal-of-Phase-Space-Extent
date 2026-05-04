@@ -220,20 +220,29 @@ orbit_covariance <- function(V_fn, E, turning_points, hbar=1.0, n_pts=10001) {
 
   # A_0 = pi * hbar (= h/2). Fermi-blob area A = pi * Delta_q * Delta_p.
   #
-  # The QoA acts as a microscope with a fixed minimum resolution: the
-  # smallest blob it can render has area h/2 (the de Gosson quantum-of-
-  # action cell, fixed by Gromov's non-squeezing theorem). When the
-  # classical orbit's moment-product reads sub-resolution
-  # (A_orbit < A_0), the QoA cannot render a blob smaller than its own
-  # resolution floor — it returns a blob of area exactly A_0,
-  # regardless of what the orbit reports.
+  # MICROSCOPE ANALOGY. The QoA is a microscope of fixed minimum
+  # resolution: the smallest cell it can render has phase-space area
+  # h/2 (Gromov's non-squeezing theorem; de Gosson's quantum blob).
+  # Pointing the microscope at a smaller object does not improve the
+  # microscope: the apparatus is still limited by its factory-set
+  # maximum resolution.
   #
-  # We implement the floor by scaling Delta_q and Delta_p uniformly so
-  # their product hits hbar exactly when the raw moment-product is
-  # below it. The aspect ratio (directional information about which
-  # axis is squeezed) is preserved; only the overall scale is bumped
-  # to the QoA minimum. Above the floor, no clamp activates and the
-  # orbit moments pass through unchanged.
+  # A purely classical orbit can have phase-space area arbitrarily close
+  # to zero (a hypothetical low-energy oscillator with nothing forbidding
+  # it). Convolving with a kernel of physical area h/2 against a sub-
+  # resolution orbit-derived width would require the kernel to be
+  # smaller than h/2 — impossible. We clamp instead: when the raw
+  # orbit moment-product reads A_orbit < A_0, scale Delta_q and Delta_p
+  # uniformly so their product hits hbar exactly (the resolution floor).
+  # Aspect ratio is preserved (directional squeezing information is kept);
+  # only the overall scale bumps to the QoA minimum.
+  #
+  # NONE of the three test systems in the manuscript triggers this clamp:
+  # harmonic n=0 has A/A_0 = 1 exactly (Heisenberg-saturated, edge of
+  # the floor), Morse n=8 has A/A_0 >> 1, double-well doublet has
+  # A_BS/A_0 ~ 1.97 > 1. The clamp is defensive; it would activate only
+  # for a hypothetical sub-Heisenberg orbit (e.g., a classical oscillator
+  # at energy below 1/2 in natural units).
   #
   # The check is loosened by a small tolerance to absorb finite-grid
   # quadrature error: at the harmonic ground state A/A0 = 1 exactly,

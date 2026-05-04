@@ -2,11 +2,20 @@
 # plot_cats.R
 # Symplectic resolution of Wigner negativity for n-cat states.
 # Each row shows one n-cat configuration:
-#   row 1: n_cats=2     (N/S lobes; classic two-cat with central interference)
-#   row 2: n_cats=3     (triangle pointing up; pair-fringe envelopes)
-#   row 3: n_cats=4     (rotated-45 Zurek compass; lobes at NE/NW/SW/SE,
-#                        central chessboard plus pair-fringe envelopes
-#                        at the diagonal pair midpoints)
+#   row 1: n_cats=2          (lobes at (0, +/-5); classic two-cat with
+#                             central interference)
+#   row 2: n_cats=3          (equilateral triangle pointing up; apex (0, 5),
+#                             base lobes (+/- 10/sqrt(3), -5);
+#                             pair-fringe envelopes)
+#   row 3: n_cats=4 diag     (compass with lobes on the diagonals at
+#                             (+/-5, +/-5) -- this is Zurek's rotated
+#                             compass. Lobes off the p=0 slice; central
+#                             sub-Planck chessboard cuts the slice.)
+#   row 4: n_cats=4 axis     (diag rotated 45 deg, lobes on the q and p
+#                             axes at (0, +/-5sqrt(2)) and (+/-5sqrt(2), 0)
+#                             so the adjacent-cat distance equals 2*p_max
+#                             same as diag. Lobes E and W now sit on the
+#                             p=0 slice and are directly resolved.)
 #
 # Three columns:
 #   left:    bare Wigner heatmap with the symplectic quantum of action
