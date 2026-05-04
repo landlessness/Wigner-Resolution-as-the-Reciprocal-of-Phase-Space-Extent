@@ -30,7 +30,7 @@ COLUMN_TITLE_RIGHT_SYMPLECTIC     <- "Symplectic Resolution"
 PANEL_WIDTHS    <- c(1, 1, 1)
 FIGURE_WIDTH_IN <- 7.5
 ROW_HEIGHT_IN   <- 1.8
-FIGURE_PAD_IN   <- 0.5
+FIGURE_PAD_IN   <- 0.0
 
 # Left margin reserved for the row-label tag. Sized to fit the longest
 # expected label (e.g. "25.38 A_0") at ROW_LABEL_SIZE_PT in a serif body
@@ -546,7 +546,7 @@ assemble_grid <- function(rows, title_center, title_right, base_font="",
   }
 
   wrap_plots(plot_list, ncol=3, widths=PANEL_WIDTHS) +
-    theme(plot.margin=margin(10,10,10,10))
+    theme(plot.margin=margin(10,10,0,10))
 }
 
 # ------------------------------------------------------------------------------
@@ -590,7 +590,7 @@ assemble_grid_unlabeled <- function(rows, title_center, title_right,
   }
 
   wrap_plots(plot_list, ncol=3, widths=PANEL_WIDTHS) +
-    theme(plot.margin=margin(10,10,10,10))
+    theme(plot.margin=margin(10,10,0,10))
 }
 
 # ------------------------------------------------------------------------------
