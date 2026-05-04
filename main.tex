@@ -48,7 +48,7 @@ forbid the state from being a point: zero area is incompatible with finite uncer
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/quantum_of_action.pdf}
-\caption{\textbf{Conjugate structure of the quantum state} (schematic, 1D case). The Heisenberg limit $\sigma_q \sigma_p \ge \hbar/2$ admits semi-axes $\Delta q = \sqrt{2}\sigma_q$, $\Delta p = \sqrt{2}\sigma_p$; the state's $1\sigma$ contour is its Fermi blob \cite{degosson2013fermiblobs}, of area $A = \pi\Delta q\Delta p \ge h/2$. Inside sit two conjugate quantum blobs \cite{degosson2009,degossoncharlyne2022}, $a_q = \pi\,\delta q\,\Delta p = h/2$ squeezed along position and $a_p = \pi\,\Delta q\,\delta p = h/2$ squeezed along momentum. Their narrow widths are $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$. As $A$ grows, $\Delta p$ and $\Delta q$ grow while $\delta q$ and $\delta p$ shrink: the same $\hbar$ binds the outer extent and the inner resolution.}
+\caption{\textbf{Conjugate structure of the quantum state} (schematic, 1D case). The Heisenberg limit $\sigma_q \sigma_p \ge \hbar/2$ admits semi-axes $\Delta q = \sqrt{2}\sigma_q$, $\Delta p = \sqrt{2}\sigma_p$; the state's $1\sigma$ contour is its Fermi blob, of area $A = \pi\Delta q\Delta p \ge h/2$. Inside sit two conjugate quantum blobs, $a_q = \pi\,\delta q\,\Delta p = h/2$ squeezed along position and $a_p = \pi\,\Delta q\,\delta p = h/2$ squeezed along momentum. Their narrow widths are $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$. As $A$ grows, $\Delta p$ and $\Delta q$ grow while $\delta q$ and $\delta p$ shrink: the same $\hbar$ binds the outer extent and the inner resolution.}
 \label{fig:quantum_of_action}
 \end{figure}
 
@@ -83,7 +83,7 @@ diverges at every classical turning point, a leading-order asymptotic artifact p
 W(q,p) = \frac{1}{\pi\hbar}\int_{-\infty}^{\infty} \psi^*(q+y)\,\psi(q-y)\,e^{2ipy/\hbar}\, dy
 \label{eq:wigner}
 \end{equation}
-takes negative values for any state beyond the ground state. These values carry operationally meaningful structure at sub-cell scales used in resource-theoretic and simulability arguments \cite{marieisert2012,veitch2012}; the Husimi $Q$-function \cite{husimi1940} smooths $W$ with a fixed kernel that erases every scale below it.
+takes negative values for any state beyond the ground state, with structure at sub-cell scales. The Husimi $Q$-function \cite{husimi1940} smooths $W$ with a fixed kernel that erases every scale below it.
 
 Pointwise evaluation at a precise $q$ or an exact $(q,p)$ assumes a zero-area limit ($\delta q \to 0$ or $\delta p \to 0$), which is physically forbidden \cite{dragoman2005}. By Eq.~(\ref{eq:reciprocal}) such a limit demands an infinite conjugate spread ($\Delta p \to \infty$ or $\Delta q \to \infty$) and unbounded covariance area ($A \to \infty$). The conjugate cells are the physical scale at which the density of the state is defined.
 
@@ -100,12 +100,12 @@ G_{\delta q}(q,p) = \frac{1}{\pi}\exp\!\left(-\frac{q^2}{\delta q^2} - \frac{p^2
 G_{\delta p}(q,p) = \frac{1}{\pi}\exp\!\left(-\frac{q^2}{\Delta q^2} - \frac{p^2}{\delta p^2}\right),
 \label{eq:Gdp}
 \end{equation}
-$G_{\delta q}$ squeezed along position and $G_{\delta p}$ along momentum, written here for diagonal covariance and recovered in general by symplectic rotation. Each kernel is itself a quantum blob at the $h/2$ floor. Gaussian smoothing of the Wigner function with a minimum-uncertainty kernel is the Cahill--Glauber $s$-parametrized construction \cite{cahillglauber1969}, of which Husimi is the fixed-width member, and yields a non-negative distribution \cite{cartwright1976,narcowichoconnell1986}. de Gosson \cite{degosson2005cellules} connected the symplectic-cell framework to the positivity of Wigner and Husimi functions, fixing the kernel scale at $h/2$. Gromov non-squeezing forbids a narrower kernel; a wider kernel discards resolution the state has. Other $s$-values answer different questions, including operator-ordering conventions and resource-theoretic features of $W$ \cite{marieisert2012,veitch2012} that operate at all scales.
+$G_{\delta q}$ squeezed along position and $G_{\delta p}$ along momentum, written here for diagonal covariance and recovered in general by symplectic rotation. Each kernel is itself a quantum blob at the $h/2$ floor. Gaussian smoothing of the Wigner function with a minimum-uncertainty kernel is the Cahill--Glauber $s$-parametrized construction \cite{cahillglauber1969}, of which Husimi is the fixed-width member, and yields a non-negative distribution \cite{cartwright1976}. de Gosson \cite{degosson2005cellules} connected the symplectic-cell framework to the positivity of Wigner and Husimi functions, fixing the kernel scale at $h/2$. Gromov non-squeezing forbids a narrower kernel; a wider kernel discards resolution the state has.
 
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{figures/semiclassical.pdf}
-\caption{\textbf{Semiclassical resolution.} Rows: harmonic ground state, Morse $n=8$, symmetric double-well in the sub-barrier doublet regime. \textit{Left:} Classical orbit at $E_n$ with the conjugate quantum blobs overlaid. \textit{Center:} WKB density with caustic divergences (rendered as infinity arrows) at every classical turning point. \textit{Right:} Resolved density $\rho_{\delta q}(q)$ with the per-orbit Airy uniform density \cite{langer1937} overlaid. The Morse row preserves the $n+1$ WKB lobes; divergences become finite peaks. Per-well Airy lobe maxima clip the panel at every inner turning point of the double-well; $\rho_{\delta q}$ is everywhere finite.}
+\caption{\textbf{Semiclassical resolution.} Rows: harmonic ground state, Morse $n=8$, symmetric double-well in the sub-barrier doublet regime. \textit{Left:} Classical orbit at $E_n$ with the conjugate quantum blobs overlaid. \textit{Center:} WKB density with caustic divergences (rendered as infinity arrows) at every classical turning point. \textit{Right:} Resolved density $\rho_{\delta q}(q)$ with the per-orbit Airy uniform density overlaid. The Morse row preserves the $n+1$ WKB lobes; divergences become finite peaks. Per-well Airy lobe maxima clip the panel at every inner turning point of the double-well; $\rho_{\delta q}$ is everywhere finite.}
 \label{fig:semiclassical}
 \end{figure}
 
@@ -128,12 +128,12 @@ The same kernel applies in the wave formalism, with $\Delta q = \sqrt{2\langle (
 P_{\delta q}(q,p) = (W * G_{\delta q})(q,p)
 \label{eq:Pdq}
 \end{equation}
-is non-negative everywhere, since convolution with a quantum-blob kernel sends any Wigner function to a non-negative one \cite{hudson1974,degosson2013qblobs}. Figure~\ref{fig:wigner} shows the three systems as eigenstates. The Morse row at $n=8$ has $n+1$ alternating-sign Wigner lobes; $P_{\delta q}$ preserves the lobe envelope and is non-negative throughout, while Husimi smooths away the interior interference, leaving only two broad peaks at the classical turning points. The double-well antisymmetric partner $\psi_1$ has an exact wavefunction node at $q=0$, where the Wigner negativity is deepest. At resolution $\delta q$, $P_{\delta q}(q,0)$ is strictly positive throughout, including across the node and through the barrier where the Gaussian tails extend from each well.
+is non-negative everywhere, since convolution with a quantum-blob kernel sends any Wigner function to a non-negative one \cite{degosson2013qblobs}. Figure~\ref{fig:wigner} shows the three systems as eigenstates. The Morse row at $n=8$ has $n+1$ alternating-sign Wigner lobes; $P_{\delta q}$ preserves the lobe envelope and is non-negative throughout, while Husimi smooths away the interior interference, leaving only two broad peaks at the classical turning points. The double-well antisymmetric partner $\psi_1$ has an exact wavefunction node at $q=0$, where the Wigner negativity is deepest. At resolution $\delta q$, $P_{\delta q}(q,0)$ is strictly positive throughout, including across the node and through the barrier where the Gaussian tails extend from each well.
 
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{figures/cats.pdf}
-\caption{\textbf{Cat states.} Coherent superpositions of $n$ Gaussian wavepackets with no classical orbit and no Bohr--Sommerfeld condition. Kernel widths from the Robertson--Schr\"odinger covariance of $\psi$ directly. Rows: 2-cat (two lobes), 3-cat (equilateral triangle), 4-cat compass (diagonal lobes), 4-cat Zurek compass (axial lobes) \cite{zurek2001}. Columns as in Fig.~\ref{fig:wigner}. Each row's Wigner cross-section dips below zero, including the chessboards \cite{zurek2001} of the two 4-cat compasses. $P_{\delta q}(q,0)$ is non-negative for every row.}
+\caption{\textbf{Cat states.} Coherent superpositions of $n$ Gaussian wavepackets with no classical orbit and no Bohr--Sommerfeld condition. Kernel widths from the Robertson--Schr\"odinger covariance of $\psi$ directly. Rows: 2-cat (two lobes), 3-cat (equilateral triangle), 4-cat compass (diagonal lobes), 4-cat Zurek compass (axial lobes). Columns as in Fig.~\ref{fig:wigner}. Each row's Wigner cross-section dips below zero, including the chessboards of the two 4-cat compasses. $P_{\delta q}(q,0)$ is non-negative for every row.}
 \label{fig:cats}
 \end{figure}
 
