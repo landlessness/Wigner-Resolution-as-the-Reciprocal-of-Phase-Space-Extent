@@ -24,7 +24,7 @@
 \title{Quantum of Action as Two Conjugate Cells Resolves Caustics and Wigner Negativity}
 
 \begin{abstract}
-A quantum state has finite action in phase space. Heisenberg's uncertainty combined with de Gosson's topology structures Planck's quantum of action $h$ as two conjugate cells of size $h/2$, one squeezed along position, the other along momentum. Caustics in the WKB density and negativity in the Wigner function are mathematical artifacts because both formalisms calculate below this scale. At the physical scale, the state is everywhere finite and non-negative.
+A quantum state has finite action in phase space. Heisenberg's uncertainty combined with de Gosson's topology forces this action into two conjugate cells of size $h/2$, one squeezed along position, the other along momentum. Caustics in the WKB density and negativity in the Wigner function are mathematical artifacts because both formalisms calculate below this scale. At the physical scale, the state is everywhere finite and non-negative.
 \end{abstract}
 
 \author{Brian S. Mulloy\orcidlink{0000-0002-1803-3172}}
@@ -109,12 +109,12 @@ $G_{\delta q}$ squeezed along position and $G_{\delta p}$ along momentum. Each k
 \label{fig:semiclassical}
 \end{figure}
 
-For the classical microcanonical density $W_\text{cl}(q,p) \propto \delta(H - E)$ at the Bohr--Sommerfeld energy $E_n$, the orbit's time-averaged second moments give $\Delta q = \sqrt{2\langle (q-\langle q\rangle)^2\rangle_\text{orbit}}$ and $\Delta p = \sqrt{2\langle p^2\rangle_\text{orbit}}$. The marginal of the convolution over $p$ is
+The classical orbit at the Bohr--Sommerfeld energy $E_n$ provides kernel widths $\Delta q = \sqrt{2\langle (q-\langle q\rangle)^2\rangle_\text{orbit}}$ and $\Delta p = \sqrt{2\langle p^2\rangle_\text{orbit}}$. We resolve the oscillating WKB phase-space density $W_\text{WKB}(q,p) \propto \delta(H - E)\,\cos^2(S(q)/\hbar - \pi/4)$, whose $p$-marginal is the diverging $|\psi_\text{WKB}|^2$. The convolved marginal,
 \begin{equation}
-\rho_{\delta q}(q) = \int (W_\text{cl} * G_{\delta q})(q,p)\, dp,
+\rho_{\delta q}(q) = \int (W_\text{WKB} * G_{\delta q})(q,p)\, dp,
 \label{eq:rho_marginal}
 \end{equation}
-finite at the turning points where $|\psi_\text{WKB}|^2$ diverges, and strictly positive everywhere due to the kernel's Gaussian tails. Figure~\ref{fig:semiclassical} shows three systems. The harmonic ground state collapses to a single Gaussian. The Morse oscillator at $n=8$ preserves the $n+1$ Bohr--Sommerfeld interference lobes; the WKB caustics become finite peaks. For the symmetric double-well sub-barrier doublet, per-well Langer--Airy constructions place artificial maxima at the inner turning points; $\rho_{\delta q}(q)$ is everywhere finite and seamlessly resolves the physical barrier penetration.
+is finite at the turning points and strictly positive everywhere due to the kernel's Gaussian tails. Figure~\ref{fig:semiclassical} shows three systems. The harmonic ground state collapses to a single Gaussian. The Morse oscillator at $n=8$ preserves the $n+1$ Bohr--Sommerfeld interference lobes; the WKB caustics become finite peaks. For the symmetric double-well sub-barrier doublet, per-well Langer--Airy constructions place artificial maxima at the inner turning points; $\rho_{\delta q}(q)$ is everywhere finite and seamlessly resolves the physical barrier penetration.
 
 \begin{figure}[!htbp]
 \centering
@@ -133,11 +133,11 @@ is non-negative everywhere: convolution with a quantum-blob kernel sends any Wig
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{figures/cats.pdf}
-\caption{\textbf{Cat states.} Coherent superpositions of $n$ Gaussian wavepackets with no classical orbit and no Bohr--Sommerfeld condition. Kernel widths from the Robertson--Schr\"odinger covariance of $\psi$ directly. Rows: 2-cat at $(0, \pm 5)$; 3-cat at the equilateral triangle apex $(0,5)$ and base $(\pm 10/\sqrt{3}, -5)$; 4-cat compass at $(\pm 5, 0), (0, \pm 5)$ \cite{zurek2001}; 4-cat compass rotated $45^\circ$ to $(\pm 5, \pm 5)$. Columns as in Fig.~\ref{fig:wigner}. Each row's Wigner cross-section dips below zero --- including the sub-Planck chessboard \cite{zurek2001} of the rotated compass. $P_{\delta q}(q,0)$ is non-negative for every row.}
+\caption{\textbf{Cat states.} Coherent superpositions of $n$ Gaussian wavepackets with no classical orbit and no Bohr--Sommerfeld condition. Kernel widths from the Robertson--Schr\"odinger covariance of $\psi$ directly. Rows: 2-cat at $(0, \pm 5)$; 3-cat at the equilateral triangle apex $(0,5)$ and base $(\pm 10/\sqrt{3}, -5)$; 4-cat compass with diagonal lobes at $(\pm 5, \pm 5)$; 4-cat Zurek compass with axial lobes at $(\pm 5\sqrt{2}, 0), (0, \pm 5\sqrt{2})$ \cite{zurek2001}. Columns as in Fig.~\ref{fig:wigner}. Each row's Wigner cross-section dips below zero --- including the sub-Planck chessboards \cite{zurek2001} of the two 4-cat compasses. $P_{\delta q}(q,0)$ is non-negative for every row.}
 \label{fig:cats}
 \end{figure}
 
-A cat state has no classical orbit and no Bohr--Sommerfeld action. The Fermi blob is still finite, set by the wavefunction's covariance directly, with $\Delta q = \sqrt{2\langle (q-\langle q\rangle)^2\rangle_\psi}$ and $\Delta p = \sqrt{2\langle p^2\rangle_\psi}$. Figure~\ref{fig:cats} shows four cat configurations. Each row's Wigner cross-section dips below zero --- the central interference fringe of the 2-cat, the pair-fringe envelopes of the 3-cat, the chessboard of the axis-aligned compass, and the sub-Planck chessboard of the rotated compass. Zurek's sub-Planck chessboard \cite{zurek2001} is the conjugate quantum-blob width $\delta q = \hbar/\Delta p$. At resolution $\delta q$, every cross-section is non-negative.
+A cat state has no classical orbit and no Bohr--Sommerfeld action. The Fermi blob is still finite, set by the wavefunction's covariance directly, with $\Delta q = \sqrt{2\langle (q-\langle q\rangle)^2\rangle_\psi}$ and $\Delta p = \sqrt{2\langle p^2\rangle_\psi}$. Figure~\ref{fig:cats} shows four cat configurations. Each row's Wigner cross-section dips below zero --- the central interference fringe of the 2-cat, the pair-fringe envelopes of the 3-cat, and the sub-Planck chessboards of the two 4-cat compasses. Zurek's sub-Planck chessboard \cite{zurek2001} is the conjugate quantum-blob width $\delta q = \hbar/\Delta p$. At resolution $\delta q$, every cross-section is non-negative.
 
 % ======================================================================
 % SLICE 4 --- CLOSING
