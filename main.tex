@@ -21,10 +21,10 @@
 
 \begin{document}
 
-\title{Uncertainty Principles and Finite Action in Phase Space}
+\title{Quantum of Action as Two Conjugate Cells Resolves Caustics and Wigner Negativity}
 
 \begin{abstract}
-Quantum states occupy finite action cells in phase space. The uncertainty principles of Heisenberg, Robertson--Schr\"odinger, and de Gosson combine to partition cells into conjugate pairs of squeezed action areas, each bounded by $h/2$, totaling Planck's quantum of action $h$. Assuming sub-Planck pointwise measurements ignores this physical structure, producing semiclassical caustics and Wigner negativity. Probed at the resolution of its conjugate cells, the state is everywhere finite and everywhere non-negative.
+A quantum state has finite action in phase space. Heisenberg's uncertainty combined with de Gosson's topology structures Planck's quantum of action $h$ as two conjugate cells of size $h/2$, one squeezed along position, the other along momentum. Caustics in the WKB density and negativity in the Wigner function are mathematical artifacts because both formalisms calculate below this scale. At the physical scale, the state is everywhere finite and non-negative.
 \end{abstract}
 
 \author{Brian S. Mulloy\orcidlink{0000-0002-1803-3172}}
@@ -38,21 +38,21 @@ Quantum states occupy finite action cells in phase space. The uncertainty princi
 % SLICE 1 --- PHYSICS
 % ======================================================================
 
-A quantum state occupies a finite region of phase space. The Heisenberg and Robertson--Schr\"odinger uncertainty principles \cite{robertson1929,schrodinger1930},
+A quantum state has finite action in phase space. The Heisenberg and Robertson--Schr\"odinger uncertainty principles \cite{robertson1929,schrodinger1930},
 \begin{equation}
 \sigma_q \sigma_p \ge \hbar/2,
 \label{eq:hup}
 \end{equation}
-forbid the state from being concentrated at a point. A point is a region of zero phase-space area, in direct violation of this bound.
+forbid the state from being a point: zero area is incompatible with finite uncertainty.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/quantum_of_action.pdf}
-\caption{\textbf{Conjugate structure of the quantum state} (schematic, 1D case). The Heisenberg limit $\sigma_q \sigma_p \ge \hbar/2$ admits semi-axes $\Delta q = \sqrt{2}\sigma_q$, $\Delta p = \sqrt{2}\sigma_p$; the state's $1\sigma$ contour is its Fermi blob \cite{degosson2012fermi}, of area $A = \pi\Delta q\Delta p \ge h/2$. Inside sit two conjugate quantum blobs \cite{degosson2009,degossoncharlyne2022}, $a_q = \pi\,\delta q\,\Delta p = h/2$ squeezed along position and $a_p = \pi\,\Delta q\,\delta p = h/2$ squeezed along momentum, summing to $h = a_q + a_p$. Their narrow widths are $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$. As $A$ grows, $\Delta p$ and $\Delta q$ grow while $\delta q$ and $\delta p$ shrink: Eq.~(\ref{eq:hup}) on the blob and inside it.}
+\caption{\textbf{Conjugate structure of the quantum state} (schematic, 1D case). The Heisenberg limit $\sigma_q \sigma_p \ge \hbar/2$ admits semi-axes $\Delta q = \sqrt{2}\sigma_q$, $\Delta p = \sqrt{2}\sigma_p$; the state's $1\sigma$ contour is its Fermi blob \cite{degosson2013fermiblobs}, of area $A = \pi\Delta q\Delta p \ge h/2$. Inside sit two conjugate quantum blobs \cite{degosson2009,degossoncharlyne2022}, $a_q = \pi\,\delta q\,\Delta p = h/2$ squeezed along position and $a_p = \pi\,\Delta q\,\delta p = h/2$ squeezed along momentum, summing to $h = a_q + a_p$. Their narrow widths are $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$. As $A$ grows, $\Delta p$ and $\Delta q$ grow while $\delta q$ and $\delta p$ shrink: Heisenberg holds at every scale shown.}
 \label{fig:quantum_of_action}
 \end{figure}
 
-De Gosson identified the state's extent in phase space as the Fermi blob \cite{degosson2012fermi}, the elliptical region defined by its covariance with semi-axes $\Delta q = \sqrt{2}\sigma_q$ and $\Delta p = \sqrt{2}\sigma_p$. Its covariance area,
+De Gosson identified the state's extent in phase space as the Fermi blob \cite{degosson2013fermiblobs}, the elliptical region defined by its covariance with semi-axes $\Delta q = \sqrt{2}\sigma_q$ and $\Delta p = \sqrt{2}\sigma_p$. Its covariance area,
 \begin{equation}
 A = \pi \Delta q \Delta p \ge h/2,
 \label{eq:fermi_blob_area}
@@ -67,13 +67,13 @@ each carrying half the Planck quantum of action and together summing to $h$ (Fig
 \delta q = \hbar/\Delta p, \qquad \delta p = \hbar/\Delta q
 \label{eq:reciprocal}
 \end{equation}
-are reciprocal to the Fermi-blob semi-axes, fixed by the same Heisenberg constant in Eq.~(\ref{eq:hup}). As the action capacity $A$ grows, $\Delta p$ and $\Delta q$ grow and $\delta q$ and $\delta p$ shrink: the uncertainty principles bind the state at both scales. Gromov's non-squeezing theorem \cite{gromov1985} forbids any canonical transformation from compressing a quantum blob below $h/2$. Planck's quantum of action is the floor of phase space.
+are reciprocal to the Fermi-blob semi-axes, fixed by the same Heisenberg constant in Eq.~(\ref{eq:hup}). Equation~(\ref{eq:reciprocal}) is itself an uncertainty relation between conjugate resolutions inside a state of fixed covariance. As $A$ grows, $\Delta p$ and $\Delta q$ grow while $\delta q$ and $\delta p$ shrink: Heisenberg binds the state at both scales. Gromov's non-squeezing theorem \cite{gromov1985} forbids any canonical transformation from compressing a quantum blob below $h/2$. Planck's quantum of action is the floor of phase space.
 
 % ======================================================================
 % SLICE 2 --- FORMALISM PROBLEMS
 % ======================================================================
 
-Two pathologies arise when formalisms breach this floor. The WKB density \cite{berry1977,langer1937}
+Two pathologies arise when formalisms breach this floor. The WKB density \cite{berry1977}
 \begin{equation}
 |\psi_\text{WKB}(q)|^2 = \frac{N^2}{p(q)}\cos^2\!\left(S(q)/\hbar - \pi/4\right)
 \label{eq:wkb}
@@ -83,15 +83,15 @@ diverges at every classical turning point. The Wigner--Weyl distribution \cite{w
 W(q,p) = \frac{1}{\pi\hbar}\int_{-\infty}^{\infty} \psi^*(q+y)\,\psi(q-y)\,e^{2ipy/\hbar}\, dy
 \label{eq:wigner}
 \end{equation}
-takes negative values for any state beyond the ground state. Connection formulas and Airy uniformization \cite{langer1937,berry1977} patch the caustic locally; the Husimi $Q$-function \cite{husimi1940} smooths Wigner with a fixed coherent-state kernel of unit width and erases every scale below it. Each remedy treats one symptom in one formalism.
+takes negative values for any state beyond the ground state. Connection formulas and Airy uniformization \cite{langer1937} patch the caustic locally; the Husimi $Q$-function \cite{husimi1940} smooths Wigner with a fixed coherent-state kernel of unit width and erases every scale below it. Each remedy treats one symptom in one formalism.
 
-The two pathologies share a single root. WKB evaluates density at a precise $q$; Wigner evaluates it at an exact $(q,p)$. Each assumes a zero-area point measurement ($\delta q \to 0$ or $\delta p \to 0$), which is physically forbidden \cite{dragoman2005} and by Eq.~(\ref{eq:reciprocal}) demands an unphysical, infinite conjugate spread ($\Delta p \to \infty$ or $\Delta q \to \infty$) and an unbounded covariance area ($A \to \infty$). The mathematical infinities of the caustics and the negativities of Wigner emerge precisely because the formalisms are driven into this forbidden limit.
+The two pathologies share a single root. WKB evaluates density at a precise $q$; Wigner evaluates it at an exact $(q,p)$. Each assumes a zero-area point evaluation ($\delta q \to 0$ or $\delta p \to 0$), which is physically forbidden \cite{dragoman2005}. By Eq.~(\ref{eq:reciprocal}) this demands an infinite conjugate spread ($\Delta p \to \infty$ or $\Delta q \to \infty$) and unbounded covariance area ($A \to \infty$). Caustics and Wigner negativity are mathematical artifacts of this forbidden limit, not features of the state.
 
 % ======================================================================
 % SLICE 3 --- PHYSICS
 % ======================================================================
 
-The two conjugate quantum blobs define the fundamental physical measurement limits of the state. Because pointwise evaluation ignores this floor, we follow established physical filtering principles \cite{dragoman2005} and inject the physical measurement limits back into the formalisms using a convolution kernel. The corresponding kernels of phase-space area $h/2$ are
+The two conjugate quantum blobs are the physical scale of the state. Because pointwise evaluation ignores this floor, we adapt the phase-space filtering of \cite{dragoman2005} with a kernel set by the state's own quantum blobs. The conjugate quantum blobs of Fig.~\ref{fig:quantum_of_action}, as Gaussian filters of phase-space area $h/2$, give
 \begin{equation}
 G_{\delta q}(q,p) = \frac{1}{\pi}\exp\!\left(-\frac{q^2}{\delta q^2} - \frac{p^2}{\Delta p^2}\right),
 \label{eq:Gdq}
@@ -100,7 +100,7 @@ G_{\delta q}(q,p) = \frac{1}{\pi}\exp\!\left(-\frac{q^2}{\delta q^2} - \frac{p^2
 G_{\delta p}(q,p) = \frac{1}{\pi}\exp\!\left(-\frac{q^2}{\Delta q^2} - \frac{p^2}{\delta p^2}\right),
 \label{eq:Gdp}
 \end{equation}
-$G_{\delta q}$ squeezed along position and $G_{\delta p}$ along momentum. Each saturates the symplectic-capacity bound at $h/2$.
+$G_{\delta q}$ squeezed along position and $G_{\delta p}$ along momentum. Each kernel is itself a quantum blob at the $h/2$ floor. Unlike Husimi's fixed-width kernel, $G_{\delta q}$ tracks the state's own covariance.
 
 \begin{figure}[!htbp]
 \centering
@@ -128,7 +128,7 @@ The same kernel applies in the wave formalism, with $\Delta q = \sqrt{2\langle (
 P_{\delta q}(q,p) = (W * G_{\delta q})(q,p)
 \label{eq:Pdq}
 \end{equation}
-is non-negative everywhere by Hudson's theorem \cite{hudson1974}, because $G_{\delta q}$ saturates the symplectic positivity condition. Figure~\ref{fig:wigner} shows the three systems as eigenstates. The Morse row at $n=8$ has $n+1$ alternating-sign Wigner lobes; $P_{\delta q}$ preserves the lobe envelope and is non-negative throughout, while Husimi smooths away the interior interference, leaving only two broad peaks at the classical turning points. The double-well antisymmetric partner $\psi_1$ has an exact wavefunction node at $q=0$, which coincides with $W_1(0,0) = -0.32$, the deepest point of the Wigner negativity --- a known artifact of sub-blob interference \cite{dragoman2005} and the same unphysical point-measurement failing in two different formalisms. At resolution $\delta q$, $P_{\delta q}(q,0)$ is strictly positive throughout, including across the node and through the barrier where the Gaussian tails extend from each well.
+is non-negative everywhere: convolution with a quantum-blob kernel sends any Wigner function to a non-negative one \cite{hudson1974,degosson2013qblobs}. Figure~\ref{fig:wigner} shows the three systems as eigenstates. The Morse row at $n=8$ has $n+1$ alternating-sign Wigner lobes; $P_{\delta q}$ preserves the lobe envelope and is non-negative throughout, while Husimi smooths away the interior interference, leaving only two broad peaks at the classical turning points. The double-well antisymmetric partner $\psi_1$ has an exact wavefunction node at $q=0$, which coincides with $W_1(0,0) = -0.32$, the deepest point of the Wigner negativity --- the same unphysical point-evaluation failing in two different formalisms. At resolution $\delta q$, $P_{\delta q}(q,0)$ is strictly positive throughout, including across the node and through the barrier where the Gaussian tails extend from each well.
 
 \begin{figure}[!htbp]
 \centering
@@ -137,13 +137,13 @@ is non-negative everywhere by Hudson's theorem \cite{hudson1974}, because $G_{\d
 \label{fig:cats}
 \end{figure}
 
-A cat state has no classical orbit and no Bohr--Sommerfeld action \cite{schleich2001}. Its conjugate widths come from the wavefunction's covariance alone, with $\Delta q = \sqrt{2\langle (q-\langle q\rangle)^2\rangle_\psi}$ and $\Delta p = \sqrt{2\langle p^2\rangle_\psi}$. Figure~\ref{fig:cats} shows four cat configurations. Each row's Wigner cross-section dips below zero --- the central interference fringe of the 2-cat, the pair-fringe envelopes of the 3-cat, the chessboard of the axis-aligned compass, and the sub-Planck chessboard of the rotated compass. The scale of the chessboard identified by Zurek \cite{zurek2001} is the conjugate quantum-blob width $\delta q = \hbar/\Delta p$. At resolution $\delta q$, every cross-section is non-negative.
+A cat state has no classical orbit and no Bohr--Sommerfeld action. The Fermi blob is still finite, set by the wavefunction's covariance directly, with $\Delta q = \sqrt{2\langle (q-\langle q\rangle)^2\rangle_\psi}$ and $\Delta p = \sqrt{2\langle p^2\rangle_\psi}$. Figure~\ref{fig:cats} shows four cat configurations. Each row's Wigner cross-section dips below zero --- the central interference fringe of the 2-cat, the pair-fringe envelopes of the 3-cat, the chessboard of the axis-aligned compass, and the sub-Planck chessboard of the rotated compass. Zurek's sub-Planck chessboard \cite{zurek2001} is the conjugate quantum-blob width $\delta q = \hbar/\Delta p$. At resolution $\delta q$, every cross-section is non-negative.
 
 % ======================================================================
 % SLICE 4 --- CLOSING
 % ======================================================================
 
-A quantum state is not a point in phase space and cannot be probed as one. Caustics and Wigner negativity are mathematical artifacts of ignoring this physical reality. The state possesses finite action, partitioned by the uncertainty principles into de Gosson's Fermi and conjugate quantum blobs. By respecting this geometric floor, the conjugate resolution ensures the state is everywhere finite and non-negative.
+A quantum state has finite action in phase space and cannot be reduced to a point. Caustics and Wigner negativity are mathematical artifacts of ignoring this physical reality. That action is partitioned by Heisenberg's uncertainty and de Gosson's topology into a Fermi blob and two conjugate quantum blobs. At the physical scale, the state is everywhere finite and non-negative.
 \medskip
 All numerical data, figure-generating code, and reproducibility scaffolding for this paper are available at \url{https://doi.org/10.17605/OSF.IO/EV8H6}.
 
