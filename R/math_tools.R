@@ -29,7 +29,15 @@
 fft_convolve_2d <- function(W_mat, K_mat, dq, dp) {
   nq <- nrow(W_mat); np <- ncol(W_mat)
 
-  # Normalize kernel to unit integral.
+  # Normalize kernel to unit integral. Eq. 7 of the manuscript writes
+  # G_delta_q = (1/pi)*exp(-q^2/delta_q^2 - p^2/Delta_p^2), which
+  # integrates analytically to delta_q*Delta_p = hbar (by Eq. 4 of the
+  # manuscript). Discretizing on a finite grid produces hbar*(1+O(dq*dp))
+  # numerically. Re-normalizing the discrete kernel to unit integral
+  # (a) absorbs that discretization error and (b) makes convolution
+  # preserve the Wigner norm independent of the unit choice for hbar.
+  # Equivalent to dividing the analytic kernel by hbar. Hudson positivity
+  # is preserved under this positive rescaling.
   K_norm <- K_mat / (sum(K_mat) * dq * dp)
 
   # ifftshift: move kernel center to FFT origin [1,1].

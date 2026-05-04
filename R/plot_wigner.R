@@ -4,9 +4,9 @@
 # Each row shows one system at one chosen Schroedinger eigenstate:
 #   row 1: harmonic    n=0   (ground state, analytical psi)
 #   row 2: Morse       n=8   (highly excited bound state, multi-lobed Wigner)
-#   row 3: double-well n=2   (upper sub-barrier doublet partner, the
-#                             tunneling-doublet visual: two well lobes plus
-#                             a tall central inter-well coherence peak)
+#   row 3: double-well n=1   (antisymmetric lower-doublet partner with exact
+#                             wavefunction node psi_1(0)=0; the deepest
+#                             Wigner negativity coincides with the node)
 #
 # Three columns:
 #   left:    bare Wigner heatmap with the symplectic quantum of action

@@ -4,8 +4,10 @@
 # Each row shows one system at one chosen action capacity:
 #   row 1: harmonic   n=0   (ground state, isotropic Fermi blob)
 #   row 2: Morse      n=8   (anharmonic mid-state, asymmetric horseshoe orbit)
-#   row 3: double-well n=2  (sub-barrier upper doublet partner, four turning
-#                            points, two disconnected orbital loops)
+#   row 3: double-well n=1  (sub-barrier lower-doublet partner, four turning
+#                            points, two disconnected orbital loops; aligned
+#                            with the Wigner figure's Schroedinger n=1 row at
+#                            A_BS/A_0 = 1.97593)
 #
 # Three columns:
 #   left:    classical orbit at E_n with the symplectic quantum of action
