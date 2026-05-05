@@ -121,14 +121,11 @@ symplectic_overlay_layers <- function(Delta_q, Delta_p, q_center=0, hbar=1.0) {
   path_a_p <- ellipse_path(Delta_q,   w$delta_p, "a_p")
   list(
     geom_path(data=path_A,   aes(x=q, y=p, group=group),
-              inherit.aes=FALSE,
-              color="black", linewidth=0.4,  linetype="dotted"),
+              inherit.aes=FALSE, color="black", linewidth=0.2),
     geom_path(data=path_a_q, aes(x=q, y=p, group=group),
-              inherit.aes=FALSE,
-              color="black", linewidth=0.25, linetype="dotted"),
+              inherit.aes=FALSE, color="black", linewidth=0.2),
     geom_path(data=path_a_p, aes(x=q, y=p, group=group),
-              inherit.aes=FALSE,
-              color="black", linewidth=0.25, linetype="dotted")
+              inherit.aes=FALSE, color="black", linewidth=0.2)
   )
 }
 
