@@ -24,7 +24,7 @@
 \title{Two Squeezed Cells per Heisenberg Cell}
 
 \begin{abstract}
-Heisenberg bounds a quantum state's action in position and momentum, and the same $\hbar$ binds de Gosson's pair of inner scales, the sharpest position and momentum the state can resolve. The Wigner function sampled finer than these goes negative, not because the formalism fails but because the question is forbidden. Resolved at the permitted scale, it is non-negative everywhere, with all interference structure including Zurek's chessboard appearing as non-negative density.
+Heisenberg bounds a quantum state's action in position and momentum, and the same $\hbar$ binds de Gosson's pair of inner scales, the sharpest position and momentum the state can resolve. The Wigner function sampled finer than these goes negative, not because the formalism fails but because the question is forbidden. Resolved at the permitted scale, the resulting density is non-negative everywhere, with all interference structure including Zurek's chessboard appearing as non-negative density.
 \end{abstract}
 
 \author{Brian S. Mulloy\orcidlink{0000-0002-1803-3172}}
@@ -80,7 +80,7 @@ W(q,p) = \frac{1}{\pi\hbar}\int \psi^*(q+y)\,\psi(q-y)\,e^{2ipy/\hbar}\, dy
 \end{equation}
 is well-defined, and its marginals reproduce $|\psi(q)|^2$ and $|\hat\psi(p)|^2$ exactly. The limit $\delta q \to 0$ that asks for density at a point is malformed. By Eq.~(\ref{eq:reciprocal}) such a limit demands $\Delta p \to \infty$ and unbounded covariance area. Wigner negativity for any non-Gaussian state \cite{hudson1974} is the formalism reporting that pointwise quasi-probability is incompatible with the state's available action, not a pathology of $W$. The well-posed density question lives at the scale where the state actually lives, namely the squeezed cells.
 
-The squeezed cells of Fig.~\ref{fig:quantum_of_action}, written for diagonal covariance, are
+The squeezed cells of Fig.~\ref{fig:quantum_of_action}, written as kernels for diagonal covariance, are
 \begin{equation}
 G_{\delta q}(q,p) = \frac{1}{\pi}\exp\!\left(-\frac{q^2}{\delta q^2} - \frac{p^2}{\Delta p^2}\right),
 \label{eq:Gdq}
@@ -89,7 +89,7 @@ G_{\delta q}(q,p) = \frac{1}{\pi}\exp\!\left(-\frac{q^2}{\delta q^2} - \frac{p^2
 G_{\delta p}(q,p) = \frac{1}{\pi}\exp\!\left(-\frac{q^2}{\Delta q^2} - \frac{p^2}{\delta p^2}\right),
 \label{eq:Gdp}
 \end{equation}
-recovered in general by symplectic rotation. Each is itself a squeezed cell at the $h/2$ floor. By the canonical bijection between Gaussian states and squeezed cells \cite{degossoncharlyne2022}, $G_{\delta q}$ is the Wigner transform of the squeezed coherent state matching the state's covariance, and the polar-dual identity follows from Eq.~(\ref{eq:reciprocal}). In other words, the state dictates its own resolution; observing it at this limit reveals the sharpest structure possible. The convolved Wigner density
+recovered in general by symplectic rotation. Each is a minimal-uncertainty kernel at the $h/2$ floor. By the canonical bijection between Gaussian states and squeezed cells \cite{degossoncharlyne2022}, $G_{\delta q}$ is the Wigner transform of the squeezed coherent state matching the state's covariance, and the polar-dual identity follows from Eq.~(\ref{eq:reciprocal}). In other words, the state dictates its own resolution; observing it at this limit reveals the sharpest structure possible. The convolved Wigner density
 \begin{equation}
 P_{\delta q}(q,p) = (W * G_{\delta q})(q,p)
 \label{eq:Pdq}
@@ -122,9 +122,9 @@ Figure~\ref{fig:cats} shows four cat-state configurations. The 2-cat, 3-cat, and
 % SLICE 4 --- CLOSING
 % ======================================================================
 
-Convolution of $W$ with any other kernel does not represent the state. It represents an apparatus. Dragoman's phase-space filtering \cite{dragoman2005} convolves $W$ with the Wigner function of an external measurement device. The Cahill--Glauber $s$-parametrized family \cite{cahillglauber1969} interpolates between operator-ordering and detection-scheme parametrizations \cite{wodkiewicz1984}. The Husimi $Q$-function \cite{husimi1940} convolves $W$ with the harmonic-oscillator ground-state cell, which is the vacuum noise of heterodyne detection \cite{leonhardt1997}. Husimi reports the heterodyne measurement, coinciding with the state's own squeezed cell only at the harmonic ground state. Figures~\ref{fig:wigner} and~\ref{fig:cats} show Husimi (overlaid) smooths the interior interferences. $P_{\delta q}$ tracks the state.
+Convolution of $W$ with any other kernel does not represent the state. It represents an apparatus. Dragoman's phase-space filtering \cite{dragoman2005} convolves $W$ with the Wigner function of an external measurement device. The Cahill--Glauber $s$-parametrized family \cite{cahillglauber1969} interpolates between operator-ordering and detection-scheme parametrizations \cite{wodkiewicz1984}. The Husimi $Q$-function \cite{husimi1940} convolves $W$ with the harmonic-oscillator ground-state kernel, which is the vacuum noise of heterodyne detection \cite{leonhardt1997}. Husimi reports the heterodyne measurement, coinciding with the state's own squeezed cell only at the harmonic ground state. Figures~\ref{fig:wigner} and~\ref{fig:cats} show Husimi (overlaid) smooths the interior interferences. $P_{\delta q}$ tracks the state.
 
-Zurek identified the chessboard widths $\delta q$, $\delta p$ and showed that decoherence sensitivity scales with this structure \cite{zurek2001}. The same narrow widths were identified geometrically by de Gosson from the squeezed cells \cite{degossoncharlyne2022}. The two routes meet at Eq.~(\ref{eq:reciprocal}), where one $\hbar$ binds outer extent to inner resolution. The chessboard is sub-Planckian only when measured against the macroscopic Heisenberg cell. Geometrically, its widths are precisely the minor axes of the squeezed cells. Rather than violating the Planck scale, this fine structure is strictly native to it. Probed at this natural $h/2$ resolution limit, $P_{\delta q}$ and $P_{\delta p}$ are non-negative density.
+Zurek identified the chessboard widths $\delta q$, $\delta p$ and showed that decoherence sensitivity scales with this structure \cite{zurek2001}. The same narrow widths were identified geometrically by de Gosson from the squeezed cells \cite{degossoncharlyne2022}. The two routes meet at Eq.~(\ref{eq:reciprocal}), where one $\hbar$ binds outer extent to inner resolution. The chessboard is sub-Planckian only when measured against a macroscopic Heisenberg cell. Geometrically, its widths are precisely the minor axes of the squeezed cells. Rather than violating the Planck scale, this fine structure is strictly native to it. Probed at this natural $h/2$ resolution limit, $P_{\delta q}$ and $P_{\delta p}$ are non-negative density.
 
 As system action and the Heisenberg cell grow, the squeezed cells compress. Independent of observation apparatus, large systems ($A \gg \hbar$) have high-resolution states ($\delta q \ll \Delta q, \delta p \ll \Delta p$).
 
