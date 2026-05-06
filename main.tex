@@ -24,8 +24,7 @@
 \title{Two Squeezed Cells per Heisenberg Cell}
 
 \begin{abstract}
-
-The Heisenberg limit bounds a quantum state's position and momentum uncertainty, and the same $\hbar$ binds de Gosson's pair of inner scales, the exact position and momentum resolution dictated by the state. The Wigner function sampled finer than these goes negative, not because the formalism fails but because the scale is forbidden. Resolved at the permitted scale, the resulting density is non-negative everywhere, with all interference structure including Zurek's chessboard appearing as non-negative density.
+The Heisenberg principle bounds a quantum state's position and momentum uncertainty, and the same quantum of action $h$ binds de Gosson's pair of inner scales, the position and momentum resolutions dictated by the state. The Wigner function sampled finer than these exhibits negativity, not because the formalism fails but because the scale violates the uncertainty principle. Only when resolved at the state's inner scales does the resulting density represent the physical state.
 \end{abstract}
 
 \author{Brian S. Mulloy\orcidlink{0000-0002-1803-3172}}
@@ -49,7 +48,7 @@ forbid it. Zero area is incompatible with finite uncertainty.
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/two_squeezes.pdf}
-\caption{\textbf{Two squeezed cells per Heisenberg cell} (schematic, 1D case). Heisenberg admits semi-axes $\Delta q = \sqrt{2}\sigma_q$, $\Delta p = \sqrt{2}\sigma_p$, and the state's $1\sigma$ contour is its Heisenberg cell of area $A = \pi\Delta q\Delta p \ge h/2$. Inside sit two squeezed cells, $a_q = \pi\,\delta q\,\Delta p = h/2$ compressed along position and $a_p = \pi\,\Delta q\,\delta p = h/2$ compressed along momentum, with widths $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$. As $A$ grows, $\Delta p$ and $\Delta q$ grow while $\delta q$ and $\delta p$ shrink. The same $\hbar$ binds the outer extent and the inner resolution.}
+\caption{\textbf{Two squeezed cells per Heisenberg cell} (schematic, 1D case). Heisenberg admits semi-axes $\Delta q = \sqrt{2}\sigma_q$, $\Delta p = \sqrt{2}\sigma_p$, and the state's $1\sigma$ contour is its Heisenberg cell of area $A = \pi\Delta q\Delta p \ge h/2$. Inside sit two squeezed cells, $a_q = \pi\,\delta q\,\Delta p = h/2$ compressed along position and $a_p = \pi\,\Delta q\,\delta p = h/2$ compressed along momentum, with minor semi-axes $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$. As $A$ grows, $\Delta p$ and $\Delta q$ grow while $\delta q$ and $\delta p$ shrink. The same $\hbar$ binds the outer extent and the inner resolution.}
 \label{fig:two_squeezes}
 \end{figure}
 
@@ -63,7 +62,7 @@ saturating only for the harmonic ground state. Its interior is partitioned by sy
 a_q = \pi\,\delta q\,\Delta p = h/2, \qquad a_p = \pi\,\Delta q\,\delta p = h/2,
 \label{eq:squeezed_cell_areas}
 \end{equation}
-each of area exactly $h/2$ (Fig.~\ref{fig:two_squeezes}). The squeezed semi-axes $\delta q, \delta p$ are the polar duals of the anti-squeezed widths $\Delta p, \Delta q$ fixed by $\hbar$,
+each of area exactly $h/2$ (Fig.~\ref{fig:two_squeezes}). The squeezed minor semi-axes $\delta q, \delta p$ are the polar duals of the anti-squeezed major semi-axes $\Delta p, \Delta q$ fixed by $\hbar$,
 \begin{equation}
 \delta q = \hbar/\Delta p, \qquad \delta p = \hbar/\Delta q.
 \label{eq:reciprocal}
@@ -95,7 +94,7 @@ recovered in general by symplectic rotation. Each is a minimal-uncertainty kerne
 P_{\delta q}(q,p) = (W * G_{\delta q})(q,p)
 \label{eq:Pdq}
 \end{equation}
-is non-negative everywhere, since convolution with any squeezed-cell kernel, strictly of area $h/2$ [Eq.~(\ref{eq:squeezed_cell_areas})], yields a non-negative distribution \cite{degosson2013qblobs}. $P_{\delta q}(q,p)$ is the probability density of the state at the resolution of its own squeezed cells. The polar-dual partner $P_{\delta p}(q,p) = (W * G_{\delta p})(q,p)$ resolves momentum at $\delta p$ symmetrically.
+is non-negative everywhere, since convolution with any squeezed-cell kernel, strictly of area $h/2$ [Eq.~(\ref{eq:squeezed_cell_areas})], yields a non-negative distribution \cite{degosson2013qblobs}. $P_{\delta q}(q,p)$ is the probability density of the state at the resolution $\delta q$. The polar-dual partner $P_{\delta p}(q,p) = (W * G_{\delta p})(q,p)$ resolves momentum at $\delta p$ symmetrically.
 
 % ======================================================================
 % SLICE 3 --- DEMONSTRATION
@@ -114,11 +113,11 @@ We compute $P_{\delta q}$ numerically for two classes of states. Figure~\ref{fig
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{figures/cats.pdf}
-\caption{\textbf{Cat states.} Coherent superpositions of $n$ Gaussian wavepackets. Rows show 2-cat (two lobes), 3-cat (equilateral triangle), 4-cat (square), and 4-cat Zurek compass (axial lobes) \cite{zurek2001}. Columns as in Fig.~\ref{fig:wigner}. The 2-cat, 3-cat, and 4-cat square Wigner cross-sections drop below zero, while the Zurek compass slice aligns with its positive chessboard peaks at $p=0$. In all cases, $P_{\delta q}(q,0)$ resolves the interference structures as strictly non-negative density.}
+\caption{\textbf{Cat states.} Coherent superpositions of $n$ Gaussian wavepackets. Rows show 2-cat (two lobes), 3-cat (equilateral triangle), 4-cat (square), and 4-cat Zurek compass (axial lobes) \cite{zurek2001}. Columns as in Fig.~\ref{fig:wigner}. The 2-cat, 3-cat, and 4-cat square Wigner cross-sections drop below zero, while the Zurek compass slice aligns with its positive chessboard peaks at $p=0$. In all cases, $P_{\delta q}(q,0)$ resolves the aligned interference structures as strictly non-negative density.}
 \label{fig:cats}
 \end{figure}
 
-Figure~\ref{fig:cats} shows four cat-state configurations. The 2-cat, 3-cat, and 4-cat square Wigner cross-sections exhibit negativity, while the Zurek compass slice aligns with its positive chessboard peaks. In all cases, $P_{\delta q}$ resolves the interference structures as strictly non-negative density.
+Figure~\ref{fig:cats} shows four cat-state configurations. The 2-cat, 3-cat, and 4-cat square Wigner cross-sections exhibit negativity, while the Zurek compass slice aligns with its positive chessboard peaks. In all cases, $P_{\delta q}$ resolves the aligned interference structures as strictly non-negative density.
 
 % ======================================================================
 % SLICE 4 --- CLOSING
