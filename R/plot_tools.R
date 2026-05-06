@@ -22,10 +22,10 @@ library(patchwork)
 # FIGURE-LEVEL CONSTANTS
 # ------------------------------------------------------------------------------
 
-COLUMN_TITLE_LEFT                 <- "Phase-Space Cells"
-COLUMN_TITLE_CENTER_WIGNER        <- "Wigner Negativity"
+COLUMN_TITLE_LEFT                 <- "Phase-Space"
+COLUMN_TITLE_CENTER_WIGNER        <- "Wigner Cross-Section"
 COLUMN_TITLE_CENTER_SEMICLASSICAL <- "Semiclassical Caustics"
-COLUMN_TITLE_RIGHT_SYMPLECTIC     <- "Symplectic Resolution"
+COLUMN_TITLE_RIGHT_SYMPLECTIC     <- "Convolved Cross-Section"
 
 PANEL_WIDTHS    <- c(1, 1, 1)
 FIGURE_WIDTH_IN <- 7.5

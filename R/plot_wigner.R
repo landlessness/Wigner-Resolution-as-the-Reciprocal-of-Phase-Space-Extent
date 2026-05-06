@@ -131,7 +131,7 @@ harmonic_descriptor <- list(
   name = "harmonic",
   V    = harmonic_V,
 
-  n_target = 0,
+  n_target = 1,
 
   E_fn = function(n) n + 0.5,   # exact for harmonic; analytical eigenvalue.
 
@@ -162,6 +162,60 @@ harmonic_descriptor <- list(
   # Wavefunction sampling grid for the FFT. Use a wide window so psi
   # decays to zero at the boundaries and the FFT doesn't ring.
   psi_q_grid = seq(-25, 25, by=0.02)
+)
+
+# ---- Squeezed vacuum ---------------------------------------------------------
+# The squeezed vacuum |0;r> in the harmonic oscillator. A Gaussian state
+# with covariance squeezed in q and anti-squeezed in p:
+#   psi(q) = (1/(pi * sigma_q^2))^(1/4) * exp(-q^2 / (2 sigma_q^2))
+# with sigma_q = exp(-r)/sqrt(2), sigma_p = exp(+r)/sqrt(2).
+# Saturates Heisenberg (sigma_qq * sigma_pp = hbar^2/4) at every r;
+# Wigner function is everywhere non-negative (Gaussian, Hudson 1974).
+# Shows that Husimi misrepresents anisotropic states even when W has
+# no negativity, by smoothing with an isotropic kernel that does not
+# match the state's squeezed geometry.
+
+SQUEEZED_R <- 0.5   # squeezing parameter; e^(2r) ~ 7.4 (~16 dB-ish)
+
+squeezed_vacuum_descriptor <- list(
+  name = "squeezed_vacuum",
+  V    = harmonic_V,                  # nominally a harmonic-oscillator state
+
+  n_target = 0,                       # placeholder; not a Schroedinger n
+
+  # Energy is irrelevant for axis sizing of a Gaussian state; use a value
+  # that gives sensible window sizes via the harmonic descriptor's pattern.
+  E_fn = function(n) 0.5 * cosh(2*SQUEEZED_R),  # <H> for squeezed vacuum
+
+  psi_fn = function(n, q) {
+    sigma_q <- exp(-SQUEEZED_R) / sqrt(2)
+    norm    <- (1 / (pi * sigma_q^2))^(1/4)
+    norm * exp(-q^2 / (2 * sigma_q^2))
+  },
+
+  q_window = function(E) {
+    # Window sized by Delta_q = exp(-r); show ~3*Delta_q each side
+    Delta_q <- exp(-SQUEEZED_R)
+    list(q_lo = -3 * Delta_q, q_hi = 3 * Delta_q)
+  },
+  p_window = function(E) {
+    # Window sized by Delta_p = exp(+r); show ~1.5*Delta_p each side
+    Delta_p <- exp(+SQUEEZED_R)
+    list(p_lo = -1.5 * Delta_p, p_hi = 1.5 * Delta_p)
+  },
+  q_breaks_fn = function(E) {
+    Delta_q <- exp(-SQUEEZED_R)
+    round(c(-Delta_q, Delta_q), 2)
+  },
+  p_breaks_fn = function(E) {
+    Delta_p <- exp(+SQUEEZED_R)
+    round(c(-Delta_p, 0, Delta_p), 1)
+  },
+
+  # Sampling grid: needs to resolve the narrow sigma_q ~ exp(-r)/sqrt(2)
+  # ground-state-narrow direction. dq=0.005 gives ~50 samples per sigma_q
+  # at r=1.0; widen to +/-15 for clean FFT.
+  psi_q_grid = seq(-15, 15, by=0.005)
 )
 
 # ---- Morse -------------------------------------------------------------------
@@ -218,7 +272,7 @@ double_well_descriptor <- list(
   # "Schroedinger nodes resolved via the uncertainty principle" claim.
   # Aligns with the semiclassical figure's classical action target
   # A_BS/A_0 = 1.97593 at the same energy.
-  n_target = 1,
+  n_target = 5,
 
   E_fn = function(n) dw_soln$energies[n + 1],
 
@@ -338,8 +392,12 @@ build_wigner_row <- function(descriptor, base_font="") {
   # 9. QoA overlay. RS-derived widths, centered at the wavefunction's
   #    <q>. For symmetric states <q> = 0; for asymmetric states like
   #    Morse n=8, <q> can be far from the well bottom.
+  # overlay_layers <- symplectic_overlay_layers(rs$Delta_q, rs$Delta_p,
+  #                                             q_center=rs$q_mean)
+
+  q_center_visual <- q_display[which.max(abs(state$W_cross))]
   overlay_layers <- symplectic_overlay_layers(rs$Delta_q, rs$Delta_p,
-                                              q_center=rs$q_mean)
+                                              q_center=q_center_visual)
 
   # 10. Husimi overlay on the symplectic cross-section panel.
   husimi_overlay <- list(
@@ -379,7 +437,8 @@ build_wigner_row <- function(descriptor, base_font="") {
 
 cat("\nComputing Wigner figure (3 systems x 3 panels)...\n")
 
-descriptors <- list(harmonic_descriptor,
+descriptors <- list(squeezed_vacuum_descriptor,
+                    harmonic_descriptor,
                     morse_descriptor,
                     double_well_descriptor)
 
