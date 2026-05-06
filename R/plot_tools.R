@@ -22,7 +22,7 @@ library(patchwork)
 # FIGURE-LEVEL CONSTANTS
 # ------------------------------------------------------------------------------
 
-COLUMN_TITLE_LEFT                 <- "Phase-Space"
+COLUMN_TITLE_LEFT                 <- "Wigner Phase-Space"
 COLUMN_TITLE_CENTER_WIGNER        <- "Wigner Cross-Section"
 COLUMN_TITLE_CENTER_SEMICLASSICAL <- "Semiclassical Caustics"
 COLUMN_TITLE_RIGHT_SYMPLECTIC     <- "Convolved Cross-Section"
