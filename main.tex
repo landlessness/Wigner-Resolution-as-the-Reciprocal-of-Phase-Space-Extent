@@ -24,7 +24,7 @@
 \title{Two Squeezed Cells per Heisenberg Cell}
 
 \begin{abstract}
-Heisenberg bounds a quantum state's action in position and momentum, and the same $\hbar$ binds de Gosson's pair of inner scales, the sharpest position and momentum the state can resolve. The Wigner function sampled finer than these goes negative, not because the formalism fails but because the question is forbidden. Resolved at the permitted scale, the resulting density is non-negative everywhere, with all interference structure including Zurek's chessboard appearing as non-negative density.
+Heisenberg bounds a quantum state's action in position and momentum, and the same $\hbar$ binds de Gosson's pair of inner scales, the exact position and momentum resolution dictated by the state. The Wigner function sampled finer than these goes negative, not because the formalism fails but because the scale is forbidden. Resolved at the permitted scale, the resulting density is non-negative everywhere, with all interference structure including Zurek's chessboard appearing as non-negative density.
 \end{abstract}
 
 \author{Brian S. Mulloy\orcidlink{0000-0002-1803-3172}}
@@ -55,12 +55,12 @@ forbid it. Zero area is incompatible with finite uncertainty.
 The state's extent in phase space is its Fermi blob \cite{degosson2013fermiblobs}, hereafter Heisenberg cell, the elliptical region defined by its covariance with semi-axes $\Delta q = \sqrt{2}\sigma_q$ and $\Delta p = \sqrt{2}\sigma_p$ and area
 \begin{equation}
 A = \pi \Delta q \Delta p \ge h/2,
-\label{eq:fermi_blob_area}
+\label{eq:heisenberg_cell_area}
 \end{equation}
 saturating only for the harmonic ground state. Its interior is partitioned by symplectic polar duality \cite{degossoncharlyne2022} into two quantum blobs \cite{degosson2013qblobs}, hereafter squeezed cells,
 \begin{equation}
 a_q = \pi\,\delta q\,\Delta p = h/2, \qquad a_p = \pi\,\Delta q\,\delta p = h/2,
-\label{eq:quantum_blobs}
+\label{eq:squeezed_cell_areas}
 \end{equation}
 each of area exactly $h/2$ (Fig.~\ref{fig:two_squeezes}). The squeezed widths $\delta q, \delta p$ are the polar duals of the anti-squeezed widths $\Delta p, \Delta q$ fixed by $\hbar$,
 \begin{equation}
@@ -78,7 +78,7 @@ The Wigner--Weyl distribution \cite{wigner1932}
 W(q,p) = \frac{1}{\pi\hbar}\int \psi^*(q+y)\,\psi(q-y)\,e^{2ipy/\hbar}\, dy
 \label{eq:wigner}
 \end{equation}
-is well-defined, and its marginals reproduce $|\psi(q)|^2$ and $|\hat\psi(p)|^2$ exactly. The limit $\delta q \to 0$ that asks for density at a point is malformed. By Eq.~(\ref{eq:reciprocal}) such a limit demands $\Delta p \to \infty$ and unbounded covariance area. Wigner negativity for any non-Gaussian state \cite{hudson1974} is the formalism reporting that pointwise quasi-probability is incompatible with the state's available action, not a pathology of $W$. The well-posed density question lives at the scale where the state actually lives, namely the squeezed cells.
+is well-defined, and its marginals reproduce $|\psi(q)|^2$ and $|\hat\psi(p)|^2$ exactly. The pointwise limit $\delta q \to 0$ is malformed. By Eq.~(\ref{eq:reciprocal}) such a limit demands $\Delta p \to \infty$ and unbounded covariance area. Wigner negativity for any non-Gaussian state \cite{hudson1974} is the formalism reporting that pointwise quasi-probability is incompatible with the state's available action, not a pathology of $W$. A well-posed density is therefore defined exactly at the resolution of the state's squeezed and anti-squeezed axes.
 
 The squeezed cells of Fig.~\ref{fig:two_squeezes}, written as kernels for diagonal covariance, are
 \begin{equation}
@@ -89,12 +89,12 @@ G_{\delta q}(q,p) = \frac{1}{\pi}\exp\!\left(-\frac{q^2}{\delta q^2} - \frac{p^2
 G_{\delta p}(q,p) = \frac{1}{\pi}\exp\!\left(-\frac{q^2}{\Delta q^2} - \frac{p^2}{\delta p^2}\right),
 \label{eq:Gdp}
 \end{equation}
-recovered in general by symplectic rotation. Each is a minimal-uncertainty kernel at the $h/2$ floor. By the canonical bijection between Gaussian states and squeezed cells \cite{degossoncharlyne2022}, $G_{\delta q}$ is the Wigner transform of the squeezed coherent state matching the state's covariance, and the polar-dual identity follows from Eq.~(\ref{eq:reciprocal}). In other words, the state dictates its own resolution; observing it at this limit reveals the sharpest structure possible. The convolved Wigner density
+recovered in general by symplectic rotation. Each is a minimal-uncertainty kernel at the $h/2$ floor. By the canonical bijection between Gaussian states and squeezed cells \cite{degossoncharlyne2022}, $G_{\delta q}$ is the Wigner transform of the squeezed coherent state matching the state's covariance, and the polar-dual identity follows from Eq.~(\ref{eq:reciprocal}). In other words, the state dictates its own resolution, its action defining the exact structural scale. The convolved Wigner density
 \begin{equation}
 P_{\delta q}(q,p) = (W * G_{\delta q})(q,p)
 \label{eq:Pdq}
 \end{equation}
-is non-negative everywhere, since convolution with a squeezed-cell kernel sends any Wigner function to a non-negative one \cite{degosson2013qblobs}. $P_{\delta q}(q,p)$ is the probability density of the state at the resolution of its own squeezed cells. The polar-dual partner $P_{\delta p}(q,p) = (W * G_{\delta p})(q,p)$ resolves momentum at $\delta p$ symmetrically.
+is non-negative everywhere, since convolution with any squeezed-cell kernel, strictly of area $h/2$ [Eq.~(\ref{eq:squeezed_cell_areas})], yields a non-negative distribution \cite{degosson2013qblobs}. $P_{\delta q}(q,p)$ is the probability density of the state at the resolution of its own squeezed cells. The polar-dual partner $P_{\delta p}(q,p) = (W * G_{\delta p})(q,p)$ resolves momentum at $\delta p$ symmetrically.
 
 % ======================================================================
 % SLICE 3 --- DEMONSTRATION
@@ -107,16 +107,16 @@ is non-negative everywhere, since convolution with a squeezed-cell kernel sends 
 \label{fig:wigner}
 \end{figure}
 
-We compute $P_{\delta q}$ numerically for two classes of states. Figure~\ref{fig:wigner} shows three Schr\"odinger eigenstates with kernel widths $\Delta q = \sqrt{2\langle (q-\langle q\rangle)^2\rangle_{\psi_n}}$ and $\Delta p = \sqrt{2\langle p^2\rangle_{\psi_n}}$. The harmonic ground state collapses to a single Gaussian. The Morse oscillator at $n=8$ has $n+1$ alternating-sign Wigner lobes, and $P_{\delta q}$ preserves the full lobe structure as non-negative density features. $P_{\delta q}(q,0)$ is strictly non-negative throughout, including across the node and through the barrier where the Gaussian tails extend from each well.
+We compute $P_{\delta q}$ numerically for two classes of states. Figure~\ref{fig:wigner} shows three Schr\"odinger eigenstates with kernel widths $\Delta q = \sqrt{2\langle (q-\langle q\rangle)^2\rangle_{\psi_n}}$ and $\Delta p = \sqrt{2\langle p^2\rangle_{\psi_n}}$. The harmonic ground state collapses to a single Gaussian. The Morse oscillator at $n=8$ has $n+1$ alternating-sign Wigner lobes, and $P_{\delta q}$ preserves the full lobe structure as non-negative density features. $P_{\delta q}(q,0)$ is strictly non-negative throughout, including across the node and through the barrier of the double well potential where the Gaussian tails extend from each well.
 
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{figures/cats.pdf}
-\caption{\textbf{Cat states.} Coherent superpositions of $n$ Gaussian wavepackets. Rows show 2-cat (two lobes), 3-cat (equilateral triangle), 4-cat (square), and 4-cat Zurek compass (axial lobes) \cite{zurek2001}. Columns as in Fig.~\ref{fig:wigner}. The 2-cat, 3-cat, and 4-cat cross-sections dip below zero. The Zurek compass exhibits the full chessboard at $p=0$ while the 4-cat square carries its chessboard off-axis. $P_{\delta q}(q,0)$ is non-negative for every row, and the chessboard is preserved as non-negative density.}
+\caption{\textbf{Cat states.} Coherent superpositions of $n$ Gaussian wavepackets. Rows show 2-cat (two lobes), 3-cat (equilateral triangle), 4-cat (square), and 4-cat Zurek compass (axial lobes) \cite{zurek2001}. Columns as in Fig.~\ref{fig:wigner}. The 2-cat, 3-cat, and 4-cat Wigner cross-sections dip below zero. The Zurek compass exhibits the full chessboard at $p=0$ while the 4-cat square carries its chessboard off-axis. $P_{\delta q}(q,0)$ is non-negative for every row, and the chessboard is preserved as non-negative density.}
 \label{fig:cats}
 \end{figure}
 
-Figure~\ref{fig:cats} shows four cat-state configurations. The 2-cat, 3-cat, and 4-cat cross-sections dip below zero, the Zurek-compass exhibiting the full chessboard at $p=0$. The 4-cat square has its chessboard off-axis where the diagonal lobes carry it. $P_{\delta q}$ is non-negative for every row.
+Figure~\ref{fig:cats} shows four cat-state configurations. The 2-cat, 3-cat, and 4-cat Wigner cross-sections dip below zero, the Zurek compass exhibiting the full chessboard at $p=0$. The 4-cat square has its chessboard off-axis where the diagonal lobes carry it. $P_{\delta q}$ is non-negative for every row.
 
 % ======================================================================
 % SLICE 4 --- CLOSING
@@ -124,7 +124,7 @@ Figure~\ref{fig:cats} shows four cat-state configurations. The 2-cat, 3-cat, and
 
 Convolution of $W$ with any other kernel does not represent the state. It represents an apparatus. Dragoman's phase-space filtering \cite{dragoman2005} convolves $W$ with the Wigner function of an external measurement device. The Cahill--Glauber $s$-parametrized family \cite{cahillglauber1969} interpolates between operator-ordering and detection-scheme parametrizations \cite{wodkiewicz1984}. The Husimi $Q$-function \cite{husimi1940} convolves $W$ with the harmonic-oscillator ground-state kernel, which is the vacuum noise of heterodyne detection \cite{leonhardt1997}. Husimi reports the heterodyne measurement, coinciding with the state's own squeezed cell only at the harmonic ground state. Figures~\ref{fig:wigner} and~\ref{fig:cats} show Husimi (overlaid) smooths the interior interferences. $P_{\delta q}$ tracks the state.
 
-Zurek identified the chessboard widths $\delta q$, $\delta p$ and showed that decoherence sensitivity scales with this structure \cite{zurek2001}. The same narrow widths were identified geometrically by de Gosson from the squeezed cells \cite{degossoncharlyne2022}. The two routes meet at Eq.~(\ref{eq:reciprocal}), where one $\hbar$ binds outer extent to inner resolution. The chessboard is sub-Planckian only when measured against a macroscopic Heisenberg cell. Geometrically, its widths are precisely the minor axes of the squeezed cells. Rather than violating the Planck scale, this fine structure is strictly native to it. Probed at this natural $h/2$ resolution limit, $P_{\delta q}$ and $P_{\delta p}$ are non-negative density.
+Zurek identified the chessboard widths $\delta q$, $\delta p$ and showed that decoherence sensitivity scales with this structure \cite{zurek2001}. The same narrow widths were identified geometrically by de Gosson from the squeezed cells \cite{degossoncharlyne2022}. The two routes meet at Eq.~(\ref{eq:reciprocal}), where one $\hbar$ binds outer extent to inner resolution. The chessboard is sub-Planckian only when measured against a macroscopic Heisenberg cell. Geometrically, its widths are precisely the minor axes of the squeezed cells. Rather than violating the Planck scale, this fine structure is strictly native to it. At the exact $h/2$ resolution limit, $P_{\delta q}$ and $P_{\delta p}$ are strictly non-negative densities.
 
 As system action and the Heisenberg cell grow, the squeezed cells compress. Independent of observation apparatus, large systems ($A \gg \hbar$) have high-resolution states ($\delta q \ll \Delta q, \delta p \ll \Delta p$).
 
