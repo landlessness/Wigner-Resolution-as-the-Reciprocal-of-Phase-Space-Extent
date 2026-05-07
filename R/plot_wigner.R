@@ -426,7 +426,7 @@ build_wigner_row <- function(descriptor, base_font="") {
       dt_P_sympl, q_lim=c(q_lo, q_hi), y_lim=y_lim_P,
       custom_breaks=custom_breaks_q,
       label_format=label_format, base_font=base_font,
-      overlays=husimi_overlay,
+      overlays=NULL,
       y_label=expression(italic(P)[italic(delta*q)](italic(q)*","*0)))
   )
 }
