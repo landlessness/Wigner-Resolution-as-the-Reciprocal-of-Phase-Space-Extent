@@ -1,0 +1,145 @@
+\documentclass[%
+  aps, amsmath, amssymb, onecolumn, 11pt
+]{revtex4-2}
+
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+\usepackage{orcidlink}
+\usepackage{mathtools}
+\usepackage{booktabs}
+
+% -------------- arXiv-Style Margin Stamp ----------------
+\usepackage[style=iso]{datetime2}
+\usepackage{FiraMono}
+\usepackage{tikz}
+
+\AddToHook{shipout/background}{
+  \begin{tikzpicture}[remember picture, overlay]
+    \node [rotate=-90, color=gray!80, font=\fontfamily{FiraMono-TLF}\selectfont\footnotesize] at ([xshift=-1.2cm]current page.east) {WORKING DRAFT \quad $\bullet$ \quad SUPPLEMENTAL MATERIAL \quad $\bullet$ \quad \DTMnow \quad $\bullet$ \quad doi.org/10.17605/OSF.IO/EV8H6 \quad $\bullet$ \quad Brian S. Mulloy \quad $\bullet$ \quad bmulloy@umich.edu};
+  \end{tikzpicture}
+}
+% --------------------------------------------------------
+
+% --- SM-specific counter renumbering ---
+\renewcommand{\thesection}{S\arabic{section}}
+\renewcommand{\thesubsection}{S\arabic{section}.\arabic{subsection}}
+\renewcommand{\thefigure}{S\arabic{figure}}
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\theequation}{S\arabic{equation}}
+
+\begin{document}
+
+\title{Supplemental Material for\\``Wigner Resolution as the Reciprocal of Phase-Space Extent''}
+
+\author{Brian S. Mulloy\orcidlink{0000-0002-1803-3172}}
+\email{bmulloy@umich.edu}
+
+\date{\today}
+
+\maketitle
+
+% ======================================================================
+% S1 --- Notation and conventions
+% ======================================================================
+
+\section{Notation and conventions}
+\label{sec:notation}
+
+% [To be drafted.]
+% Topics:
+% - Fermi blob: $A = \pi \Delta q \Delta p \geq h/2$
+% - Quantum blob at angle $\theta$: $a_\theta = \pi \delta q_\theta \delta p_\theta = h/2$
+% - Principal-axis cases: $a_q \equiv a_{\theta=0}$, $a_p \equiv a_{\theta=\pi/2}$
+% - Polar-dual identity: $\delta q_\theta \, \delta p_\theta = \hbar$
+% - Inscription bounds: $\delta q \leq \Delta q$, $\delta p \leq \Delta p$
+% - Convention: $\hbar$ for dispersions and Wigner kernel; $h$ for phase-space areas.
+%   Mention only if needed; otherwise allow the reader to absorb from context.
+
+% ======================================================================
+% S2 --- Full action-units table
+% ======================================================================
+
+\section{Action-units table for phase-space methods}
+\label{sec:fulltable}
+
+% [To be drafted.]
+% The full 16-row table from the body's truncated version.
+% Columns: Model | Native subfield | Kernel action structure | Map to $\delta q = \hbar/\Delta p$ | Star ranking
+% Brief paragraph framing before the table.
+
+% ======================================================================
+% S3 --- Effective resolution derivations
+% ======================================================================
+
+\section{Effective resolution: derivations}
+\label{sec:derivations}
+
+\subsection{Generalized Husimi $Q_{\lambda\theta}$}
+\label{sec:genhusimi}
+
+% [To be drafted.]
+% Show: kernel $\lambda \cdot 1/\lambda = \hbar$; setting $\lambda = \hbar/\Delta p$ recovers $P_{\delta q}$.
+% Cite Wódkiewicz, Appleby, Wünsche-Bužek.
+
+\subsection{Truncated Wigner Approximation}
+\label{sec:twa}
+
+% [To be drafted.]
+% Show: TWA samples at $\Delta q$. At saturation $\Delta q \cdot \Delta p \approx \hbar$,
+% the sampling width equals the polar-dual scale $\delta q = \hbar/\Delta p$.
+% The silhouette argument.
+
+\subsection{Cahill--Glauber $W^{(s)}$}
+\label{sec:cahillglauber}
+
+% [To be drafted.]
+% Show: $a_s = \pi(1-s)\hbar/2$. State-matched $s$ value.
+
+\subsection{Husimi $Q$}
+\label{sec:husimi}
+
+% [To be drafted.]
+% Show: fixed kernel area $h/2$; matches $\delta q$ only at vacuum.
+
+\subsection{Maximum-likelihood reconstruction with Fock-state truncation}
+\label{sec:maxlik}
+
+% [To be drafted.]
+% Show: Fock truncation $N_{\max}$; resolution per cell $\sim \hbar/\Delta p$ for state with
+% covariance $\Delta p^2 \sim N_{\max}\hbar$. Polar-dual scale emerges from action-counting.
+
+% ======================================================================
+% S4 --- Notes on remaining methods
+% ======================================================================
+
+\section{Notes on remaining methods}
+\label{sec:remaining}
+
+% [To be drafted.]
+% One paragraph each:
+% - Herman--Kluk frozen Gaussian
+% - Heller frozen/thawed Gaussian
+% - Pattern-function tomography
+% - Positive-P representation
+% - Cohen-class Born--Jordan
+% - Semidefinite programming tomography
+% - Bayesian / MCMC tomography
+% - Compressed sensing tomography
+% - Husimi-based open quantum systems
+
+% ======================================================================
+% S5 --- Computational details
+% ======================================================================
+
+\section{Computational details}
+\label{sec:computational}
+
+% [To be drafted.]
+% - R pipeline overview
+% - Eight-state list with covariance parameters
+% - Numerical grid choices for Wigner-function evaluation
+% - OSF deposit pointer
+
+\bibliography{main}
+
+\end{document}
