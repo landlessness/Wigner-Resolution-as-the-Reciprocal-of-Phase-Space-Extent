@@ -38,45 +38,35 @@ The Heisenberg principle bounds a quantum state's outer extent in phase space. A
 % SLICE 1 --- THE CONVERGENCE
 % ======================================================================
 
-The Heisenberg and Robertson--Schr\"odinger inequalities \cite{robertson1929,schrodinger1930},
-\begin{equation}
-\sigma_q \sigma_p \ge \hbar/2,
-\label{eq:hup}
-\end{equation}
-bound the outer extent of a quantum state in phase space. The state's covariance defines its Heisenberg cell with semi-axes $\Delta q = \sqrt{2}\sigma_q$, $\Delta p = \sqrt{2}\sigma_p$ and area
-\begin{equation}
-A = \pi \Delta q \Delta p \ge h/2.
-\label{eq:heisenberg_cell_area}
-\end{equation}
-The standard form of the uncertainty principle says nothing about scales \emph{inside} this cell. Two independent lines of work reach the same inner scale by different premises.
-
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/two_squeezes.pdf}
-\caption{\textbf{Two squeezed cells per Heisenberg cell} (schematic, 1D). The covariance ellipsoid (outer) of area $A \ge h/2$ contains two polar-dual quantum blobs in the sense of de Gosson \cite{degossoncharlyne2022,degosson2013qblobs}, each of area exactly $h/2$, with minor semi-axes $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$. The same equations are obtained by Zurek as the smallest interference scales of any state spread over the covariance envelope \cite{zurek2001}. Same equations, two readings: geometry and interference.}
+\caption{Two squeezed cells per extended cell (schematic, 1D). The extended cell (outer) of area $A \ge h/2$ contains two principal-axis squeezed cells $a_q$ and $a_p$, each of area exactly $h/2$, with semi-axes $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$. The same scales arise as the smallest interference scales of the Wigner function for any state spread over the extended cell \cite{zurek2001}. Same equations, two readings: geometry and interference.}
 \label{fig:two_squeezes}
 \end{figure}
 
-\textit{Route 1 (geometry).} De Gosson identifies the polar dual of the Heisenberg cell as an interior quantum blob \cite{degosson2013qblobs,degossoncharlyne2022} with symplectic capacity $h/2$:
+The Wigner function \cite{wigner1932} is the standard joint phase-space representation of a quantum state. Non-Gaussian states yield Wigner functions that take negative values \cite{hudson1974}, a feature that has come to be read as a quantum signature in tomography \cite{leonhardt1997} and as a resource for quantum advantage \cite{mari2012}. A parallel literature treats non-negative phase-space densities as the operative object: truncated Wigner approximations and Husimi distributions for semiclassical and open-system dynamics, lab homodyne reconstructions where measurement noise is large compared to negativity, and resource-theoretic accounting that asks at what resolution a state's negativity persists \cite{veitch2014}. These methods agree on the value of a non-negative density but disagree on the kernel: each fixes the resolution by an external choice---harmonic vacuum, ordering convention, or sampling width---rather than by the state itself. We show that the state's own covariance fixes a unique non-negative resolution, set by the reciprocal of the state's phase-space extent.
+
+A quantum state's covariance defines the extent of its extended cell\footnote{Heisenberg cells are conventionally drawn as rectangles for visual simplicity; the correct symplectic-geometric object is an ellipsoid \cite{degosson2013qblobs, degossoncharlyne2022}. Throughout this Letter, ``cell'' denotes the ellipsoid.}, the phase-space ellipsoid with semi-axes $\Delta q = \sqrt{2}\sigma_q$, $\Delta p = \sqrt{2}\sigma_p$ and area
 \begin{equation}
-a_{p_\theta} = \pi\,\delta q_\theta\,\Delta p_\theta = h/2, \qquad a_p = \pi\,\Delta q\,\delta p = h/2,
-\label{eq:squeezed_cell_areas}
+A = \pi\,\Delta q\,\Delta p \ge h/2,
+\label{eq:extended_cell}
 \end{equation}
-with minor semi-axes
+bounded below by Heisenberg \cite{robertson1929,schrodinger1930}. De Gosson identifies a complementary ellipsoid inscribed in the extended cell \cite{degosson2013qblobs, degossoncharlyne2022}: the squeezed cell has area exactly $h/2$,
+\begin{equation}
+a = \pi\,\delta q\,\delta p = h/2,
+\label{eq:squeezed_cell}
+\end{equation}
+with semi-axes $\delta q$ and $\delta p$ obeying the polar-dual identity. Theorem~13 of \cite{degossoncharlyne2022} establishes that a centered phase-space ellipsoid is a squeezed cell if and only if the polar dual of its position projection equals its momentum intersection. Gromov's non-squeezing theorem \cite{gromov1985} forbids any canonical compression below $h/2$.
+
+Zurek expands a generic state as a superposition of coherent states spread over the extended cell and identifies the smallest interference scales of the Wigner function \cite{zurek2001}. With the state's extended cell $A$ providing the spatial scales $\Delta q$ and $\Delta p$, the smallest interference periods are
 \begin{equation}
 \delta q = \hbar/\Delta p, \qquad \delta p = \hbar/\Delta q.
-\label{eq:reciprocal}
-\end{equation}
-Theorem 13 of \cite{degossoncharlyne2022} establishes that a centered phase-space ellipsoid is a quantum blob if and only if the polar dual of its position projection equals its momentum intersection. The polar-dual relation \eqref{eq:reciprocal} is, in de Gosson's reading, the saturated Robertson--Schr\"odinger uncertainty principle expressed geometrically; Gromov's non-squeezing theorem \cite{gromov1985} forbids any canonical compression below $h/2$.
-
-\textit{Route 2 (interference).} Zurek expands a generic state as a superposition of coherent states spread over the covariance envelope and identifies the smallest interference scales of the Wigner function \cite{zurek2001}: with $L = \sqrt{\langle q^2 \rangle - \langle q \rangle^2}$ and $P = \sqrt{\langle p^2 \rangle - \langle p \rangle^2}$,
-\begin{equation}
-\delta_x = \hbar/P, \qquad \delta_p = \hbar/L,
 \label{eq:zurek}
 \end{equation}
-shown to control the state's sensitivity to phase-space displacements and hence its decoherence rate.
+These are de Gosson's polar-dual semi-axes \eqref{eq:squeezed_cell} at the principal-axis orientations. Zurek shows that they control the state's sensitivity to phase-space displacements, and hence its decoherence rate.
 
-Equations \eqref{eq:reciprocal} and \eqref{eq:zurek} are the same equations on the same covariance scales. Two derivations from independent premises---symplectic polar duality on one hand, interference geometry on the other---converge on the same inner scale. The convergence is the starting point of this Letter.
+Two independent derivations---symplectic polar duality and interference geometry---reach the same scales. This convergence is the starting point of this Letter.
 
 % ======================================================================
 % SLICE 2 --- THE DENSITY

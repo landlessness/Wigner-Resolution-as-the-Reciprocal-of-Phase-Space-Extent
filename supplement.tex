@@ -42,8 +42,87 @@
 % S1 --- Notation and conventions
 % ======================================================================
 
+% ======================================================================
+% S1 --- Notation and conventions
+% ======================================================================
+
 \section{Notation and conventions}
 \label{sec:notation}
+
+\subsection{Symbol system}
+\label{sec:symbols}
+
+This Letter uses a single notation system internally. The state's covariance defines its \emph{extended cell}\footnote{Heisenberg cells are conventionally drawn as rectangles for visual simplicity; the correct symplectic-geometric object is an ellipsoid \cite{degosson2013qblobs, degossoncharlyne2022}. Throughout this Letter, ``cell'' denotes the ellipsoid.}, the phase-space ellipsoid with semi-axes $\Delta q$ and $\Delta p$ and area
+\begin{equation}
+A = \pi \, \Delta q \, \Delta p \geq h/2.
+\label{eq:extended_cell}
+\end{equation}
+Inscribed in the extended cell, the \emph{squeezed cell} has area exactly $h/2$:
+\begin{equation}
+a = \pi \, \delta q \, \delta p = h/2,
+\label{eq:squeezed_cell}
+\end{equation}
+with semi-axes $\delta q$ and $\delta p$ satisfying the polar-dual identity
+\begin{equation}
+\delta q \cdot \delta p = \hbar.
+\label{eq:polar_dual}
+\end{equation}
+At the principal-axis orientations, the inscription condition determines the squeezed cell's semi-axes from the extended cell's:
+\begin{equation}
+\delta q = \hbar/\Delta p, \qquad \delta p = \hbar/\Delta q.
+\label{eq:principal_axes}
+\end{equation}
+These are Zurek's interference scales \cite{zurek2001}, identified independently from sub-Planck geometry. The squeezed cells with axes along $q$ and $p$ are denoted $a_q$ and $a_p$ respectively.
+
+\paragraph{Generalization to arbitrary orientation.} The squeezed cells form a one-parameter family parameterized by orientation angle $\theta$ in the rotated frame
+\begin{equation}
+q_\theta = q\cos\theta + p\sin\theta, \qquad p_\theta = -q\sin\theta + p\cos\theta.
+\label{eq:rotated_frame}
+\end{equation}
+At general $\theta$, the squeezed cell has area
+\begin{equation}
+a_\theta = \pi \, \delta q_\theta \, \delta p_\theta = h/2,
+\label{eq:squeezed_cell_general}
+\end{equation}
+with semi-axes
+\begin{equation}
+\delta p_\theta = \sqrt{\Delta q^2 \sin^2\theta + \Delta p^2 \cos^2\theta}, \qquad \delta q_\theta = \hbar / \delta p_\theta.
+\label{eq:semi_axes_theta}
+\end{equation}
+The polar-dual identity $\delta q_\theta \, \delta p_\theta = \hbar$ holds at every angle. The principal-axis cases $a_q \equiv a_{\theta = 0}$ and $a_p \equiv a_{\theta = \pi/2}$ recover \eqref{eq:principal_axes}. The inscription bounds $\delta q \leq \Delta q$ and $\delta p \leq \Delta p$ are equivalent to the Heisenberg condition $\Delta q \, \Delta p \geq \hbar$.
+
+\subsection{Notation in the literature}
+\label{sec:translation}
+
+The notation used here is internal to this Letter and the program it initiates. The same geometric quantities appear in the source literature under different symbols and conventions. The translation is provided below for the reader who wishes to engage with the original sources.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+This work & Zurek \cite{zurek2001} & De Gosson \cite{degossoncharlyne2022, degosson2013qblobs, degosson2013fermiblobs} \\
+\midrule
+$\Delta q$ & $L$ & semi-axis of Fermi blob along $q$ \\
+$\Delta p$ & $P$ & semi-axis of Fermi blob along $p$ \\
+$\delta q$ & $\delta_x = \hbar/P$ & semi-axis of polar-dual blob along $q$ \\
+$\delta p$ & $\delta_p = \hbar/L$ & semi-axis of polar-dual blob along $p$ \\
+Extended cell, area $A$ & classical action $A \approx L \times P$ & Fermi blob, symplectic capacity $c(\Omega) \geq h/2$ \\
+Squeezed cell, area $a_\theta$ & sub-Planck scale $a \approx \hbar^2/A$ & Quantum blob, symplectic capacity $c(\mathcal{B}) = h/2$ \\
+$a_q, a_p$ & not present & two principal-axis quantum blobs of \cite{degossoncharlyne2022}, Theorem 13 \\
+Polar-dual identity & $\delta_x \, P = \hbar$ & polar-duality condition of \cite{degossoncharlyne2022}, Theorem 13 \\
+``Cell'' (this work) & not used & ``Blob'' (de Gosson) \\
+\bottomrule
+\end{tabular}
+\caption{Translation between the notation used in this Letter and the notation of the principal source works. Zurek's $L, P$ are covariance length scales; his $\delta_x, \delta_p$ are interference scales of the Wigner function. De Gosson's symplectic capacity $c(\cdot)$ of an ellipsoid equals $\pi$ times the product of its semi-axes; the quantum-blob condition $c(\mathcal{B}) = h/2$ is equivalent to area $h/2$.}
+\label{tab:notation}
+\end{table}
+
+De Gosson's symplectic-geometric framework expresses these quantities through the symplectic capacity of phase-space ellipsoids. The extended cell $\Omega$ is the centered ellipsoid
+\begin{equation}
+\Omega = \{(q,p) : (q,p) \, M^{-1} \, (q,p)^T \leq 1\}
+\label{eq:extended_ellipsoid}
+\end{equation}
+for the state's $2 \times 2$ covariance matrix $M$. Its symplectic capacity equals $\pi$ times the semi-axis product: $c(\Omega) = \pi \, \Delta q \, \Delta p = A$. Theorem 13 of \cite{degossoncharlyne2022} states that an ellipsoid $\mathcal{B}$ inscribed in $\Omega$ is a squeezed cell ($c(\mathcal{B}) = h/2$) if and only if its position projection and momentum intersection are polar duals of each other. In the notation here, this is the family $a_\theta$ for $\theta \in [0, \pi/2]$, with the two principal-axis cases $a_q$ and $a_p$ saturating the inscription condition along the $q$ and $p$ axes respectively. Zurek's interference scales emerge as the squeezed-cell semi-axes at these principal-axis orientations.
 
 % [To be drafted.]
 % Topics:
