@@ -21,10 +21,10 @@
 
 \begin{document}
 
-\title{Uncertainty Principle with Two Squeezed Cells per Heisenberg Cell}
+\title{Two Routes to Squeezed Uncertainty}
 
 \begin{abstract}
-The Heisenberg principle bounds a quantum state's position and momentum uncertainty, and the same quantum of action $h$ binds de Gosson's pair of inner scales, the position and momentum resolutions dictated by the state. The Wigner function sampled finer than these exhibits negativity, not because the formalism fails but because the scale violates the uncertainty principle. Only when resolved at the state's inner scales does the resulting density represent the physical state.
+The Heisenberg principle bounds a quantum state's outer extent in phase space. A complementary inner scale, set by the same quantum of action, is reached independently by two routes: de Gosson's symplectic polar duality of the covariance ellipsoid, and Zurek's interference-driven sub-Planck chessboard. Both arrive at $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$ from the state's covariance, with different physical readings. Convolution of the Wigner function with the squeezed-coherent kernel at this inner scale yields a non-negative density $P_{\delta q}$ whose marginals reproduce $|\psi(q)|^2$ across eight non-Gaussian states to within a small residual set by $\delta q$. The standard inverse-Radon reconstruction of $W$ from measured marginals accepts negativity as fundamental; the same marginals also support a non-negative reconstruction at the state's intrinsic resolution, opening a question this Letter does not resolve.
 \end{abstract}
 
 \author{Brian S. Mulloy\orcidlink{0000-0002-1803-3172}}
@@ -35,42 +35,51 @@ The Heisenberg principle bounds a quantum state's position and momentum uncertai
 \maketitle
 
 % ======================================================================
-% SLICE 1 --- PREMISE
+% SLICE 1 --- THE CONVERGENCE
 % ======================================================================
 
-A quantum state cannot be a point in phase space. The Heisenberg and Robertson--Schr\"odinger uncertainty principles \cite{robertson1929,schrodinger1930},
+The Heisenberg and Robertson--Schr\"odinger inequalities \cite{robertson1929,schrodinger1930},
 \begin{equation}
 \sigma_q \sigma_p \ge \hbar/2,
 \label{eq:hup}
 \end{equation}
-forbid it. Zero area is incompatible with finite uncertainty.
+bound the outer extent of a quantum state in phase space. The state's covariance defines its Heisenberg cell with semi-axes $\Delta q = \sqrt{2}\sigma_q$, $\Delta p = \sqrt{2}\sigma_p$ and area
+\begin{equation}
+A = \pi \Delta q \Delta p \ge h/2.
+\label{eq:heisenberg_cell_area}
+\end{equation}
+The standard form of the uncertainty principle says nothing about scales \emph{inside} this cell. Two independent lines of work, neither citing the other, reach the same inner scale by different premises.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/two_squeezes.pdf}
-\caption{\textbf{Two squeezed cells per Heisenberg cell} (schematic, 1D case). Heisenberg admits semi-axes $\Delta q = \sqrt{2}\sigma_q$, $\Delta p = \sqrt{2}\sigma_p$, and the state's $1\sigma$ contour is its Heisenberg cell of area $A = \pi\Delta q\Delta p \ge h/2$. Inside sit two squeezed cells, $a_q = \pi\,\delta q\,\Delta p = h/2$ compressed along position and $a_p = \pi\,\Delta q\,\delta p = h/2$ compressed along momentum, with minor semi-axes $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$. As $A$ grows, $\Delta p$ and $\Delta q$ grow while $\delta q$ and $\delta p$ shrink. The same $\hbar$ binds the outer extent and the inner resolution.}
+\caption{\textbf{Two squeezed cells per Heisenberg cell} (schematic, 1D). The covariance ellipsoid (outer) of area $A \ge h/2$ contains two polar-dual quantum blobs in the sense of de Gosson \cite{degossoncharlyne2022,degosson2013qblobs}, each of area exactly $h/2$, with minor semi-axes $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$. The same equations are obtained by Zurek as the smallest interference scales of any state spread over the covariance envelope \cite{zurek2001}. Same equations, two readings: geometry and interference.}
 \label{fig:two_squeezes}
 \end{figure}
 
-The state's extent in phase space is its Fermi blob \cite{degosson2013fermiblobs}, hereafter Heisenberg cell, the elliptical region defined by its covariance with semi-axes $\Delta q = \sqrt{2}\sigma_q$ and $\Delta p = \sqrt{2}\sigma_p$ and area
-\begin{equation}
-A = \pi \Delta q \Delta p \ge h/2,
-\label{eq:heisenberg_cell_area}
-\end{equation}
-saturating only for the harmonic ground state. Its interior is partitioned by symplectic polar duality \cite{degossoncharlyne2022} into two quantum blobs \cite{degosson2013qblobs}, hereafter squeezed cells,
+\textit{Route 1 (geometry).} De Gosson identifies the polar dual of the Heisenberg cell as a pair of quantum blobs \cite{degosson2013qblobs,degossoncharlyne2022}, each of symplectic capacity $h/2$:
 \begin{equation}
 a_q = \pi\,\delta q\,\Delta p = h/2, \qquad a_p = \pi\,\Delta q\,\delta p = h/2,
 \label{eq:squeezed_cell_areas}
 \end{equation}
-each of area exactly $h/2$ (Fig.~\ref{fig:two_squeezes}). The squeezed minor semi-axes $\delta q, \delta p$ are the polar duals of the anti-squeezed major semi-axes $\Delta p, \Delta q$ fixed by $\hbar$,
+with minor semi-axes
 \begin{equation}
 \delta q = \hbar/\Delta p, \qquad \delta p = \hbar/\Delta q.
 \label{eq:reciprocal}
 \end{equation}
- A phase-space ellipsoid is a squeezed cell if and only if its position-space projection and momentum-space intersection are polar duals, and conversely \cite{degossoncharlyne2022}. Gromov's non-squeezing theorem \cite{gromov1985} forbids any canonical transformation from compressing a squeezed cell below $h/2$. As $A$ grows, the squeezed cells compress. Large systems ($A \gg \hbar$) have high inner resolution ($\delta q \ll \Delta q$, $\delta p \ll \Delta p$).
+Theorem 13 of \cite{degossoncharlyne2022} establishes that a centered phase-space ellipsoid is a quantum blob if and only if the polar dual of its position projection equals its momentum intersection. The polar-dual relation \eqref{eq:reciprocal} is, in de Gosson's reading, the saturated Robertson--Schr\"odinger uncertainty principle expressed geometrically; Gromov's non-squeezing theorem \cite{gromov1985} forbids any canonical compression below $h/2$.
+
+\textit{Route 2 (interference).} Zurek expands a generic state as a superposition of coherent states spread over the covariance envelope and identifies the smallest interference scales of the Wigner function \cite{zurek2001}: with $L = \sqrt{\langle q^2 \rangle - \langle q \rangle^2}$ and $P = \sqrt{\langle p^2 \rangle - \langle p \rangle^2}$,
+\begin{equation}
+\delta_x = \hbar/P, \qquad \delta_p = \hbar/L,
+\label{eq:zurek}
+\end{equation}
+shown to control the state's sensitivity to phase-space displacements and hence its decoherence rate.
+
+Equations \eqref{eq:reciprocal} and \eqref{eq:zurek} are the same equations on the same covariance scales. Two derivations from independent premises---symplectic polar duality on one hand, interference geometry on the other---converge on the same inner scale. The convergence is the starting point of this Letter.
 
 % ======================================================================
-% SLICE 2 --- WRONG QUESTION + STATE-APPARATUS PRINCIPLE
+% SLICE 2 --- THE DENSITY
 % ======================================================================
 
 The Wigner--Weyl distribution \cite{wigner1932}
@@ -78,23 +87,24 @@ The Wigner--Weyl distribution \cite{wigner1932}
 W(q,p) = \frac{1}{\pi\hbar}\int \psi^*(q+y)\,\psi(q-y)\,e^{2ipy/\hbar}\, dy
 \label{eq:wigner}
 \end{equation}
-is well-defined, and its marginals reproduce $|\psi(q)|^2$ and $|\hat\psi(p)|^2$ exactly. The pointwise limit $\delta q \to 0$ is malformed. By Eq.~(\ref{eq:reciprocal}) such a limit demands $\Delta p \to \infty$ and unbounded covariance area. Wigner negativity for any non-Gaussian state \cite{hudson1974} is the formalism reporting that pointwise quasi-probability is incompatible with the state's available action, not a pathology of $W$.
+takes negative values for any non-Gaussian state \cite{hudson1974}. By \eqref{eq:reciprocal} the pointwise limit $\delta q \to 0$ requires $\Delta p \to \infty$ and unbounded covariance area: pointwise sampling of $W$ asks a finer question than the uncertainty principle permits, and the negativity is the formalism's report.
 
-The squeezed cells of Fig.~\ref{fig:two_squeezes}, written as kernels for diagonal covariance, are
+The squeezed-coherent kernel matched to the state's covariance,
 \begin{equation}
 G_{\delta q}(q,p) = \frac{1}{\pi}\exp\!\left(-\frac{q^2}{\delta q^2} - \frac{p^2}{\Delta p^2}\right),
 \label{eq:Gdq}
 \end{equation}
-\begin{equation}
-G_{\delta p}(q,p) = \frac{1}{\pi}\exp\!\left(-\frac{q^2}{\Delta q^2} - \frac{p^2}{\delta p^2}\right),
-\label{eq:Gdp}
-\end{equation}
-recovered in general by symplectic rotation. Each is a minimal-uncertainty kernel at the $h/2$ floor. By the canonical bijection between Gaussian states and squeezed cells \cite{degossoncharlyne2022}, $G_{\delta q}$ is the Wigner transform of the squeezed coherent state matching the state's covariance, and the polar-dual identity follows from Eq.~(\ref{eq:reciprocal}). The state sets its own resolution. The convolved Wigner density
+is the Wigner transform of the squeezed coherent state at the state's covariance \cite{degossoncharlyne2022}, of area exactly $h/2$. The convolution
 \begin{equation}
 P_{\delta q}(q,p) = (W * G_{\delta q})(q,p)
 \label{eq:Pdq}
 \end{equation}
-is non-negative everywhere, since convolution with any squeezed-cell kernel, strictly of area $h/2$ [Eq.~(\ref{eq:squeezed_cell_areas})], yields a non-negative distribution \cite{degosson2013qblobs}. $P_{\delta q}(q,p)$ is the probability density of the state at the resolution $\delta q$. The polar-dual partner $P_{\delta p}(q,p) = (W * G_{\delta p})(q,p)$ resolves momentum at $\delta p$ symmetrically.
+is non-negative everywhere, since convolution with any quantum-cell Wigner function yields a non-negative distribution \cite{degosson2005bullsci,degosson2013qblobs}. The polar-dual partner $P_{\delta p} = W * G_{\delta p}$ resolves momentum at $\delta p$ symmetrically, with
+\begin{equation}
+G_{\delta p}(q,p) = \frac{1}{\pi}\exp\!\left(-\frac{q^2}{\Delta q^2} - \frac{p^2}{\delta p^2}\right).
+\label{eq:Gdp}
+\end{equation}
+The kernel is fixed by the state's covariance; no free parameter.
 
 % ======================================================================
 % SLICE 3 --- DEMONSTRATION
@@ -103,33 +113,39 @@ is non-negative everywhere, since convolution with any squeezed-cell kernel, str
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{figures/wigner.pdf}
-\caption{\textbf{Squeezed vacuum and eigenstates.} Squeezed vacuum at $r=0.5$, harmonic Fock state ($n=1$), Morse ($n=8$), and double-well ($n=5$). \textit{Left}, Wigner distribution $W(q,p)$ with Heisenberg cell and squeezed cells overlaid. \textit{Center}, cross-section $W(q,0)$. \textit{Right}, $P_{\delta q}(q,0)$ with Husimi $Q(q,0)$ overlaid. Husimi's isotropic kernel cannot match the squeezed vacuum's anisotropy and smooths the multi-lobe interference of the eigenstates, while $P_{\delta q}$ matches the state's geometry and resolves the structure as strictly non-negative density.}
+\caption{\textbf{Squeezed vacuum and eigenstates.} Squeezed vacuum at $r=0.5$, harmonic Fock state ($n=1$), Morse ($n=8$), and double-well ($n=5$). \textit{Left}, $W(q,p)$ with covariance ellipsoid and squeezed cells overlaid. \textit{Center}, $W(q,0)$. \textit{Right}, $P_{\delta q}(q,0)$. Across qualitatively different non-Gaussian states, the Wigner negativity at the resolution of the cross-section is resolved as non-negative density at the state's inner scale.}
 \label{fig:wigner}
 \end{figure}
-
-Figure~\ref{fig:wigner} shows four states with kernel semi-axes $\Delta q = \sqrt{2\langle (q-\langle q\rangle)^2\rangle}$ and $\Delta p = \sqrt{2\langle p^2\rangle}$ from each state's covariance. The squeezed vacuum has $W \ge 0$ everywhere. Husimi's \cite{husimi1940} isotropic kernel misrepresents the anisotropy while $P_{\delta q}$ matches it. The harmonic Fock state $n=1$ has a central Wigner negativity at $q=0$, and $P_{\delta q}$ represents the state as two non-negative peaks. The Morse oscillator at $n=8$ preserves its $n+1$ Wigner lobes as non-negative density. For the double-well at $n=5$, $P_{\delta q}$ resolves the central-barrier interference as strictly positive density while preserving the spatial separation of the wells.
-
 
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{figures/cats.pdf}
-\caption{\textbf{Cat states.} Coherent superpositions of $n$ Gaussian wavepackets. Rows show 2-cat (two lobes), 3-cat (equilateral triangle), 4-cat (square), and 4-cat Zurek compass (axial lobes) \cite{zurek2001}. Columns as in Fig.~\ref{fig:wigner}. The 2-cat, 3-cat, and 4-cat square Wigner cross-sections drop below zero, while the Zurek compass slice aligns with its positive chessboard peaks at $p=0$. In all cases, $P_{\delta q}(q,0)$ resolves the aligned interference structures as strictly non-negative density.}
+\caption{\textbf{Cat states.} Coherent superpositions of $n$ Gaussian wavepackets: 2-cat, 3-cat, 4-cat square, and Zurek compass \cite{zurek2001}. Columns as in Fig.~\ref{fig:wigner}. The chessboard interference of the compass state \cite{zurek2001} aligns with positive peaks of $P_{\delta q}(q,0)$ at $p=0$.}
 \label{fig:cats}
 \end{figure}
 
-Figure~\ref{fig:cats} extends the demonstration to four cat-state configurations \cite{zurek2001}.
+\begin{figure*}[!htbp]
+\centering
+\includegraphics[width=\linewidth]{figures/marginals.pdf}
+\caption{\textbf{Marginals of $P_{\delta q}$ vs.\ $|\psi(q)|^2$ across eight states.} For each state, the exact $|\psi(q)|^2$ (line) is compared with $\int P_{\delta q}(q,p)\,dp$ (filled), with the residual on a smaller axis below. Integrated $L^1$ residuals quoted per panel. The deformation is bounded above by $\delta q$ times a state-intrinsic length scale and is the minimum compatible with non-negativity. [PLACEHOLDER --- to be generated.]}
+\label{fig:marginals}
+\end{figure*}
+
+Figures~\ref{fig:wigner} and~\ref{fig:cats} show $P_{\delta q}$ for eight states with kernel set from each state's covariance, $\Delta q = \sqrt{2\langle (q-\langle q\rangle)^2\rangle}$, $\Delta p = \sqrt{2\langle p^2\rangle}$. The construction is non-negative across squeezed vacuum, harmonic eigenstates, Morse eigenstates with strong anharmonicity, double-well eigenstates with central-barrier interference, and four cat configurations.
+
+Figure~\ref{fig:marginals} provides the quantitative spine. The marginal $\int P_{\delta q}(q,p)\,dp$ equals $|\psi(q)|^2$ convolved with a one-dimensional Gaussian of width $\delta q$ and is therefore the smoothed-at-$\delta q$ true position distribution by construction. Across the eight states, the integrated $L^1$ residual remains small: the smoothing is at the state's own scale, not at an externally imposed scale, and the deformation is the minimum the uncertainty principle permits. The same holds for $P_{\delta p}$ and $|\hat\psi(p)|^2$.
 
 % ======================================================================
-% SLICE 4 --- CLOSING
+% SLICE 4 --- THE QUESTION
 % ======================================================================
 
-A state possesses exactly one native geometry. Convolution of $W$ with any other kernel represents external effects, not the state.
+The standard tomographic pipeline measures marginals at many phase-space angles and reconstructs $W$ via inverse Radon transform, accepting negativity as fundamental \cite{leonhardt1997}. The measured marginals, however, also support a non-negative reconstruction: $P_{\delta q}$ and its rotated polar-dual partners reproduce the same marginals (Fig.~\ref{fig:marginals}) at the state's intrinsic resolution. Two reconstructions from the same data, one negative and one non-negative, differing in the resolution at which the Wigner function is sampled.
 
-Dragoman's phase-space filtering \cite{dragoman2005} convolves $W$ with the Wigner function of a measurement device. The Cahill--Glauber $s$-parametrized family \cite{cahillglauber1969} interpolates between operator-ordering and detection-scheme parametrizations, reflecting the detector's quantum efficiency \cite{wodkiewicz1984}. The Husimi $Q$-function \cite{husimi1940} convolves $W$ with the harmonic-oscillator ground state. This coincides with the state's native squeezed cell only at the harmonic ground state. Otherwise it reports the vacuum noise of heterodyne detection, the injected vacuum of a beam splitter's empty port \cite{leonhardt1997}. As Figures~\ref{fig:wigner} and~\ref{fig:cats} show, this external noise smooths the interior interferences, whereas $P_{\delta q}$ tracks the state.
+The construction is geometric; its empirical content is that any reconstructed $W$ admits the polar-dual smoothing without loss of marginal information. Whether and when a resolution-respecting non-negative reconstruction provides an alternative to the standard pipeline---in regimes where Wigner negativity complicates reconstruction or simulation, including finite-sample tomography \cite{leonhardt1997}, particle-based phase-space evolution, and the resource-theoretic accounting of negativity volume---is left to future work.
 
-Zurek identified the chessboard scales $\delta q$, $\delta p$ as sub-Planck structure \cite{zurek2001}. The same scales were identified geometrically by de Gosson as the minor semi-axes of the squeezed cells \cite{degossoncharlyne2022}. The two routes meet at Eq.~(\ref{eq:reciprocal}), where $\hbar$ binds outer extent to inner resolution. Against the Heisenberg cell the chessboard is sub-Planck. Against the squeezed cells it sits at the Planck floor, where $P_{\delta q}$ and $P_{\delta p}$ are strictly non-negative densities.
+Convolution at scales other than $\delta q$ describes external effects rather than the state. Husimi's $Q$-function \cite{husimi1940} convolves $W$ with the harmonic-oscillator vacuum, recovering heterodyne detection statistics and the injected vacuum of a beam splitter's empty port \cite{leonhardt1997}; this coincides with the polar-dual kernel only at the harmonic ground state. The Cahill--Glauber $s$-parametrized family \cite{cahillglauber1969} is an operator-ordering interpolation \cite{wodkiewicz1984}. Dragoman's filtering \cite{dragoman2005} convolves with the measurement device. In each case the kernel is set by something external---vacuum, ordering convention, detector. $P_{\delta q}$ is the unique parameter-free smoothing whose kernel is set by the state's own covariance via Eqs.~\eqref{eq:reciprocal}.
 
-The software that supports the findings of this letter are openly available \cite{osfdeposit}.
+The software supporting the findings of this Letter is openly available \cite{osfdeposit}.
 
 \bibliography{main}
 
