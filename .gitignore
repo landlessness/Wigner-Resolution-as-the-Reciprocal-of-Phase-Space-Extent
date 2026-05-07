@@ -1,5 +1,8 @@
 ## --- R ---
 .Rhistory
+.Rapp.history
+.Rproj.user/
+.Rproj.user
 
 ## --- macOS Metadata ---
 .DS_Store
@@ -13,8 +16,9 @@ Icon?
 *.log
 *.out
 *.toc
+*.synctex
 *.synctex.gz
-*.fdb_latemk
+*.fdb_latexmk
 *.fls
 *.gz
 
@@ -31,10 +35,9 @@ Icon?
 *.nav
 *.snm
 *.vrb
+*.lof
+*.lot
 indent.log
-.Rproj.user
 
-<<<<<<< HEAD
+## --- Project ---
 data/
-=======
->>>>>>> origin/overleaf-2026-05-07-1825
