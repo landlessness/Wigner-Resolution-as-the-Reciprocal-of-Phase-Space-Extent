@@ -35,8 +35,12 @@ The Heisenberg principle bounds a quantum state's outer extent in phase space. A
 \maketitle
 
 % ======================================================================
-% SLICE 1 --- THE CONVERGENCE
+% SLICE 1 --- Introduction
 % ======================================================================
+
+% ===============================================================================
+%  SLICE 1, PIECE A --- The Relevance and Shortcomings of Wigner Non-Negativity 
+% ===============================================================================
 
 \begin{figure}[t]
 \centering
@@ -46,6 +50,10 @@ The Heisenberg principle bounds a quantum state's outer extent in phase space. A
 \end{figure}
 
 The Wigner function \cite{wigner1932} is the standard joint phase-space representation of a quantum state. Non-Gaussian states yield Wigner functions that take negative values \cite{hudson1974}, a feature that has come to be read as a quantum signature in tomography \cite{leonhardt1997} and as a resource for quantum advantage \cite{mari2012}. A parallel literature treats non-negative phase-space densities as the operative object: truncated Wigner approximations and Husimi distributions for semiclassical and open-system dynamics, lab homodyne reconstructions where measurement noise is large compared to negativity, and resource-theoretic accounting that asks at what resolution a state's negativity persists \cite{veitch2014}. These methods agree on the value of a non-negative density but disagree on the kernel: each fixes the resolution by an external choice---harmonic vacuum, ordering convention, or sampling width---rather than by the state itself. We show that the state's own covariance fixes a unique non-negative resolution, set by the reciprocal of the state's phase-space extent.
+
+% ===============================================================================
+%  SLICE 1, PIECE B --- de Gosson
+% ===============================================================================
 
 A quantum state's covariance defines the extent of its extended cell\footnote{Heisenberg cells are conventionally drawn as rectangles for visual simplicity; the correct symplectic-geometric object is an ellipsoid \cite{degosson2013qblobs, degossoncharlyne2022}. Throughout this Letter, ``cell'' denotes the ellipsoid.}, the phase-space ellipsoid with semi-axes $\Delta q = \sqrt{2}\sigma_q$, $\Delta p = \sqrt{2}\sigma_p$ and area
 \begin{equation}
@@ -57,7 +65,15 @@ bounded below by Heisenberg \cite{robertson1929,schrodinger1930}. De Gosson iden
 a = \pi\,\delta q\,\delta p = h/2,
 \label{eq:squeezed_cell}
 \end{equation}
-with semi-axes $\delta q$ and $\delta p$ obeying the polar-dual identity. Theorem~13 of \cite{degossoncharlyne2022} establishes that a centered phase-space ellipsoid is a squeezed cell if and only if the polar dual of its position projection equals its momentum intersection. Gromov's non-squeezing theorem \cite{gromov1985} forbids any canonical compression below $h/2$.
+with semi-axes $\delta q$ and $\delta p$ obeying the polar-dual identity and $\delta q \le \Delta q$ and $\delta p \le \Delta p$. Theorem~13 of \cite{degossoncharlyne2022} establishes that a centered phase-space ellipsoid is a squeezed cell if and only if the polar dual of its position projection equals its momentum intersection. Gromov's non-squeezing theorem \cite{gromov1985} forbids any canonical compression below $h/2$.
+
+% ===============================================================================
+%  SLICE 1, PIECE C --- tomography
+% ===============================================================================
+
+% ===============================================================================
+%  SLICE 1, PIECE D --- Zurek
+% ===============================================================================
 
 Zurek expands a generic state as a superposition of coherent states spread over the extended cell and identifies the smallest interference scales of the Wigner function \cite{zurek2001}. With the state's extended cell $A$ providing the spatial scales $\Delta q$ and $\Delta p$, the smallest interference periods are
 \begin{equation}

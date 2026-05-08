@@ -52,44 +52,37 @@
 \subsection{Symbol system}
 \label{sec:symbols}
 
-This Letter uses a single notation system internally. The state's covariance defines its \emph{extended cell}\footnote{Heisenberg cells are conventionally drawn as rectangles for visual simplicity; the correct symplectic-geometric object is an ellipsoid \cite{degosson2013qblobs, degossoncharlyne2022}. Throughout this Letter, ``cell'' denotes the ellipsoid.}, the phase-space ellipsoid with semi-axes $\Delta q$ and $\Delta p$ and area
+This Letter uses a single notation system internally. Phase space carries the metric
+\begin{equation}
+ds^2 = \frac{dq^2}{q_0^2} + \frac{dp^2}{p_0^2}, \qquad q_0 \cdot p_0 = \hbar,
+\label{eq:metric}
+\end{equation}
+in which lengths, angles, and orientations are computed. The reference scales $q_0$ and $p_0$ are convention; their product is fixed by $\hbar$ \cite{degosson2013qblobs, degossoncharlyne2022}. All phase-space figures in this Letter and its supplement use the dimensionless coordinates $q/q_0$ and $p/p_0$.
+
+The state's covariance defines its \emph{extended cell}\footnote{Heisenberg cells are conventionally drawn as rectangles for visual simplicity; the correct symplectic-geometric object is an ellipsoid \cite{degosson2013qblobs, degossoncharlyne2022}. Throughout this Letter, ``cell'' denotes the ellipsoid.}, the phase-space ellipsoid with semi-axes $\Delta q$ and $\Delta p$ and area
 \begin{equation}
 A = \pi \, \Delta q \, \Delta p \geq h/2.
 \label{eq:extended_cell}
 \end{equation}
-Inscribed in the extended cell, the \emph{squeezed cell} has area exactly $h/2$:
+Inscribed in the extended cell is a one-parameter family of \emph{squeezed cells}, parameterized by the orientation angle $\theta$ of the cell's long axis relative to the $q$-axis. Each squeezed cell has area exactly $h/2$:
 \begin{equation}
 a = \pi \, \delta q \, \delta p = h/2,
 \label{eq:squeezed_cell}
 \end{equation}
-with semi-axes $\delta q$ and $\delta p$ satisfying the polar-dual identity
+with $\delta q$ and $\delta p$ the lengths of the cell's short and long semi-axes respectively. The semi-axes satisfy the polar-dual identity
 \begin{equation}
 \delta q \cdot \delta p = \hbar.
 \label{eq:polar_dual}
 \end{equation}
-At the principal-axis orientations, the inscription condition determines the squeezed cell's semi-axes from the extended cell's:
+The inscription condition --- the squeezed cell is tangent to the extended cell at the endpoints of its long axis --- determines the semi-axes from the extended cell's:
 \begin{equation}
-\delta q = \hbar/\Delta p, \qquad \delta p = \hbar/\Delta q.
-\label{eq:principal_axes}
-\end{equation}
-These are Zurek's interference scales \cite{zurek2001}, identified independently from sub-Planck geometry. The squeezed cells with axes along $q$ and $p$ are denoted $a_q$ and $a_p$ respectively.
-
-\paragraph{Generalization to arbitrary orientation.} The squeezed cells form a one-parameter family parameterized by orientation angle $\theta$ in the rotated frame
-\begin{equation}
-q_\theta = q\cos\theta + p\sin\theta, \qquad p_\theta = -q\sin\theta + p\cos\theta.
-\label{eq:rotated_frame}
-\end{equation}
-At general $\theta$, the squeezed cell has area
-\begin{equation}
-a_\theta = \pi \, \delta q_\theta \, \delta p_\theta = h/2,
-\label{eq:squeezed_cell_general}
-\end{equation}
-with semi-axes
-\begin{equation}
-\delta p_\theta = \sqrt{\Delta q^2 \sin^2\theta + \Delta p^2 \cos^2\theta}, \qquad \delta q_\theta = \hbar / \delta p_\theta.
+\delta q(\theta) = \hbar \sqrt{ \frac{\cos^2\theta}{\Delta q^2} + \frac{\sin^2\theta}{\Delta p^2} }, \qquad \delta p(\theta) = \frac{\hbar}{\delta q(\theta)}.
 \label{eq:semi_axes_theta}
 \end{equation}
-The polar-dual identity $\delta q_\theta \, \delta p_\theta = \hbar$ holds at every angle. The principal-axis cases $a_q \equiv a_{\theta = 0}$ and $a_p \equiv a_{\theta = \pi/2}$ recover \eqref{eq:principal_axes}. The inscription bounds $\delta q \leq \Delta q$ and $\delta p \leq \Delta p$ are equivalent to the Heisenberg condition $\Delta q \, \Delta p \geq \hbar$.
+The squeezed cells at $\theta = 0$ and $\theta = \pi/2$ are denoted $a_p$ and $a_q$ respectively.
+
+\subsection{Notation in the literature}
+\label{sec:translation}
 
 \subsection{Notation in the literature}
 \label{sec:translation}
