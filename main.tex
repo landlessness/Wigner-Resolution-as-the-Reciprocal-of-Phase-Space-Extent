@@ -45,7 +45,7 @@ The Heisenberg principle bounds a quantum state's outer extent in phase space. A
 \label{fig:heisenberg_cells}
 \end{figure}
 
-The Wigner function \cite{wigner1932} is the standard joint phase-space representation of a quantum state. Non-Gaussian states yield Wigner functions that take negative values \cite{hudson1974}, a feature that has come to be read as a quantum signature in tomography \cite{leonhardt1997} and as a resource for quantum advantage \cite{mari2012}. A parallel literature treats non-negative phase-space densities as the operative object: truncated Wigner approximations and Husimi distributions for semiclassical and open-system dynamics, lab homodyne reconstructions where measurement noise is large compared to negativity, and resource-theoretic accounting that asks at what resolution a state's negativity persists \cite{veitch2014}. These methods agree on the value of a non-negative density but disagree on the scale of the smearing: each fixes that scale by an external choice---harmonic vacuum, ordering convention, or sampling width---rather than by the state itself. We show that the state's own phase-space extent fixes a unique non-negative resolution, equal to the reciprocal of that extent in units of action.
+The Wigner function \cite{wigner1932} is the standard joint phase-space representation of a quantum state. For non-Gaussian states it takes negative values \cite{hudson1974}, and these regions of negativity carry physical content---signaling non-classicality in tomography \cite{leonhardt1997} and quantifying resource for quantum advantage \cite{mari2012}. Many working contexts call instead for non-negative phase-space densities, and several construction routes have proven successful in practice. Truncated Wigner approximations \cite{polkovnikov2010} sample classical trajectories and produce accurate semiclassical dynamics when the sampling matches the state's covariance. Husimi-style smoothings with state-dependent kernels \cite{wodkiewicz1984, wuensche1995} reconstruct positive densities from generalized $P_{\lambda\theta}$ representations when $\lambda$ is chosen to match the state's spread. Homodyne tomography reconstructions \cite{lvovsky2009} return faithful densities when measurement noise lies at the state's polar-dual scale. Maximum-likelihood reconstruction with Fock-state truncation produces non-negative reconstructions when the truncation is matched to the state's available action. Each method names its own kernel, its own ordering, or its own cutoff in the language of its subfield. The same scale appears in each: the reciprocal of the state's phase-space extent, $\hbar/\Delta p$ and $\hbar/\Delta q$. We give this scale its symplectic-geometric origin, derive the smoothing it defines, and show that the resulting non-negative density coincides with what each of these methods produces in its regime of success.
 
 % ===============================================================================
 %  SLICE 1, PIECE B --- de Gosson
@@ -117,9 +117,33 @@ G_{\delta p}(q,p) = \frac{1}{\pi}\exp\!\left(-\frac{q^2}{\Delta q^2} - \frac{p^2
 \end{equation}
 The kernel is fixed by the state's covariance; no free parameter.
 
-% ======================================================================
-% SLICE 3 --- DEMONSTRATION
-% ======================================================================
+% ===============================================================================
+%  SLICE 3 --- The convergence demonstrated
+% ===============================================================================
+
+\begin{table}[t]
+\centering
+\caption{Effective resolution of established non-negative phase-space methods. Each method works correctly when its operative parameter takes the value shown in the right column. In every case, the resulting effective resolution is $\hbar/\Delta p$, the reciprocal of the state's phase-space extent. Detailed derivations are in the Supplemental Material.}
+\label{tab:effective_resolution}
+\begin{ruledtabular}
+\begin{tabular}{@{}p{0.45\columnwidth}p{0.5\columnwidth}@{}}
+Method & Regime of success \\
+\hline
+Truncated Wigner approximation \cite{polkovnikov2010} & 
+  Sampling width $\sigma = \Delta q$ at saturation \\
+Generalized Husimi $P_{\lambda\theta}$ \cite{wodkiewicz1984} & 
+  Kernel parameter $\lambda = \hbar/\Delta p$ \\
+Husimi $Q$ \cite{husimi1940} & 
+  Vacuum-saturated states \\
+Homodyne tomography \cite{lvovsky2009} & 
+  Detection noise $\sigma_n \gtrsim \hbar/\Delta p$ \\
+Maximum-likelihood reconstruction & 
+  Fock cutoff $N_{\max} \hbar \sim \Delta p^2$ \\
+Cahill--Glauber $W^{(s)}$ \cite{cahillglauber1969} & 
+  Ordering parameter $s$ matched to state covariance \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
 
 \begin{figure}[!htbp]
 \centering
@@ -134,13 +158,6 @@ The kernel is fixed by the state's covariance; no free parameter.
 \caption{\textbf{Cat states.} Coherent superpositions of $n$ Gaussian wavepackets: 2-cat, 3-cat, 4-cat square, and Zurek compass \cite{zurek2001}. Columns as in Fig.~\ref{fig:wigner}. The chessboard interference of the compass state \cite{zurek2001} aligns with positive peaks of $P_{\delta q}(q,0)$ at $p=0$.}
 \label{fig:cats}
 \end{figure}
-
-\begin{figure*}[!htbp]
-\centering
-\includegraphics[width=\linewidth]{figures/marginals.pdf}
-\caption{\textbf{Marginals of $P_{\delta q}$ vs.\ $|\psi(q)|^2$ across eight states.} For each state, the exact $|\psi(q)|^2$ (line) is compared with $\int P_{\delta q}(q,p)\,dp$ (filled), with the residual on a smaller axis below. Integrated $L^1$ residuals quoted per panel. The deformation is bounded above by $\delta q$ times a state-intrinsic length scale and is the minimum compatible with non-negativity. [PLACEHOLDER --- to be generated.]}
-\label{fig:marginals}
-\end{figure*}
 
 Figures~\ref{fig:wigner} and~\ref{fig:cats} show $P_{\delta q}$ for eight states with kernel set from each state's covariance, $\Delta q = \sqrt{2\langle (q-\langle q\rangle)^2\rangle}$, $\Delta p = \sqrt{2\langle p^2\rangle}$. The construction is non-negative across squeezed vacuum, harmonic eigenstates, Morse eigenstates with strong anharmonicity, double-well eigenstates with central-barrier interference, and four cat configurations.
 

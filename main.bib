@@ -1,3 +1,23 @@
+% ===============================================================================
+%  main.bib --- Bibliography for
+%  "Wigner Resolution as the Reciprocal of Phase-Space Extent"
+%  Brian S. Mulloy
+% ===============================================================================
+%
+%  This bib is sized to the body of the Letter. References cited only in the
+%  Supplemental Material (e.g., Appleby 1998 for generalized-Husimi derivation,
+%  Hradil 2004 for MaxLik tomography, Wuensche-Buzek 1997 for state-dependent
+%  Gaussian filters) are added to the SM as needed.
+%
+%  Both main.tex and supplement.tex call \bibliography{main}; each compiles its
+%  own bibliography from the entries it actually cites. No duplication needed.
+%
+% ===============================================================================
+
+% ---------------------------------------------------------------------
+% Foundations: Wigner function and quasi-probability distributions
+% ---------------------------------------------------------------------
+
 @article{wigner1932,
   title={On the quantum correction for thermodynamic equilibrium},
   author={Wigner, Eugene},
@@ -6,7 +26,8 @@
   number={5},
   pages={749--759},
   year={1932},
-  publisher={APS}
+  publisher={APS},
+  doi={10.1103/PhysRev.40.749}
 }
 
 @article{husimi1940,
@@ -18,113 +39,6 @@
   pages={264--314},
   year={1940},
   publisher={The Physical Society of Japan}
-}
-
-@article{zurek2001,
-  title={Sub-{P}lanck structure in phase space and its relevance for quantum decoherence},
-  author={Zurek, Wojciech Hubert},
-  journal={Nature},
-  volume={412},
-  number={6848},
-  pages={712--717},
-  year={2001},
-  publisher={Nature Publishing Group}
-}
-
-@misc{degosson2013fermiblobs,
-  title={Fermi's Trick and Symplectic Capacities: A Geometric Picture of Quantum States},
-  author={de Gosson, Maurice A. and de Gosson, Serge M.},
-  year={2013},
-  eprint={1301.0923},
-  archivePrefix={arXiv},
-  primaryClass={quant-ph}
-}
-
-@article{degossoncharlyne2022,
-  author  = {de Gosson, Maurice and de Gosson, Charlyne},
-  title   = {Symplectic Polar Duality, Quantum Blobs, and Generalized {G}aussians},
-  journal = {arXiv preprint},
-  year    = {2022},
-  eprint  = {2206.06334},
-  archivePrefix = {arXiv},
-  primaryClass  = {quant-ph}
-}
-
-@article{degosson2013qblobs,
-  title={Quantum Blobs},
-  author={de Gosson, Maurice A.},
-  journal={Foundations of Physics},
-  volume={43},
-  number={4},
-  pages={440--457},
-  year={2013},
-  publisher={Springer},
-  doi={10.1007/s10701-012-9636-x}
-}
-
-@article{degosson2005bullsci,
-  title={Cellules quantiques symplectiques et fonctions de {H}usimi--{W}igner},
-  author={de Gosson, Maurice},
-  journal={Bulletin des Sciences Math\'ematiques},
-  volume={129},
-  number={3},
-  pages={211--226},
-  year={2005},
-  publisher={Elsevier},
-  doi={10.1016/j.bulsci.2004.06.003}
-}
-
-@article{gromov1985,
-  title={Pseudo holomorphic curves in symplectic manifolds},
-  author={Gromov, Mikhael},
-  journal={Inventiones mathematicae},
-  volume={82},
-  number={2},
-  pages={307--347},
-  year={1985},
-  publisher={Springer}
-}
-
-@article{hudson1974,
-  title={When is the {W}igner quasi-probability density non-negative?},
-  author={Hudson, Robin L.},
-  journal={Reports on Mathematical Physics},
-  volume={6},
-  number={2},
-  pages={249--252},
-  year={1974},
-  publisher={Elsevier}
-}
-
-@article{robertson1929,
-  author  = {Robertson, H. P.},
-  title   = {The Uncertainty Principle},
-  journal = {Physical Review},
-  volume  = {34},
-  number  = {1},
-  pages   = {163--164},
-  year    = {1929},
-  doi     = {10.1103/PhysRev.34.163}
-}
-
-@article{schrodinger1930,
-  author  = {Schr\"{o}dinger, E.},
-  title   = {Zum {H}eisenbergschen {U}nsch\"{a}rfeprinzip},
-  journal = {Sitzungsberichte der Preussischen Akademie der Wissenschaften, Physikalisch-mathematische Klasse},
-  volume  = {14},
-  pages   = {296--303},
-  year    = {1930}
-}
-
-@article{dragoman2005,
-  title={Phase space formulation of quantum mechanics. {I}nsight into the measurement problem},
-  author={Dragoman, Daniela},
-  journal={Physica Scripta},
-  volume={72},
-  number={4},
-  pages={290--295},
-  year={2005},
-  publisher={IOP Publishing}
 }
 
 @article{cahillglauber1969,
@@ -151,42 +65,122 @@
   doi={10.1103/PhysRevLett.52.1064}
 }
 
-@book{leonhardt1997,
-  title={Measuring the Quantum State of Light},
-  author={Leonhardt, Ulf},
-  year={1997},
-  publisher={Cambridge University Press},
-  address={Cambridge}
+% ---------------------------------------------------------------------
+% Heisenberg principle and related uncertainty bounds
+% ---------------------------------------------------------------------
+
+@article{robertson1929,
+  author  = {Robertson, H. P.},
+  title   = {The Uncertainty Principle},
+  journal = {Physical Review},
+  volume  = {34},
+  number  = {1},
+  pages   = {163--164},
+  year    = {1929},
+  doi     = {10.1103/PhysRev.34.163}
 }
 
-@misc{osfdeposit,
-  author    = {Mulloy, Brian S.},
-  title     = {Supplementary Materials for Two Squeezed Cells per {H}eisenberg Cell},
-  year      = {2026},
-  publisher = {Open Science Framework},
-  doi       = {10.17605/OSF.IO/EV8H6}
+@article{schrodinger1930,
+  author  = {Schr\"{o}dinger, E.},
+  title   = {Zum {H}eisenbergschen {U}nsch\"{a}rfeprinzip},
+  journal = {Sitzungsberichte der Preussischen Akademie der Wissenschaften, Physikalisch-mathematische Klasse},
+  volume  = {14},
+  pages   = {296--303},
+  year    = {1930}
 }
 
-@article{mari2012,
-  title={Positive {W}igner functions render classical simulation of quantum computation efficient},
-  author={Mari, A. and Eisert, J.},
-  journal={Physical Review Letters},
-  volume={109},
-  number={23},
-  pages={230503},
-  year={2012},
-  doi={10.1103/PhysRevLett.109.230503}
+@article{hudson1974,
+  title={When is the {W}igner quasi-probability density non-negative?},
+  author={Hudson, Robin L.},
+  journal={Reports on Mathematical Physics},
+  volume={6},
+  number={2},
+  pages={249--252},
+  year={1974},
+  publisher={Elsevier},
+  doi={10.1016/0034-4877(74)90007-X}
 }
 
-@article{veitch2014,
-  title={The resource theory of stabilizer quantum computation},
-  author={Veitch, Victor and Mousavian, S. A. Hamed and Gottesman, Daniel and Emerson, Joseph},
-  journal={New Journal of Physics},
-  volume={16},
-  number={1},
-  pages={013009},
-  year={2014},
-  doi={10.1088/1367-2630/16/1/013009}
+% ---------------------------------------------------------------------
+% Symplectic geometry: de Gosson, Gromov, polar duality, quantum blobs
+% ---------------------------------------------------------------------
+
+@article{gromov1985,
+  title={Pseudo holomorphic curves in symplectic manifolds},
+  author={Gromov, Mikhael},
+  journal={Inventiones mathematicae},
+  volume={82},
+  number={2},
+  pages={307--347},
+  year={1985},
+  publisher={Springer},
+  doi={10.1007/BF01388806}
+}
+
+@article{degosson2005bullsci,
+  title={Cellules quantiques symplectiques et fonctions de {H}usimi--{W}igner},
+  author={de Gosson, Maurice},
+  journal={Bulletin des Sciences Math\'ematiques},
+  volume={129},
+  number={3},
+  pages={211--226},
+  year={2005},
+  publisher={Elsevier},
+  doi={10.1016/j.bulsci.2004.06.003}
+}
+
+@article{degosson2013qblobs,
+  title={Quantum Blobs},
+  author={de Gosson, Maurice A.},
+  journal={Foundations of Physics},
+  volume={43},
+  number={4},
+  pages={440--457},
+  year={2013},
+  publisher={Springer},
+  doi={10.1007/s10701-012-9636-x}
+}
+
+@article{degossoncharlyne2022,
+  author        = {de Gosson, Maurice and de Gosson, Charlyne},
+  title         = {Symplectic Polar Duality, Quantum Blobs, and Generalized {G}aussians},
+  journal       = {arXiv preprint},
+  year          = {2022},
+  eprint        = {2206.06334},
+  archivePrefix = {arXiv},
+  primaryClass  = {quant-ph}
+}
+
+% ---------------------------------------------------------------------
+% Sub-Planck structure: Zurek
+% ---------------------------------------------------------------------
+
+@article{zurek2001,
+  title={Sub-{P}lanck structure in phase space and its relevance for quantum decoherence},
+  author={Zurek, Wojciech Hubert},
+  journal={Nature},
+  volume={412},
+  number={6848},
+  pages={712--717},
+  year={2001},
+  publisher={Nature Publishing Group},
+  doi={10.1038/35089017}
+}
+
+% ---------------------------------------------------------------------
+% Methods cited in Slice 1A and Slice 3 table
+% ---------------------------------------------------------------------
+
+@article{polkovnikov2010,
+  title={Phase space representation of quantum dynamics},
+  author={Polkovnikov, Anatoli},
+  journal={Annals of Physics},
+  volume={325},
+  number={8},
+  pages={1790--1852},
+  year={2010},
+  publisher={Elsevier},
+  doi={10.1016/j.aop.2010.02.006}
 }
 
 @article{vogelrisken1989,
@@ -197,21 +191,11 @@
   number={5},
   pages={2847--2849},
   year={1989},
+  publisher={APS},
   doi={10.1103/PhysRevA.40.2847}
 }
 
-@article{smithey1993,
-  title={Measurement of the {W}igner distribution and the density matrix of a light mode using optical homodyne tomography: {A}pplication to squeezed states and the vacuum},
-  author={Smithey, D. T. and Beck, M. and Raymer, M. G. and Faridani, A.},
-  journal={Physical Review Letters},
-  volume={70},
-  number={9},
-  pages={1244--1247},
-  year={1993},
-  doi={10.1103/PhysRevLett.70.1244}
-}
-
-@article{lvovskyraymer2009,
+@article{lvovsky2009,
   title={Continuous-variable optical quantum-state tomography},
   author={Lvovsky, A. I. and Raymer, M. G.},
   journal={Reviews of Modern Physics},
@@ -219,5 +203,62 @@
   number={1},
   pages={299--332},
   year={2009},
+  publisher={APS},
   doi={10.1103/RevModPhys.81.299}
+}
+
+% ---------------------------------------------------------------------
+% Tomography and Wigner-function reconstruction (textbook reference)
+% ---------------------------------------------------------------------
+
+@book{leonhardt1997,
+  title={Measuring the Quantum State of Light},
+  author={Leonhardt, Ulf},
+  year={1997},
+  publisher={Cambridge University Press},
+  address={Cambridge}
+}
+
+% ---------------------------------------------------------------------
+% Negativity-as-resource framing (Slice 1A)
+% ---------------------------------------------------------------------
+
+@article{mari2012,
+  title={Positive {W}igner functions render classical simulation of quantum computation efficient},
+  author={Mari, A. and Eisert, J.},
+  journal={Physical Review Letters},
+  volume={109},
+  number={23},
+  pages={230503},
+  year={2012},
+  publisher={APS},
+  doi={10.1103/PhysRevLett.109.230503}
+}
+
+% ---------------------------------------------------------------------
+% Slice 4 alternative-kernel framings
+% ---------------------------------------------------------------------
+
+@article{dragoman2005,
+  title={Phase space formulation of quantum mechanics. {I}nsight into the measurement problem},
+  author={Dragoman, Daniela},
+  journal={Physica Scripta},
+  volume={72},
+  number={4},
+  pages={290--295},
+  year={2005},
+  publisher={IOP Publishing},
+  doi={10.1238/Physica.Regular.072a00290}
+}
+
+% ---------------------------------------------------------------------
+% Open data
+% ---------------------------------------------------------------------
+
+@misc{osfdeposit,
+  author    = {Mulloy, Brian S.},
+  title     = {Code and figures for ``{W}igner Resolution as the Reciprocal of Phase-Space Extent''},
+  year      = {2026},
+  publisher = {Open Science Framework},
+  doi       = {10.17605/OSF.IO/EV8H6}
 }
