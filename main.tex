@@ -34,10 +34,6 @@ The Heisenberg principle bounds a quantum state's outer extent in phase space. A
 
 \maketitle
 
-% ======================================================================
-% SLICE 1 --- Introduction
-% ======================================================================
-
 % ===============================================================================
 %  SLICE 1, PIECE A --- The Relevance and Shortcomings of Wigner Non-Negativity
 % ===============================================================================
@@ -49,47 +45,49 @@ The Heisenberg principle bounds a quantum state's outer extent in phase space. A
 \label{fig:heisenberg_cells}
 \end{figure}
 
-The Wigner function \cite{wigner1932} is the standard joint phase-space representation of a quantum state. Non-Gaussian states yield Wigner functions that take negative values \cite{hudson1974}, a feature that has come to be read as a quantum signature in tomography \cite{leonhardt1997} and as a resource for quantum advantage \cite{mari2012}. A parallel literature treats non-negative phase-space densities as the operative object: truncated Wigner approximations and Husimi distributions for semiclassical and open-system dynamics, lab homodyne reconstructions where measurement noise is large compared to negativity, and resource-theoretic accounting that asks at what resolution a state's negativity persists \cite{veitch2014}. These methods agree on the value of a non-negative density but disagree on the kernel: each fixes the resolution by an external choice---harmonic vacuum, ordering convention, or sampling width---rather than by the state itself. We show that the state's own covariance fixes a unique non-negative resolution, set by the reciprocal of the state's phase-space extent.
+The Wigner function \cite{wigner1932} is the standard joint phase-space representation of a quantum state. Non-Gaussian states yield Wigner functions that take negative values \cite{hudson1974}, a feature that has come to be read as a quantum signature in tomography \cite{leonhardt1997} and as a resource for quantum advantage \cite{mari2012}. A parallel literature treats non-negative phase-space densities as the operative object: truncated Wigner approximations and Husimi distributions for semiclassical and open-system dynamics, lab homodyne reconstructions where measurement noise is large compared to negativity, and resource-theoretic accounting that asks at what resolution a state's negativity persists \cite{veitch2014}. These methods agree on the value of a non-negative density but disagree on the scale of the smearing: each fixes that scale by an external choice---harmonic vacuum, ordering convention, or sampling width---rather than by the state itself. We show that the state's own phase-space extent fixes a unique non-negative resolution, equal to the reciprocal of that extent in units of action.
 
 % ===============================================================================
 %  SLICE 1, PIECE B --- de Gosson
 % ===============================================================================
 
-A quantum state's covariance defines the extent of its extended cell\footnote{Heisenberg cells are conventionally drawn as rectangles for visual simplicity; the correct symplectic-geometric object is an ellipsoid \cite{degosson2013qblobs, degossoncharlyne2022}. Throughout this Letter, ``cell'' denotes the ellipsoid.}, the phase-space ellipsoid with semi-axes $\Delta q = \sqrt{2}\sigma_q$, $\Delta p = \sqrt{2}\sigma_p$ and area
+A quantum state occupies phase space\footnote{Heisenberg cells are conventionally drawn as rectangles for visual simplicity; the correct symplectic-geometric object is an ellipsoid \cite{degosson2013qblobs, degossoncharlyne2022}. Throughout this Letter, ``cell'' denotes the ellipsoid.}, with extent set by its covariance: an extended cell, the phase-space ellipsoid with semi-axes $\Delta q = \sqrt{2}\sigma_q$, $\Delta p = \sqrt{2}\sigma_p$ and action
 \begin{equation}
 A = \pi\,\Delta q\,\Delta p \ge h/2,
 \label{eq:extended_cell}
 \end{equation}
-bounded below by Heisenberg \cite{robertson1929,schrodinger1930}. De Gosson identifies a complementary ellipsoid inscribed in the extended cell \cite{degosson2013qblobs, degossoncharlyne2022}: the squeezed cell has area exactly $h/2$,
+floored at $h/2$ by Heisenberg \cite{robertson1929,schrodinger1930}. De Gosson finds a complementary cell inscribed in the extended one \cite{degosson2013qblobs, degossoncharlyne2022}: the squeezed cell, of action exactly $h/2$,
 \begin{equation}
 a = \pi\,\delta q\,\delta p = h/2,
 \label{eq:squeezed_cell}
 \end{equation}
-with semi-axes $\delta q$ and $\delta p$ obeying the polar-dual identity and $\delta q \le \Delta q$ and $\delta p \le \Delta p$. Theorem~13 of \cite{degossoncharlyne2022} establishes that a centered phase-space ellipsoid is a squeezed cell if and only if the polar dual of its position projection equals its momentum intersection. Gromov's non-squeezing theorem \cite{gromov1985} forbids any canonical compression below $h/2$.
+with semi-axes $\delta q$ and $\delta p$ tied by the polar-dual identity and $\delta q \le \Delta q$, $\delta p \le \Delta p$. Theorem~13 of \cite{degossoncharlyne2022} establishes that the inscribed cell carries the floor action $h/2$ exactly when the spreads it shows in $q$ and $p$ are reciprocals. Gromov's non-squeezing theorem \cite{gromov1985} forbids any canonical compression below $h/2$.
 
 % ===============================================================================
 %  SLICE 1, PIECE C --- tomography
 % ===============================================================================
 
-Continuous-variable tomography measures the state's quadrature distribution along a phase-space axis at angle $\theta$, then inverts the Radon transform to reconstruct $W$ \cite{vogelrisken1989, smithey1993, leonhardt1997, lvovskyraymer2009}. The measurement axis rotates; the geometry that determines what is measured does not. At every $\theta$ the state's covariance ellipsoid inscribes a squeezed cell of area exactly $h/2$, with semi-axes
+The state fixes the extended cell; rotation through angle $\theta$ leaves it where it is. The inscribed squeezed cell is not so anchored: as $\theta$ varies, it pivots within the extended cell and its semi-axes flow according to
 \begin{equation}
 \delta q(\theta) = \hbar\sqrt{ \frac{\cos^2\theta}{\Delta q^2} + \frac{\sin^2\theta}{\Delta p^2} }, \qquad \delta p(\theta) = \frac{\hbar}{\delta q(\theta)},
 \label{eq:cell_axes_theta}
 \end{equation}
-fixed by the polar-dual identity \cite{degossoncharlyne2022}. The principal-axis cases $\theta = 0$ and $\theta = \pi/2$ are the cells $a_p$ and $a_q$ of Fig.~\ref{fig:heisenberg_cells}; intermediate $\theta$ gives the rotated cell $a$. The rotation is intrinsic to the state's geometry, not to any measurement apparatus: tomography accesses the family of squeezed cells, but the family is there independent of being measured.
+tied by the polar-dual identity \cite{degossoncharlyne2022}. Shape tracks $\theta$ while the action stays at $h/2$. The cells $a_p$ and $a_q$ of Fig.~\ref{fig:heisenberg_cells} sit with axes along $q$ and $p$, at $\theta = 0$ and $\theta = \pi/2$; the rotated cell $a$ illustrates a typical orientation. The same rotated axis labels the quadrature in continuous-variable tomography \cite{vogelrisken1989, lvovskyraymer2009}.
 
 % ===============================================================================
 %  SLICE 1, PIECE D --- Zurek
 % ===============================================================================
-
-Zurek expands a generic state as a superposition of coherent states spread over the extended cell and identifies the smallest interference scales of the Wigner function \cite{zurek2001}. With the state's extended cell $A$ providing the spatial scales $\Delta q$ and $\Delta p$, the smallest interference periods are
+Zurek discovered that the Wigner function carries interference structure on sub-Planck scales \cite{zurek2001}. With the state's extended cell $A$ providing the spreads $\Delta q$ and $\Delta p$, the smallest interference periods are
 \begin{equation}
 \delta q = \hbar/\Delta p, \qquad \delta p = \hbar/\Delta q.
 \label{eq:zurek}
 \end{equation}
-These are de Gosson's polar-dual semi-axes \eqref{eq:squeezed_cell} at the principal-axis orientations. Zurek shows that they control the state's sensitivity to phase-space displacements, and hence its decoherence rate.
+These interference scales are the same $\delta q$ and $\delta p$ that bound de Gosson's squeezed cell when its axes lie along $q$ and $p$. Zurek shows that they control the state's sensitivity to phase-space displacements, and hence its decoherence rate.
 
-Two independent derivations---symplectic polar duality and interference geometry---reach the same scales. This convergence is the starting point of this Letter.
+% ===============================================================================
+%  SLICE 1, PIECE E --- Convergence
+% ===============================================================================
+Two physical pictures---the cell that cannot be squeezed below the action $h/2$, and the chessboard of sub-Planck interference---reach the same scales. This convergence is the starting point of this Letter.
 
 % ======================================================================
 % SLICE 2 --- THE DENSITY
