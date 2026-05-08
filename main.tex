@@ -45,7 +45,7 @@ The Heisenberg principle bounds a quantum state's outer extent in phase space. A
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/heisenberg_cells.pdf}
-\caption{Heisenberg cells (schematic, 1D). The extended cell (outer) of area $A \ge h/2$ contains an squeezed cell (inner) $a = h/2$. For $\theta = 0$ we label $a$ as $a_p$, and for $\theta = \pi/2$, $a_p$. The semi-axes for those two values of $\theta$ are $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$. The same scales arise as the smallest interference scales of the Wigner function for any state spread over the extended cell \cite{zurek2001}. Same equations, two readings: geometry and interference.}
+\caption{Heisenberg cells (schematic, 1D). The state's covariance defines an extended cell of area $A \ge h/2$ (outer), inside which a one-parameter family of squeezed cells of area $a = h/2$ is inscribed, parameterized by the orientation angle $\theta$ of the long axis from the $q$-axis. The generic cell $a$ (dark) is shown at $\theta = \pi/4$; its principal-axis members $a_p$ and $a_q$ (light) sit at $\theta = 0$ and $\theta = \pi/2$ respectively. At those orientations the inner semi-axes reduce to $\delta q = \hbar/\Delta p$ and $\delta p = \hbar/\Delta q$, the smallest interference scales of the Wigner function for any state spread over the extended cell. Same equations, two readings: de Gosson's geometry and Zurek's interference.}
 \label{fig:heisenberg_cells}
 \end{figure}
 
@@ -70,6 +70,13 @@ with semi-axes $\delta q$ and $\delta p$ obeying the polar-dual identity and $\d
 % ===============================================================================
 %  SLICE 1, PIECE C --- tomography
 % ===============================================================================
+
+Continuous-variable tomography measures the state's quadrature distribution along a phase-space axis at angle $\theta$, then inverts the Radon transform to reconstruct $W$ \cite{vogelrisken1989, smithey1993, leonhardt1997, lvovskyraymer2009}. The measurement axis rotates; the geometry that determines what is measured does not. At every $\theta$ the state's covariance ellipsoid inscribes a squeezed cell of area exactly $h/2$, with semi-axes
+\begin{equation}
+\delta q(\theta) = \hbar\sqrt{ \frac{\cos^2\theta}{\Delta q^2} + \frac{\sin^2\theta}{\Delta p^2} }, \qquad \delta p(\theta) = \frac{\hbar}{\delta q(\theta)},
+\label{eq:cell_axes_theta}
+\end{equation}
+fixed by the polar-dual identity \cite{degossoncharlyne2022}. The principal-axis cases $\theta = 0$ and $\theta = \pi/2$ are the cells $a_p$ and $a_q$ of Fig.~\ref{fig:heisenberg_cells}; intermediate $\theta$ gives the rotated cell $a$. The rotation is intrinsic to the state's geometry, not to any measurement apparatus: tomography accesses the family of squeezed cells, but the family is there independent of being measured.
 
 % ===============================================================================
 %  SLICE 1, PIECE D --- Zurek
