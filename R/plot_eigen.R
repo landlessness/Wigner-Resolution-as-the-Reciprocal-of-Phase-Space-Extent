@@ -1,5 +1,5 @@
 # ==============================================================================
-# plot_wigner.R
+# plot_eigen.R
 # Symplectic resolution of Wigner negativity for bound-state systems.
 # Each row shows one quantum eigenstate:
 #   row 1: squeezed vacuum     (Gaussian; non-negative W; demonstrates that
@@ -42,7 +42,17 @@ source(here("R", "state_builder.R"))             # build_eigenstate_state
 latex_font  <- "CMU Serif"
 dir_figures <- here("figures")
 if (!dir.exists(dir_figures)) dir.create(dir_figures, recursive=TRUE)
-file_output_pdf <- file.path(dir_figures, "wigner.pdf")
+file_output_pdf <- file.path(dir_figures, "eigen.pdf")
+
+# ------------------------------------------------------------------------------
+# OVERLAY CELLS
+#
+# Which symplectic cells to draw on the heatmap. Subset of:
+#   "A"   - extended (Fermi blob)
+#   "a_q" - q-squeezed (tall ellipse: small in q, full extent in p)
+#   "a_p" - p-squeezed (wide ellipse: full extent in q, small in p)
+# ------------------------------------------------------------------------------
+OVERLAY_CELLS <- c("A", "a_q")
 
 # ------------------------------------------------------------------------------
 # WAVEFUNCTION SOURCES (quantum universe)
@@ -199,8 +209,9 @@ double_well_descriptor <- list(
 # this figure needs (and the tomography pipeline does not).
 # ------------------------------------------------------------------------------
 
-build_wigner_row <- function(descriptor, base_font="") {
-  ps <- build_eigenstate_state(descriptor, base_font=base_font)
+build_wigner_row <- function(descriptor, base_font="",
+                             cells=c("A", "a_q", "a_p")) {
+  ps <- build_eigenstate_state(descriptor, base_font=base_font, cells=cells)
 
   # Symplectic kernel cross-section for the right column.
   symplectic_kernel_for_state <- function(qg, pg) {
@@ -238,13 +249,13 @@ build_wigner_row <- function(descriptor, base_font="") {
 
   # Three panels.
   list(
-    plot_wigner_heatmap(
+    plot_eigen_heatmap(
       ps$state$heatmap_dt, ps$overlay_layers, df_traj=NULL,
       q_lim=c(ps$q_lo, ps$q_hi), p_lim=c(ps$p_lo, ps$p_hi),
       custom_breaks_q=ps$custom_breaks_q,
       custom_breaks_p=ps$custom_breaks_p,
       label_format=ps$label_format, base_font=base_font),
-    plot_wigner_cross_section(
+    plot_eigen_cross_section(
       dt_W, q_lim=c(ps$q_lo, ps$q_hi), y_lim=y_lim_W,
       custom_breaks=ps$custom_breaks_q,
       label_format=ps$label_format, base_font=base_font),
@@ -269,7 +280,8 @@ descriptors <- list(squeezed_vacuum_descriptor,
                     double_well_descriptor)
 
 rows <- lapply(descriptors,
-               function(d) build_wigner_row(d, base_font=latex_font))
+               function(d) build_wigner_row(d, base_font=latex_font,
+                                            cells=OVERLAY_CELLS))
 
 p_final <- assemble_grid_unlabeled(rows,
                                    COLUMN_TITLE_CENTER_WIGNER,

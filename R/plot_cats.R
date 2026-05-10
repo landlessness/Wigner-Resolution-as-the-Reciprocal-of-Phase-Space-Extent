@@ -36,6 +36,16 @@ if (!dir.exists(dir_figures)) dir.create(dir_figures, recursive=TRUE)
 file_output_pdf <- file.path(dir_figures, "cats.pdf")
 
 # ------------------------------------------------------------------------------
+# OVERLAY CELLS
+#
+# Which symplectic cells to draw on the heatmap. Subset of:
+#   "A"   - extended (Fermi blob)
+#   "a_q" - q-squeezed (tall ellipse: small in q, full extent in p)
+#   "a_p" - p-squeezed (wide ellipse: full extent in q, small in p)
+# ------------------------------------------------------------------------------
+OVERLAY_CELLS <- c("A", "a_q")
+
+# ------------------------------------------------------------------------------
 # DISPLAY WINDOW (shared across all four rows)
 # ------------------------------------------------------------------------------
 
@@ -83,8 +93,9 @@ row_descriptors <- list(
 # needs (and the tomography pipeline does not).
 # ------------------------------------------------------------------------------
 
-build_cat_row <- function(descriptor, base_font="") {
-  ps <- build_cat_state(descriptor, base_font=base_font)
+build_cat_row <- function(descriptor, base_font="",
+                          cells=c("A", "a_q", "a_p")) {
+  ps <- build_cat_state(descriptor, base_font=base_font, cells=cells)
 
   # Symplectic kernel cross-section.
   symplectic_kernel_for_state <- function(qg, pg) {
@@ -118,13 +129,13 @@ build_cat_row <- function(descriptor, base_font="") {
   dt_P_sympl <- data.table(q=ps$q_display, rho_sympl=P_sympl_cross)
 
   list(
-    plot_wigner_heatmap(
+    plot_eigen_heatmap(
       ps$state$heatmap_dt, ps$overlay_layers, df_traj=NULL,
       q_lim=c(ps$q_lo, ps$q_hi), p_lim=c(ps$p_lo, ps$p_hi),
       custom_breaks_q=ps$custom_breaks_q,
       custom_breaks_p=ps$custom_breaks_p,
       label_format=ps$label_format, base_font=base_font),
-    plot_wigner_cross_section(
+    plot_eigen_cross_section(
       dt_W, q_lim=c(ps$q_lo, ps$q_hi), y_lim=y_lim_W,
       custom_breaks=ps$custom_breaks_q,
       label_format=ps$label_format, base_font=base_font),
@@ -144,7 +155,8 @@ build_cat_row <- function(descriptor, base_font="") {
 cat("Computing cats figure (4 cat configurations x 3 panels)...\n")
 
 rows <- lapply(row_descriptors,
-               function(d) build_cat_row(d, base_font=latex_font))
+               function(d) build_cat_row(d, base_font=latex_font,
+                                         cells=OVERLAY_CELLS))
 
 p_final <- assemble_grid_unlabeled(rows,
                                    COLUMN_TITLE_CENTER_WIGNER,

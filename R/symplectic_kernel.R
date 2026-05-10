@@ -83,8 +83,9 @@ G_delta_q_kernel_matrix <- function(q_grid, p_grid, Delta_q, Delta_p, hbar=1.0) 
 
 # ------------------------------------------------------------------------------
 # SYMPLECTIC OVERLAY
-# Three nested ellipses: outer A (solid), inner a_q (dashed), inner a_p
-# (dashed). All centered at q_center.
+# Up to three nested ellipses: outer A, inner a_q, inner a_p.
+# All centered at q_center. The `cells` parameter selects which subset
+# to render; default is all three.
 # ------------------------------------------------------------------------------
 
 #' Symplectic overlay layers for a phase-space heatmap.
@@ -92,23 +93,37 @@ G_delta_q_kernel_matrix <- function(q_grid, p_grid, Delta_q, Delta_p, hbar=1.0) 
 #' Returns a list of ggplot layers ready to be added to a heatmap plot.
 #' Same signature pattern as husimi_overlay_layers().
 #'
-#' Drawing order: outer A first, then inner a_q and a_p so they appear on
-#' top of the outer.
+#' Drawing order: outer A first, then inner cells so they appear on top
+#' of the outer.
 #'
 #' Visual hierarchy: outer Fermi blob A is drawn with a slightly thicker
 #' line than the inner conjugate quantum blobs a_q, a_p, to emphasize A
-#' as the primary kinematic envelope. All three are solid black.
+#' as the primary kinematic envelope. All cells are solid black.
 #'
 #' @param Delta_q,Delta_p Covariance widths (RS or orbit).
 #' @param q_center Center of the overlay in q (orbit center).
 #' @param hbar Planck constant.
-#' @return A list of three ggplot layers (one per ellipse).
-symplectic_overlay_layers <- function(Delta_q, Delta_p, q_center=0, hbar=1.0) {
+#' @param cells Character vector specifying which cells to render.
+#'   Any subset of c("A", "a_q", "a_p"). Order in this vector does not
+#'   matter; cells are always drawn in canonical order (A first, then
+#'   a_q, then a_p) so inner cells appear on top of the outer envelope.
+#'   Defaults to all three.
+#' @return A list of ggplot layers, one per requested cell.
+symplectic_overlay_layers <- function(Delta_q, Delta_p, q_center=0, hbar=1.0,
+                                      cells=c("A", "a_q", "a_p")) {
+  valid_cells <- c("A", "a_q", "a_p")
+  unknown <- setdiff(cells, valid_cells)
+  if (length(unknown) > 0) {
+    stop(sprintf("Unknown cell(s): %s. Valid: %s",
+                 paste(unknown, collapse=", "),
+                 paste(valid_cells, collapse=", ")))
+  }
+
   w <- symplectic_kernel_widths(Delta_q, Delta_p, hbar=hbar)
   # Build ellipse paths directly with geom_path. Older ggforce versions on
   # some R installs drop linewidth on geom_ellipse and warn about it; we
   # construct the parametric paths ourselves so the line weights are
-  # respected exactly. Each path has its own group id so the three are
+  # respected exactly. Each path has its own group id so the cells are
   # rendered as separate closed curves.
   theta <- seq(0, 2*pi, length.out=361)
   ellipse_path <- function(a, b, group_id) {
@@ -116,17 +131,27 @@ symplectic_overlay_layers <- function(Delta_q, Delta_p, q_center=0, hbar=1.0) {
                p     =            b * sin(theta),
                group = group_id)
   }
-  path_A   <- ellipse_path(Delta_q,   Delta_p,   "A")
-  path_a_q <- ellipse_path(w$delta_q, Delta_p,   "a_q")
-  path_a_p <- ellipse_path(Delta_q,   w$delta_p, "a_p")
-  list(
-    geom_path(data=path_A,   aes(x=q, y=p, group=group),
-              inherit.aes=FALSE, color="black", linewidth=0.2),
-    geom_path(data=path_a_q, aes(x=q, y=p, group=group),
-              inherit.aes=FALSE, color="black", linewidth=0.2),
-    geom_path(data=path_a_p, aes(x=q, y=p, group=group),
-              inherit.aes=FALSE, color="black", linewidth=0.2)
-  )
+
+  layers <- list()
+  if ("A" %in% cells) {
+    path_A <- ellipse_path(Delta_q, Delta_p, "A")
+    layers <- c(layers, list(
+      geom_path(data=path_A, aes(x=q, y=p, group=group),
+                inherit.aes=FALSE, color="black", linewidth=0.2)))
+  }
+  if ("a_q" %in% cells) {
+    path_a_q <- ellipse_path(w$delta_q, Delta_p, "a_q")
+    layers <- c(layers, list(
+      geom_path(data=path_a_q, aes(x=q, y=p, group=group),
+                inherit.aes=FALSE, color="black", linewidth=0.2)))
+  }
+  if ("a_p" %in% cells) {
+    path_a_p <- ellipse_path(Delta_q, w$delta_p, "a_p")
+    layers <- c(layers, list(
+      geom_path(data=path_a_p, aes(x=q, y=p, group=group),
+                inherit.aes=FALSE, color="black", linewidth=0.2)))
+  }
+  layers
 }
 
 # ------------------------------------------------------------------------------

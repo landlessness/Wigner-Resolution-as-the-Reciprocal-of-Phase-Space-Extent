@@ -20,8 +20,11 @@
 #   $hbar         Planck constant in chosen units
 #   $state        output of build_wigner_state(): q_int, p_int, dq_int,
 #                 dp_int, W_matrix, W_cross, heatmap_dt, norm
-#   $overlay_layers     symplectic overlay layers (Fermi blob + conjugate
-#                       quantum blobs) ready to add to a heatmap plot
+#   $overlay_layers     symplectic overlay layers (subset of Fermi blob A
+#                       and conjugate quantum blobs a_q, a_p) ready to add
+#                       to a heatmap plot. Subset selected by the `cells`
+#                       argument to the build function (default: all
+#                       three).
 #
 # Two descriptor flavors are supported:
 #
@@ -129,9 +132,14 @@ load_tomography_cache <- function(cache_path, compute_path) {
 # Mirrors steps 1-9 of build_wigner_row() in plot_wigner.R. Output is a
 # state bundle ready for either the existing 3-panel plot or the new
 # tomography pipeline.
+#
+# The `cells` argument controls which symplectic overlay cells are
+# rendered on the heatmap. Defaults to all three; pass e.g.
+# c("A", "a_q") to show only the extended cell and the q-squeezed cell.
 # ------------------------------------------------------------------------------
 
-build_eigenstate_state <- function(descriptor, base_font="") {
+build_eigenstate_state <- function(descriptor, base_font="",
+                                   cells = c("A", "a_q", "a_p")) {
   n   <- descriptor$n_target
   E_n <- descriptor$E_fn(n)
 
@@ -168,7 +176,8 @@ build_eigenstate_state <- function(descriptor, base_font="") {
   # 5. Symplectic overlay layers, centered at the visual peak of W(q,0).
   q_center_visual <- q_display[which.max(abs(state$W_cross))]
   overlay_layers  <- symplectic_overlay_layers(rs$Delta_q, rs$Delta_p,
-                                                q_center=q_center_visual)
+                                                q_center=q_center_visual,
+                                                cells=cells)
 
   list(
     name            = descriptor$name,
@@ -195,9 +204,13 @@ build_eigenstate_state <- function(descriptor, base_font="") {
 # Mirrors steps 1-8 of build_cat_row() in plot_cats.R. The cat figure
 # uses a single shared display window across all four rows; we accept
 # that window as descriptor fields rather than re-computing per-row.
+#
+# The `cells` argument controls which symplectic overlay cells are
+# rendered on the heatmap. Defaults to all three.
 # ------------------------------------------------------------------------------
 
-build_cat_state <- function(descriptor, base_font="") {
+build_cat_state <- function(descriptor, base_font="",
+                            cells = c("A", "a_q", "a_p")) {
   n_cats  <- descriptor$n_cats
   variant <- descriptor$variant
   hbar    <- if (is.null(descriptor$hbar)) CAT_HBAR else descriptor$hbar
@@ -235,7 +248,8 @@ build_cat_state <- function(descriptor, base_font="") {
   # 5. Symplectic overlay layers.
   overlay_layers <- symplectic_overlay_layers(rs$Delta_q, rs$Delta_p,
                                                q_center=rs$q_mean,
-                                               hbar=hbar)
+                                               hbar=hbar,
+                                               cells=cells)
 
   list(
     name            = if (is.null(descriptor$name))

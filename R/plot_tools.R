@@ -76,7 +76,7 @@ TAG_Y_NPC <-  0.5
 # WIGNER HEATMAP (signed density, diverging colormap)
 # ------------------------------------------------------------------------------
 
-plot_wigner_heatmap <- function(dt_w2d, overlay_layers, df_traj=NULL,
+plot_eigen_heatmap <- function(dt_w2d, overlay_layers, df_traj=NULL,
                                 q_lim, p_lim,
                                 custom_breaks_q, custom_breaks_p,
                                 label_format, base_font="") {
@@ -157,7 +157,7 @@ plot_semiclassical_heatmap <- function(dt_w2d, overlay_layers,
 # WIGNER CROSS-SECTION (signed, two-color fill matching heatmap endpoints)
 # ------------------------------------------------------------------------------
 
-plot_wigner_cross_section <- function(dt, q_lim, y_lim, custom_breaks, label_format, base_font="") {
+plot_eigen_cross_section <- function(dt, q_lim, y_lim, custom_breaks, label_format, base_font="") {
   ax_x <- expression(italic(q)/italic(q)[0])
   ax_y <- expression(italic(W)[italic(n)](italic(q)*","*0))
   # Recover the data peak from y_lim (the convention is y_lim = peak*1.1).
