@@ -48,11 +48,11 @@ The Heisenberg principle bounds a quantum state's outer extent in phase space. A
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{figures/zurek_cells.pdf}
-\caption{\textbf{Zurek cells} (schematic, 1D). The two principal-axis squeezed cells, at orientations $\theta = 0$ and $\theta = \pi/2$. The semi-axes $\delta_x = \hbar/\Delta p$ and $\delta_p = \hbar/\Delta x$ shown here are precisely Zurek's smallest interference scales of the Wigner function, derived independently from coherent-state interference. Two paths reach the same scales: de Gosson's symplectic polar duality (Fig.~\ref{fig:de_gosson_cells}) and Zurek's interference geometry.}
+\caption{\textbf{Zurek cells} (schematic, 1D). The two principal-axis squeezed cells inscribed in the extended cell, taking $\theta$ as the angle of $\delta_\parallel$ from the $+x$-axis. At $\theta = 0$, $\delta_\parallel$ lies along $x$ and $\delta_\perp$ along $p$: this is $a_x$, with semi-axes $\delta_\parallel = \delta_x = \hbar/\Delta p$ and $\delta_\perp = \Delta p$. At $\theta = \pi/2$, $\delta_\parallel$ lies along $p$ and $\delta_\perp$ along $x$: this is $a_p$, with semi-axes $\delta_\parallel = \delta_p = \hbar/\Delta x$ and $\delta_\perp = \Delta x$. Both cells satisfy $a = \pi\,\delta_\parallel\,\delta_\perp = h/2$. The widths $\delta_x = \hbar/\Delta p$ and $\delta_p = \hbar/\Delta x$ are precisely Zurek's smallest interference scales of the Wigner function, derived independently from coherent-state interference. Two paths reach the same scales: de Gosson's symplectic polar duality (Fig.~\ref{fig:de_gosson_cells}) and Zurek's interference geometry.}
 \label{fig:zurek_cells}
 \end{figure}
 
-The Wigner function~\cite{wigner1932} is the standard joint phase-space representation of a quantum state. For non-Gaussian states it takes negative values~\cite{hudson1974}. Many working contexts call for non-negative phase-space densities, and several construction routes have proven successful in practice. Truncated Wigner approximations~\cite{polkovnikov2010} sample classical trajectories and produce accurate semiclassical dynamics when the sampling matches the state's covariance. Husimi-style smoothings with state-dependent kernels~\cite{wodkiewicz1984, wuensche1995} reconstruct positive densities from generalized $P_{\lambda\theta}$ representations when $\lambda$ is matched to the state's spread. Maximum-likelihood reconstruction with Fock-state truncation produces non-negative reconstructions when the truncation is matched to the state's available action. Cahill--Glauber $W^{(s)}$ distributions~\cite{cahillglauber1969} recover positivity when the ordering parameter $s$ is matched to the state's covariance. Apparatus-matched smoothings, modeled in the phase-space formulation of quantum mechanics, produce non-negative densities when the device's resolution matches the state's spread~\cite{dragoman2005}. Born--Jordan and Cohen-class smoothings damp interference contributions while preserving the Wigner distribution's symplectic covariance~\cite{cordero2018}, with their non-negativity controlled by the kernel's relationship to the state's covariance. Each method names its own kernel, ordering, or cutoff in the language of its subfield. The same scale appears in each: the reciprocal of the state's phase-space extent. We give this scale its symplectic-geometric origin and derive the smoothing it defines.
+The Wigner function~\cite{wigner1932} is the standard joint phase-space representation of a quantum state. For non-Gaussian states it takes negative values~\cite{hudson1974}. Many working contexts call for non-negative phase-space densities, and several construction routes have proven successful in practice. Truncated Wigner approximations~\cite{polkovnikov2010} sample classical trajectories and produce accurate semiclassical dynamics when the sampling matches the state's covariance. Husimi-style smoothings with state-dependent kernels~\cite{wodkiewicz1984, wuensche1995} reconstruct positive densities from generalized $P_{\lambda\theta}$ representations when $\lambda$ is matched to the state's spread. Maximum-likelihood reconstruction with Fock-state truncation produces non-negative reconstructions when the truncation is matched to the state's available action. Cahill--Glauber $W^{(s)}$ distributions~\cite{cahillglauber1969} recover positivity when the ordering parameter $s$ is matched to the state's covariance. Each method names its own kernel, ordering, or cutoff in the language of its subfield. The same scale appears in each: the reciprocal of the state's phase-space extent. We give this scale its symplectic-geometric origin and derive the smoothing it defines.
 
 % ===============================================================================
 %  SLICE 1, PIECE B --- de Gosson
@@ -76,7 +76,7 @@ with semi-axes $\delta_\parallel$ and $\delta_\perp$ tied by the polar-dual iden
 
 The state fixes the extended cell. As $\theta$ varies, the inscribed squeezed cell pivots within and its semi-axes flow according to
 \begin{equation}
-\delta_\parallel(\theta) = \hbar\sqrt{ \frac{\cos^2\theta}{\Delta x^2} + \frac{\sin^2\theta}{\Delta p^2} }, \qquad \delta_\perp(\theta) = \frac{\hbar}{\delta_\parallel(\theta)},
+\delta_\parallel(\theta) = \hbar\sqrt{ \frac{\cos^2\theta}{\Delta p^2} + \frac{\sin^2\theta}{\Delta x^2} }, \qquad \delta_\perp(\theta) = \frac{\hbar}{\delta_\parallel(\theta)},
 \label{eq:cell_axes_theta}
 \end{equation}
 tied by the polar-dual identity~\cite{degossoncharlyne2022}. The shape tracks $\theta$; the action stays at $h/2$. The cells $a_x$ and $a_p$ of Fig.~\ref{fig:zurek_cells} sit with axes along $x$ and $p$, at $\theta = 0$ and $\theta = \pi/2$; the rotated cell of Fig.~\ref{fig:de_gosson_cells} illustrates a typical orientation. The same rotated axis labels the quadrature in continuous-variable tomography~\cite{vogelrisken1989, lvovsky2009}.
@@ -95,6 +95,8 @@ These interference scales are the principal-axis values of $\delta_\parallel$ an
 %  SLICE 1, PIECE E --- Convergence
 % ===============================================================================
 Two physical pictures---the cell that cannot be squeezed below the action $h/2$, and the chessboard of sub-Planck interference---reach the same scales. This convergence is the starting point of this Letter.
+
+Prior work has touched the same convergence from adjacent directions. Dragoman, working in the phase-space formulation of quantum mechanics, argued that an apparatus produces a non-negative density when its resolution matches the state's spread~\cite{dragoman2005}---the same matching condition we derive here from symplectic geometry. Cordero, de Gosson, D\"orfler, and Nicola studied Born--Jordan distributions of Gaussian superpositions in the ``diamond'' configuration and connected de Gosson's symplectic-covariance program directly to Zurek's sub-Planck interference structure~\cite{cordero2018}. This Letter gives the convergence its geometric origin and derives the smoothing it defines.
 
 % ======================================================================
 % SLICE 2 --- THE DENSITY
@@ -139,14 +141,12 @@ is non-negative everywhere, since convolution with any quantum-cell Wigner funct
 
 Figures~\ref{fig:eigen} and~\ref{fig:cats} show $P_0$ for eight states with kernel set from each state's covariance, $\Delta x = \sqrt{2\langle (x-\langle x\rangle)^2\rangle}$, $\Delta p = \sqrt{2\langle p^2\rangle}$. The construction is non-negative across squeezed vacuum, harmonic eigenstates, Morse eigenstates with strong anharmonicity, double-well eigenstates with central-barrier interference, and four cat configurations.
 
-The marginal $\int P_0(x,p)\,dp$ equals $|\psi(x)|^2$ convolved with a one-dimensional Gaussian of width $\delta_x$ and is the smoothed-at-$\delta_x$ position distribution by construction. The same holds for $P_{\pi/2}$ and $|\hat\psi(p)|^2$.
-
 % ======================================================================
 % SLICE 4 --- THE CLOSING
 % ======================================================================
 \begin{table}[t]
 \centering
-\caption{Effective resolution of established non-negative phase-space methods. Each method works correctly when its operative parameter takes the value shown in the right column. In every case, the resulting effective resolution is $\hbar/\Delta p$, the reciprocal of the state's phase-space extent. The methods reach this scale through different premises---semiclassical sampling, ordering conventions, vacuum reference, Hilbert-space cutoffs, apparatus modeling, interference damping---but agree on the scale where they work. Detailed derivations are in the Supplemental Material.}
+\caption{Effective resolution of established non-negative phase-space methods. Each method works correctly when its operative parameter takes the value shown in the right column. In every case, the resulting effective resolution is $\hbar/\Delta p$, the reciprocal of the state's phase-space extent. The methods reach this scale through different premises---semiclassical sampling, ordering conventions, vacuum reference, Hilbert-space cutoffs---but agree on the scale where they work. Detailed derivations are in the Supplemental Material.}
 \label{tab:effective_resolution}
 \begin{ruledtabular}
 \begin{tabular}{@{}p{0.45\columnwidth}p{0.5\columnwidth}@{}}
@@ -164,17 +164,13 @@ Maximum-likelihood reconstruction &
   Fock cutoff $N_{\max} \hbar \sim \Delta p^2$ \\
 Cahill--Glauber $W^{(s)}$ \cite{cahillglauber1969} & 
   Ordering parameter $s$ matched to state covariance \\
-Apparatus-matched smoothing \cite{dragoman2005} & 
-  Device resolution matched to state spread \\
-Born--Jordan / Cohen-class \cite{cordero2018} & 
-  Cohen kernel matched to state covariance \\
 \end{tabular}
 \end{ruledtabular}
 \end{table}
 
 The polar-dual smoothing $P_\theta$ produces a non-negative phase-space density at a resolution determined by the state itself. The resolution is geometric: it follows from de Gosson's symplectic polar duality and matches Zurek's interference scales at principal-axis orientations. It coincides with the resolution at which established non-negative phase-space methods produce correct results.
 
-The convergence across methods rooted in different premises---semiclassical sampling, ordering conventions, vacuum reference, Hilbert-space cutoffs, apparatus modeling, interference damping---suggests that the polar-dual scale is a universal feature of phase-space resolution rather than an artifact of any particular construction. The geometric framework gives the convergence a unified origin in symplectic structure.
+The convergence across methods rooted in different premises---semiclassical sampling, ordering conventions, vacuum reference, Hilbert-space cutoffs---suggests that the polar-dual scale is a universal feature of phase-space resolution rather than an artifact of any particular construction. The geometric framework gives the convergence a unified origin in symplectic structure.
 
 The software supporting the findings of this Letter is openly available~\cite{osfdeposit}.
 
