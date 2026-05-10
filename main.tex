@@ -24,7 +24,7 @@
 \title{Wigner Resolution as the Reciprocal of Phase-Space Extent}
 
 \begin{abstract}
-The Heisenberg principle bounds a quantum state's outer extent in phase space. A complementary inner scale, set by the same quantum of action, is reached independently by two routes: de Gosson's symplectic polar duality of the covariance ellipsoid, and Zurek's interference-driven sub-Planck chessboard. Both arrive at $\delta_\parallel \cdot \delta_\perp = \hbar$ from the state's covariance, with $\delta_x = \hbar/\Delta p$ and $\delta_p = \hbar/\Delta x$ the principal-axis values. Convolution of the Wigner function with the squeezed-coherent kernel at this scale yields a non-negative density determined by the state itself. Established non-negative phase-space methods---truncated Wigner approximations, generalized Husimi smoothings, maximum-likelihood reconstructions, Cahill--Glauber distributions, apparatus-matched smoothings, and Born--Jordan / Cohen-class smoothings---converge on this same scale in their respective regimes of success. We give the scale its symplectic-geometric origin.
+The Heisenberg principle bounds a quantum state's outer extent in phase space. A complementary inner scale, set by the same quantum of action, is reached independently by two routes: de Gosson's symplectic polar duality of the covariance ellipsoid, and Zurek's interference-driven sub-Planck chessboard. Both arrive at resolutions that are reciprocals of the phase space extent. Convolution of the Wigner function with the squeezed-coherent kernel at this scale yields a non-negative density determined by the state itself. Established non-negative phase-space methods---truncated Wigner approximations, generalized Husimi smoothings, maximum-likelihood reconstructions, Cahill--Glauber distributions---converge on this same scale in their respective regimes of success. We give the scale its symplectic-geometric origin.
 \end{abstract}
 
 \author{Brian S. Mulloy\orcidlink{0000-0002-1803-3172}}
@@ -58,7 +58,7 @@ The Wigner function~\cite{wigner1932} is the standard joint phase-space represen
 %  SLICE 1, PIECE B --- de Gosson
 % ===============================================================================
 
-A quantum state occupies phase space\footnote{Heisenberg cells are conventionally drawn as rectangles for visual simplicity; the correct symplectic-geometric object is an ellipsoid~\cite{degosson2013qblobs, degossoncharlyne2022}. Throughout this Letter, ``cell'' denotes the ellipsoid.}, with extent set by its covariance: an extended cell, the phase-space ellipsoid with semi-axes $\Delta x = \sqrt{2}\sigma_x$, $\Delta p = \sqrt{2}\sigma_p$ and action
+A quantum state occupies phase space\footnote{Heisenberg cells are conventionally drawn as rectangles for visual simplicity; the correct symplectic-geometric object is an ellipsoid~\cite{degosson2013qblobs, degossoncharlyne2022}. Throughout this Letter, ``cell'' denotes a de Gosson ellipsoid.}, with extent set by its covariance: an extended cell, the phase-space ellipsoid with semi-axes $\Delta x = \sqrt{2}\sigma_x$, $\Delta p = \sqrt{2}\sigma_p$ and action
 \begin{equation}
 A = \pi\,\Delta x\,\Delta p \ge h/2,
 \label{eq:extended_cell}
@@ -105,7 +105,7 @@ The Wigner--Weyl distribution~\cite{wigner1932}
 W(x,p) = \frac{1}{\pi\hbar}\int \psi^*(x+y)\,\psi(x-y)\,e^{2ipy/\hbar}\, dy
 \label{eq:wigner}
 \end{equation}
-takes negative values for any non-Gaussian state~\cite{hudson1974}. By \eqref{eq:zurek} the pointwise limit $\delta_\parallel \to 0$ requires $\delta_\perp \to \infty$ and unbounded covariance area: pointwise sampling of $W$ asks a finer question than the uncertainty principle permits, and the negativity is the formalism's report.
+takes negative values for any non-Gaussian state~\cite{hudson1974}. By \eqref{eq:zurek} the pointwise limit $\delta_\parallel \to 0$ requires $\delta_\perp \to \infty$ and unbounded covariance area: pointwise sampling of $W$ asks a finer question than the de Gosson cells permit.
 
 The squeezed-coherent kernel matched to the state's covariance,
 \begin{equation}
@@ -126,7 +126,7 @@ is non-negative everywhere, since convolution with any quantum-cell Wigner funct
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{figures/eigen.pdf}
-\caption{\textbf{Squeezed vacuum and eigenstates.} Squeezed vacuum at $r=0.5$, harmonic Fock state ($n=1$), Morse ($n=8$), and double-well ($n=5$). \textit{Left}, $W(x,p)$ with covariance ellipsoid and squeezed cells overlaid. \textit{Center}, $W(x,0)$. \textit{Right}, $P_0(x,0)$. Across qualitatively different non-Gaussian states, the Wigner negativity at the resolution of the cross-section is resolved as non-negative density at the state's inner scale.}
+\caption{\textbf{Squeezed vacuum and eigenstates.} Squeezed vacuum at $r=0.5$, harmonic Fock state ($n=1$), Morse ($n=8$), and double-well ($n=5$). \textit{Left}, $W(x,p)$ with de Gosson cells $A$ and $a_x$ overlaid. \textit{Center}, $W(x,0)$. \textit{Right}, $P_0(x,0)$. Across qualitatively different non-Gaussian states, the Wigner negativity at the resolution of the cross-section is resolved as non-negative density at the state's inner scale.}
 \label{fig:eigen}
 \end{figure}
 
