@@ -41,14 +41,14 @@ The Heisenberg principle bounds a quantum state's outer extent in phase space. A
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{figures/de_gosson_cells.pdf}
-\caption{\textbf{de Gosson cells} (schematic, 1D). The state's covariance defines the extended cell (outer ellipse), the phase-space region with area $A \ge h/2$. A one-parameter family of squeezed cells, each of area exactly $h/2$, is inscribed within the extended cell at orientations $\theta$. A squeezed cell at $\theta = \pi/4$ is shown; $\delta_\parallel$ and $\delta_\perp$ are its semi-axes parallel and perpendicular to direction $\theta$, satisfying the polar-dual identity $\delta_\parallel \cdot \delta_\perp = \hbar$.}
+\caption{\textbf{de Gosson cells} (schematic, 1D). The state's covariance defines the extended cell (outer ellipse), the phase-space region with area $A = \pi \Delta x \Delta p \ge h/2$. A family of squeezed cells, each of area exactly $a = h/2$, is inscribed within the extended cell at orientations $\theta$. A squeezed cell at $\theta = \pi/4$ is shown; $\delta_\parallel$ and $\delta_\perp$ are its semi-axes parallel and perpendicular to direction $\theta$, satisfying the polar-dual identity $\delta_\parallel \cdot \delta_\perp = \hbar$.}
 \label{fig:de_gosson_cells}
 \end{figure}
 
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{figures/zurek_cells.pdf}
-\caption{\textbf{Zurek cells} (schematic, 1D). The two principal-axis squeezed cells inscribed in the extended cell, taking $\theta$ as the angle of $\delta_\parallel$ from the $+x$-axis. At $\theta = 0$, $\delta_\parallel$ lies along $x$ and $\delta_\perp$ along $p$: this is $a_x$, with semi-axes $\delta_\parallel = \delta_x = \hbar/\Delta p$ and $\delta_\perp = \Delta p$. At $\theta = \pi/2$, $\delta_\parallel$ lies along $p$ and $\delta_\perp$ along $x$: this is $a_p$, with semi-axes $\delta_\parallel = \delta_p = \hbar/\Delta x$ and $\delta_\perp = \Delta x$. Both cells satisfy $a = \pi\,\delta_\parallel\,\delta_\perp = h/2$. The widths $\delta_x = \hbar/\Delta p$ and $\delta_p = \hbar/\Delta x$ are precisely Zurek's smallest interference scales of the Wigner function, derived independently from coherent-state interference. Two paths reach the same scales: de Gosson's symplectic polar duality (Fig.~\ref{fig:de_gosson_cells}) and Zurek's interference geometry.}
+\caption{\textbf{Zurek cells} (schematic, 1D). The two principal-axis squeezed cells inscribed in the extended cell. At $\theta = 0$, the squeezed cell has area $a_{\delta p} = \pi \Delta x \delta p$. At $\theta = \pi/2$, the squeezed cell has area $a_{\delta x} = \pi \delta x \Delta p$. The widths $\delta x = \hbar/\Delta p$ and $\delta p = \hbar/\Delta x$ are Zurek's interference scales of the Wigner function, derived independently from coherent-state interference. Two paths reach the same scales: de Gosson's symplectic polar duality (Fig.~\ref{fig:de_gosson_cells}) and Zurek's interference geometry.}
 \label{fig:zurek_cells}
 \end{figure}
 
@@ -94,7 +94,7 @@ These interference scales are the principal-axis values of $\delta_\parallel$ an
 % ===============================================================================
 %  SLICE 1, PIECE E --- Convergence
 % ===============================================================================
-Two physical pictures---the cell that cannot be squeezed below the action $h/2$, and the chessboard of sub-Planck interference---reach the same scales. This convergence is the starting point of this Letter.
+Two physical pictures---the cell that cannot be squeezed below the action $h/2$, and the chessboard of sub-Planck interference---reach the same scales. This convergence is the foundation of this Letter.
 
 Prior work has touched the same convergence from adjacent directions. Dragoman, working in the phase-space formulation of quantum mechanics, argued that an apparatus produces a non-negative density when its resolution matches the state's spread~\cite{dragoman2005}---the same matching condition we derive here from symplectic geometry. Cordero, de Gosson, D\"orfler, and Nicola studied Born--Jordan distributions of Gaussian superpositions in the ``diamond'' configuration and connected de Gosson's symplectic-covariance program directly to Zurek's sub-Planck interference structure~\cite{cordero2018}. This Letter gives the convergence its geometric origin and derives the smoothing it defines.
 
@@ -111,15 +111,15 @@ takes negative values for any non-Gaussian state~\cite{hudson1974}. By \eqref{eq
 
 The squeezed-coherent kernel matched to the state's covariance,
 \begin{equation}
-G_\theta(x,p) = \frac{1}{\pi}\exp\!\left(-\frac{x_\theta^2}{\delta_\parallel^2} - \frac{p_\theta^2}{\delta_\perp^2}\right),
+K(x,p) = \frac{1}{\pi}\exp\!\left(-\frac{x_\theta^2}{\delta_\parallel^2} - \frac{p_\theta^2}{\delta_\perp^2}\right),
 \label{eq:Gtheta}
 \end{equation}
 where $x_\theta = x\cos\theta + p\sin\theta$ and $p_\theta = -x\sin\theta + p\cos\theta$ are the rotated coordinates, is the Wigner transform of the squeezed coherent state at the state's covariance~\cite{degossoncharlyne2022}, of area exactly $h/2$. The convolution
 \begin{equation}
-P_\theta(x,p) = (W * G_\theta)(x,p)
+P_\theta(x,p) = (W * K)(x,p)
 \label{eq:Ptheta}
 \end{equation}
-is non-negative everywhere, since convolution with any quantum-cell Wigner function yields a non-negative distribution~\cite{degosson2005bullsci,degosson2013qblobs}. The kernel is fixed by the state's covariance and the orientation $\theta$; no free parameter.
+is non-negative everywhere, since convolution with any quantum-cell Wigner function yields a non-negative distribution~\cite{degosson2005bullsci,degosson2013qblobs}. The kernel is fixed by the state's covariance and the orientation $\theta$; no free parameters.
 
 % ===============================================================================
 %  SLICE 3 --- The convergence demonstrated
