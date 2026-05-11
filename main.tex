@@ -21,10 +21,10 @@
 
 \begin{document}
 
-\title{Wigner Resolution as the Reciprocal of Phase-Space Extent}
+\title{Wigner Resolution as the Reciprocal of Action}
 
 \begin{abstract}
-The Heisenberg principle bounds a quantum state's outer extent in phase space. A complementary inner scale, set by the same quantum of action, is reached independently by two routes: de Gosson's symplectic polar duality of the covariance ellipsoid, and Zurek's interference-driven sub-Planck chessboard. Both arrive at action resolutions that are reciprocals of the phase space extent. Convolution of the Wigner function with the squeezed-coherent kernel at this scale yields a non-negative density determined by the state itself. Established non-negative phase-space methods---truncated Wigner approximations, generalized Husimi smoothings, maximum-likelihood reconstructions, Cahill--Glauber distributions---converge on this same scale in their respective regimes of success. We give the scale its geometric-action origin.
+A quantum state carries a phase-space action of at least Planck's quantum. As its extent grows along one direction, its conjugate scale contracts in inverse proportion, with the product held at the quantum of action. The Wigner function of the state shows fringes at this conjugate scale, the interference between classical paths separated by less than a quantum of action. At any finer resolution the fringes dip below zero. At the conjugate scale itself they sit within the action the state carries, and the density is everywhere non-negative. Zurek's sub-Planck features are this conjugate scale aligned with position and momentum, the limiting case of a continuous family of resolutions tied to the action of the state. Truncated Wigner approximation, generalized Husimi smoothing, maximum-likelihood reconstruction, and Cahill--Glauber ordering each succeed at this same conjugate scale. Wigner resolution is the reciprocal of action.
 \end{abstract}
 
 \author{Brian S. Mulloy\orcidlink{0000-0002-1803-3172}}
@@ -35,142 +35,129 @@ The Heisenberg principle bounds a quantum state's outer extent in phase space. A
 \maketitle
 
 % ===============================================================================
-%  SLICE 1, PIECE A --- The Relevance of Wigner Non-Negativity
+%  OPENING --- Wigner negativity is real, and so is the need for positive densities
+% ===============================================================================
+
+The Wigner function~\cite{wigner1932} is the phase-space portrait of a quantum state. Its positive regions correspond to classical configurations of the state, and the regions where it dips below zero~\cite{hudson1974} are the interference between alternative classical paths. The negative regions quantify non-classicality~\cite{kenfack2004} and certify resources for continuous-variable quantum computation~\cite{marieisert2012,veitch2012}.
+
+Some tasks require a phase-space density that can be read as a classical probability. Semiclassical sampling, tomographic reconstruction, and classical-limit transport all proceed this way. The interference fringes must then be unresolved, leaving a non-negative density. Several methods do this. Each names its own parameter. The parameter may be a sampling width, a kernel scale, a Fock cutoff, or an ordering. Each method works when its parameter is matched to the state's extent. This Letter identifies the physical origin of that matching condition. The matching scale is set by the action of the state.
+
+% ===============================================================================
+%  THE PHASE-SPACE CELLS
 % ===============================================================================
 
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{figures/de_gosson_cells.pdf}
-\caption{\textbf{de Gosson cells} (schematic, 1D). The state's covariance defines the extended cell (outer ellipse), the phase-space region with area $A = \pi \Delta x \Delta p \ge h/2$. A family of squeezed cells, each of area exactly $a = \pi \delta_\parallel \delta_\perp = h/2$, is inscribed within the extended cell at orientations $\theta$. The squeezed cell has semi-axes parallel $\delta_\parallel$ and perpendicular $\delta_\perp$ to direction $\theta$, satisfying the polar-dual identity $\delta_\parallel \delta_\perp = \hbar$.}
+\caption{\textbf{de Gosson cells} (schematic, 1D). The state's covariance sets the extended cell (outer ellipse) of action $A = \pi\Delta x\Delta p \ge h/2$. Inscribed within it is a one-parameter family of squeezed cells of fixed action $a = \pi\delta_\parallel\delta_\perp = h/2$, parameterized by orientation $\theta$. The semi-axes satisfy the polar-dual identity $\delta_\parallel\delta_\perp = \hbar$.}
 \label{fig:de_gosson_cells}
 \end{figure}
 
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{figures/zurek_cells.pdf}
-\caption{\textbf{Zurek cells} (schematic, 1D). Two orientations $\theta$ of squeezed cells are inscribed in the extended cell. At $\theta = 0$, the squeezed cell is compressed in $p$ with area $a_{\delta p} = \pi \Delta x \delta p = h/2$, where $\delta_\parallel = \Delta x$ and $\delta_\perp = \delta p$. At $\theta = \pi/2$, the squeezed cell is compressed in $x$ with area $a_{\delta x} = \pi \delta x \Delta p = h/2$, where $\delta_\parallel = \Delta p$ and $\delta_\perp = \delta x$. The reciprocals $\delta x = \hbar/\Delta p$ and $\delta p = \hbar/\Delta x$ are the interference scales discovered by Zurek.}
+\caption{\textbf{Zurek cells} (schematic, 1D). At $\theta = 0$ the squeezed cell aligns with $x$, with $\delta_\parallel = \Delta x$ and $\delta_\perp = \delta p = \hbar/\Delta x$. At $\theta = \pi/2$ it aligns with $p$, with $\delta_\parallel = \Delta p$ and $\delta_\perp = \delta x = \hbar/\Delta p$. The short axes $\delta x$ and $\delta p$ are the sub-Planck interference scales identified by Zurek.}
 \label{fig:zurek_cells}
 \end{figure}
 
-The Wigner function~\cite{wigner1932} is the standard joint phase-space representation of a quantum state. For non-Gaussian states it takes negative values~\cite{hudson1974}, utilized in quantum advantage, etc. Many working parallel contexts call for non-negative phase-space densities, and several construction routes have proven successful in practice. Truncated Wigner approximations~\cite{polkovnikov2010} sample classical trajectories and produce accurate semiclassical dynamics when the sampling matches the state's covariance. Husimi-style smoothings with state-dependent kernels~\cite{wodkiewicz1984, wuensche1995} reconstruct positive densities from generalized $P_{\lambda\theta}$ representations when $\lambda$ is matched to the state's spread. Maximum-likelihood reconstruction with Fock-state truncation produces non-negative reconstructions when the truncation is matched to the state's available action. Cahill--Glauber $W^{(s)}$ distributions~\cite{cahillglauber1969} recover positivity when the ordering parameter $s$ is matched to the state's covariance. Each method names its own kernel, ordering, or cutoff in the language of its subfield. The same scale appears in each: the reciprocal of the state's phase-space extent. We give this scale its geometric-action origin and derive the boundaries it defines.
-
-% ===============================================================================
-%  SLICE 1, PIECE B --- de Gosson
-% ===============================================================================
-
-A quantum state occupies phase space. Heisenberg cells are conventionally drawn as rectangles for visual simplicity; the correct symplectic-geometric object is an ellipsoid~\cite{degosson2013qblobs, degossoncharlyne2022}. Throughout this Letter, ``cell'' denotes a de Gosson ellipsoid. The extent is set by its covariance: an extended cell, the phase-space ellipsoid with semi-axes $\Delta x = \sqrt{2}\sigma_x$, $\Delta p = \sqrt{2}\sigma_p$ and action area
+We work in one degree of freedom and align the coordinates with the principal axes of the state's covariance ellipse. The Robertson--Schr\"odinger covariance term~\cite{robertson1929,schrodinger1930} then vanishes, leaving the position spread $\Delta x = \sqrt{2}\sigma_x$ and the momentum spread $\Delta p = \sqrt{2}\sigma_p$. The symplectic results we use~\cite{degosson2013qblobs,degossoncharlyne2022} extend without modification to higher dimensions and to the full off-diagonal covariance. The state's extent in phase space is its \emph{extended cell} (Fig.~\ref{fig:de_gosson_cells}, outer ellipse), an ellipse of action area
 \begin{equation}
 A = \pi\,\Delta x\,\Delta p \ge h/2,
 \label{eq:extended_cell}
 \end{equation}
-floored at $h/2$ by Heisenberg~\cite{robertson1929,schrodinger1930}. De Gosson identifies a complementary cell inscribed in the extended one~\cite{degosson2013qblobs, degossoncharlyne2022}: the squeezed cell, of action exactly $h/2$,
+floored at the quantum of action by Heisenberg. De Gosson identifies the smallest phase-space region the state can locally occupy, the \emph{squeezed cell}~\cite{degosson2013qblobs,degossoncharlyne2022}, an ellipse of fixed action
 \begin{equation}
 a = \pi\,\delta_\parallel\,\delta_\perp = h/2,
 \label{eq:squeezed_cell}
 \end{equation}
-with semi-axes $\delta_\parallel$ and $\delta_\perp$ tied by the polar-dual identity $\delta_\parallel \cdot \delta_\perp = \hbar$ and bounded by the inscription within the extended cell. Theorem~13 of \cite{degossoncharlyne2022} establishes that an inscribed cell carries action $h/2$ exactly when the spreads it shows along orthogonal directions are reciprocals. Gromov's non-squeezing theorem~\cite{gromov1985} forbids any canonical compression below $h/2$.
+parameterized by orientation $\theta$, with semi-axes tied by $\delta_\parallel\,\delta_\perp = \hbar$. Gromov's non-squeezing theorem~\cite{gromov1985} forbids compression of any squeezed cell below this minimum action.
 
-% ===============================================================================
-%  SLICE 1, PIECE C --- tomography
-% ===============================================================================
-
-The state fixes the extended cell. As $\theta$ varies, the inscribed squeezed cell pivots within and its semi-axes flow according to
+As $\theta$ varies, the squeezed cell rotates within the extended cell and changes aspect ratio. Its action stays at $h/2$. Its semi-axes track the support of the extended cell along $\theta$,
 \begin{equation}
-\delta_\parallel(\theta) = \hbar\sqrt{ \frac{\cos^2\theta}{\Delta p^2} + \frac{\sin^2\theta}{\Delta x^2} }, \qquad \delta_\perp(\theta) = \frac{\hbar}{\delta_\parallel(\theta)},
-\label{eq:cell_axes_theta}
+\delta_\parallel(\theta) = \sqrt{\Delta x^2\cos^2\theta + \Delta p^2\sin^2\theta},
+\label{eq:delta_parallel}
 \end{equation}
-tied by the polar-dual identity~\cite{degossoncharlyne2022}. The shape tracks $\theta$; the action stays at $h/2$. The cells $a_{\delta x}$ and $a_{\delta p}$ of Fig.~\ref{fig:zurek_cells} sit with axes along $x$ and $p$, at $\theta = 0$ and $\theta = \pi/2$; the rotated cell of Fig.~\ref{fig:de_gosson_cells} illustrates a typical orientation. The same rotated axis labels the quadrature in continuous-variable tomography~\cite{vogelrisken1989, lvovsky2009}.
-
-% ===============================================================================
-%  SLICE 1, PIECE D --- Zurek
-% ===============================================================================
-Zurek discovered that the Wigner function carries interference structure on sub-Planck scales~\cite{zurek2001}. With the state's extended cell $A$ providing the spreads $\Delta x$ and $\Delta p$, the smallest interference periods are
 \begin{equation}
-\delta x = \hbar/\Delta p, \qquad \delta p = \hbar/\Delta x.
+\delta_\perp(\theta) = \hbar / \delta_\parallel(\theta).
+\label{eq:delta_perp}
+\end{equation}
+The angle $\theta$ is the rotated quadrature direction of continuous-variable tomography~\cite{vogelrisken1989,lvovsky2009}. At the principal-axis orientations $\theta = 0$ and $\theta = \pi/2$ (Fig.~\ref{fig:zurek_cells}), the short axes are Zurek's sub-Planck interference scales~\cite{zurek2001},
+\begin{equation}
+\delta x = \frac{\hbar}{\Delta p}, \qquad \delta p = \frac{\hbar}{\Delta x}.
 \label{eq:zurek}
 \end{equation}
-These interference scales are the principal-axis values of $\delta_\parallel$ and $\delta_\perp$: de Gosson's polar-dual semi-axes when the squeezed cell aligns with the $x$ and $p$ axes. Zurek shows that they control the state's sensitivity to phase-space displacements, and hence its decoherence rate.
+The smallest cell a state can locally carry and the spacing of its interference fringes are the same length, set by the action of the state.
 
 % ===============================================================================
-%  SLICE 1, PIECE E --- Convergence
+%  THE DENSITY
 % ===============================================================================
-Two physical pictures---the cell that cannot be squeezed below the action $h/2$, and the chessboard of sub-Planck interference---reach the same scales. This convergence is the foundation of this Letter.
 
-Prior work has touched the same convergence from adjacent directions. Dragoman, working in the phase-space formulation of quantum mechanics, argued that an apparatus produces a non-negative density when its resolution matches the state's spread~\cite{dragoman2005}---the same matching condition we derive here from symplectic geometry. Cordero, de Gosson, D\"orfler, and Nicola studied Born--Jordan distributions of Gaussian superpositions in the ``diamond'' configuration and connected de Gosson's symplectic-covariance program directly to Zurek's sub-Planck interference structure~\cite{cordero2018}. This Letter gives the convergence its geometric-action origin and derives the boundaries it defines.
-
-% ======================================================================
-% SLICE 2 --- THE DENSITY
-% ======================================================================
-
-The Wigner--Weyl distribution~\cite{wigner1932}
+The Wigner function of the state,
 \begin{equation}
-W(x,p) = \frac{1}{\pi\hbar}\int \psi^*(x+y)\,\psi(x-y)\,e^{2ipy/\hbar}\, dy
+W(x,p) = \frac{1}{\pi\hbar}\int \psi^*(x+y)\,\psi(x-y)\,e^{2ipy/\hbar}\,dy,
 \label{eq:wigner}
 \end{equation}
-takes negative values for any non-Gaussian state~\cite{hudson1974}. By \eqref{eq:zurek} the pointwise limit $\delta_\parallel \to 0$ requires $\delta_\perp \to \infty$ and unbounded covariance area: pointwise sampling of $W$ asks a finer question than the de Gosson cells permit.
+oscillates at the conjugate scale~\cite{wigner1932}. Sampling it at a finer scale would demand more action than the state carries. The limit $\delta_\parallel \to 0$ forces $\delta_\perp \to \infty$ by the conjugate identity, and the state cannot be located more finely than its own squeezed cell.
 
-The squeezed-coherent kernel matched to the state's covariance,
+Looking at the state at this scale means weighting it by the squeezed coherent state of the same extent. The Wigner function of that squeezed coherent state at orientation $\theta$ is
 \begin{equation}
-K(x,p) = \frac{1}{\pi}\exp\!\left(-\frac{x_\theta^2}{\delta_\parallel^2} - \frac{P^2}{\delta_\perp^2}\right),
+K_\theta(x,p) = \frac{1}{\pi\hbar}\exp\!\left(-\frac{x_\theta^2}{\delta_\parallel^2} - \frac{P^2}{\delta_\perp^2}\right),
 \label{eq:Gtheta}
 \end{equation}
-where $x_\theta = x\cos\theta + p\sin\theta$ and $P = -x\sin\theta + p\cos\theta$ are the rotated coordinates, is the Wigner transform of the squeezed coherent state at the state's covariance~\cite{degossoncharlyne2022}, of area exactly $h/2$. The convolution
+with $x_\theta = x\cos\theta + p\sin\theta$ and $P = -x\sin\theta + p\cos\theta$, of action $h/2$. The state seen at this resolution is
 \begin{equation}
-P(x,p) = (W * K)(x,p)
+P_\theta(x,p) = (W * K_\theta)(x,p),
 \label{eq:Ptheta}
 \end{equation}
-is non-negative everywhere, since convolution with any quantum-cell Wigner function yields a non-negative distribution~\cite{degosson2005bullsci,degosson2013qblobs}. The kernel is fixed by the state's covariance and the orientation $\theta$; no free parameters.
+non-negative everywhere because the Wigner function of any state, weighted by the Wigner function of any state, is pointwise non-negative~\cite{degosson2005bullsci,degosson2013qblobs}. There are no free parameters. The weight carries action $h/2$ in any direction. The state's action sets the resolution at which it is everywhere positive, and that resolution is the reciprocal of the state's conjugate extent.
 
 % ===============================================================================
-%  SLICE 3 --- The convergence demonstrated
+%  DEMONSTRATION
 % ===============================================================================
 
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{figures/eigen.pdf}
-\caption{\textbf{Squeezed vacuum and eigenstates.} Squeezed vacuum at $r=0.5$, harmonic Fock state ($n=1$), Morse ($n=8$), and double-well ($n=5$). \textit{Left}, $W(x,p)$ with de Gosson cells $A$ and $a_x$ overlaid. \textit{Center}, $W(x,0)$. \textit{Right}, $P_0(x,0)$. Across qualitatively different non-Gaussian states, the Wigner negativity at the resolution of the cross-section is resolved as non-negative density at the state's inner scale.}
+\caption{\textbf{Squeezed vacuum and eigenstates.} Squeezed vacuum at $r=0.5$, harmonic Fock state ($n=1$), Morse ($n=8$), and double-well ($n=5$). \textit{Left}, $W(x,p)$ with the extended cell and the $\theta=\pi/2$ squeezed cell overlaid. \textit{Center}, $W(x,0)$. \textit{Right}, $P_{\pi/2}(x,0)$. The Wigner cross-section at $p=0$ is negative in places. The convolved cross-section at the squeezed-cell scale is non-negative everywhere.}
 \label{fig:eigen}
 \end{figure}
 
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{figures/cats.pdf}
-\caption{\textbf{Cat states.} Coherent superpositions of $n$ Gaussian wavepackets: 2-cat, 3-cat, 4-cat square, and Zurek compass. Columns as in Fig.~\ref{fig:eigen}. The chessboard interference of the compass state aligns with positive peaks of $P_0(x,0)$ at $p=0$.}
+\caption{\textbf{Cat states.} Coherent superpositions of $n$ Gaussian wavepackets, including the $2$-cat, $3$-cat, $4$-cat square, and Zurek compass states. Columns as in Fig.~\ref{fig:eigen}. The compass state's chessboard interference resolves into positive peaks of $P_{\pi/2}(x,0)$ at $p=0$.}
 \label{fig:cats}
 \end{figure}
 
-Figures~\ref{fig:eigen} and~\ref{fig:cats} show $P$ with $\theta = \pi/2$ for eight states with kernel set from each state's covariance, $\Delta x = \sqrt{2\langle (x-\langle x\rangle)^2\rangle}$, $\Delta p = \sqrt{2\langle p^2\rangle}$. The construction is non-negative across squeezed vacuum, harmonic eigenstates, Morse eigenstates with strong anharmonicity, double-well eigenstates with central-barrier interference, and four cat configurations.
+Figures~\ref{fig:eigen} and~\ref{fig:cats} show $P_{\pi/2}$ for eight states with the kernel set from each state's covariance. The state library includes squeezed vacuum, harmonic eigenstates, Morse eigenstates with strong anharmonicity, double-well eigenstates with central-barrier interference, and four cat configurations including Zurek's compass. The density $P_\theta$ is non-negative in every case.
 
-% ======================================================================
-% SLICE 4 --- THE CLOSING
-% ======================================================================
+% ===============================================================================
+%  CLOSING
+% ===============================================================================
+
 \begin{table}[t]
 \centering
-\caption{Effective resolution of established non-negative phase-space methods. Each method works correctly when its operative parameter takes the value shown in the right column. In every case, the resulting effective $\delta x$ resolution is $\hbar/\Delta p$, the reciprocal of the state's phase-space extent. The methods reach this scale through different premises---semiclassical sampling, ordering conventions, vacuum reference, Hilbert-space cutoffs---but agree on the scale where they work. Detailed derivations are in the Supplemental Material.}
+\caption{Established non-negative phase-space methods and the regime in which each works correctly. In each case the operative parameter, correctly set, gives a resolution of $\delta x \sim \hbar/\Delta p$, the conjugate scale set by the state's action. Derivations are in the Supplemental Material.}
 \label{tab:effective_resolution}
 \begin{ruledtabular}
 \begin{tabular}{@{}p{0.45\columnwidth}p{0.5\columnwidth}@{}}
 Method & Regime of success \\
 \hline
-Truncated Wigner approximation \cite{polkovnikov2010} & 
-  Sampling width $\sigma = \Delta x$ at saturation \\
-Generalized Husimi $P_{\lambda\theta}$ \cite{wodkiewicz1984} & 
-  Kernel parameter $\lambda = \hbar/\Delta p$ \\
-Husimi $Q$ \cite{husimi1940} & 
-  Vacuum-saturated states \\
-Homodyne tomography \cite{lvovsky2009} & 
-  Detection noise $\sigma_n \gtrsim \hbar/\Delta p$ \\
-Maximum-likelihood reconstruction & 
-  Fock cutoff $N_{\max} \hbar \sim \Delta p^2$ \\
-Cahill--Glauber $W^{(s)}$ \cite{cahillglauber1969} & 
-  Ordering parameter $s$ matched to state covariance \\
+Truncated Wigner~\cite{polkovnikov2010} & Sampling width $\sigma = \Delta x$ \\
+Generalized Husimi $P_{\lambda\theta}$~\cite{wodkiewicz1984} & Kernel parameter $\lambda = \hbar/\Delta p$ \\
+Husimi $Q$~\cite{husimi1940} & Vacuum-saturated states \\
+Homodyne tomography~\cite{lvovsky2009} & Detection noise $\sigma_n \gtrsim \hbar/\Delta p$ \\
+Maximum-likelihood & Fock cutoff $N_{\max}\hbar \sim \Delta p^2$ \\
+Cahill--Glauber $W^{(s)}$~\cite{cahillglauber1969} & Ordering $s$ matched to covariance \\
 \end{tabular}
 \end{ruledtabular}
 \end{table}
 
-The geometric-action smoothing $P$ produces a non-negative phase-space density at a resolution determined by the state itself. The resolution is reciprocal: it follows from de Gosson's symplectic polar duality and matches Zurek's interference scales at principal-axis orientations. It coincides with the resolution at which established non-negative phase-space methods produce correct results.
+Methods from unrelated traditions reach the same effective resolution (Table~\ref{tab:effective_resolution}). At the parameter setting where each method works correctly, the resolved scale is $\delta x \sim \hbar/\Delta p$, the reciprocal of the conjugate extent of the state. At vacuum saturation the extent $\Delta x$ and the conjugate scale $\hbar/\Delta p$ coincide, and the reciprocal nature is invisible. As the state's action grows, the reciprocal opens, and resolution and extent move in opposite directions. The product of resolution and conjugate extent stays at $\hbar$, the action of one squeezed cell.
 
-The convergence across methods rooted in different premises---semiclassical sampling, ordering conventions, vacuum reference, Hilbert-space cutoffs---suggests that the polar-dual scale is a universal feature of phase-space resolution rather than an artifact of any particular construction. Wigner resolution is the reciprocal of phase-space extent.
+Two prior approaches reach a non-negative density from adjacent directions. Dragoman~\cite{dragoman2005} weights the Wigner function of the state by the Wigner function of a measuring apparatus, an external scale chosen by the experimenter. Cordero, de Gosson, D\"orfler, and Nicola~\cite{cordero2018} study Zurek's diamond cat state in the Born--Jordan portrait and find that the interference fringes are damped, a property of the portrait rather than of the state. The squeezed cell of action $h/2$ used here is intrinsic to the state itself, and Zurek's $\delta x$ and $\delta p$ are its principal-axis cases. Further comparison is in the Supplemental Material.
+
+The Wigner function remains the phase-space portrait of the state. Its negative regions, the interference between alternative classical paths, are used as described at the start. When the state is read as a classical probability, the action it carries sets the resolution at which it is everywhere non-negative. Wigner resolution is the reciprocal of action.
 
 The software supporting the findings of this Letter is openly available~\cite{osfdeposit}.
 
