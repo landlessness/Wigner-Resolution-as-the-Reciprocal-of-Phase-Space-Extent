@@ -24,7 +24,7 @@
 \title{Wigner Resolution as the Reciprocal of Action}
 
 \begin{abstract}
-A quantum state carries a phase-space action of at least Planck's quantum. As its extent grows along one direction, its conjugate scale contracts in inverse proportion, with the product held at the quantum of action. The Wigner function of the state shows fringes at this conjugate scale, the interference between classical paths separated by less than a quantum of action. At any finer resolution the fringes dip below zero. At the conjugate scale itself they sit within the action the state carries, and the density is everywhere non-negative. Zurek's sub-Planck features are this conjugate scale aligned with position and momentum, the limiting case of a continuous family of resolutions tied to the action of the state. Truncated Wigner approximation, generalized Husimi smoothing, maximum-likelihood reconstruction, and Cahill--Glauber ordering each succeed at this same conjugate scale. Wigner resolution is the reciprocal of action.
+A quantum state's Wigner function shows fringes wherever classical paths interfere. The fringes are finely spaced in position when the state is broad in momentum, and finely spaced in momentum when the state is broad in position. Their product is Planck's constant. When the Wigner function must be read as a classical probability, the fringes have to be unresolved, and several methods do this under different names. We show they all reach the same scale, the reciprocal of the state's reach in the anti-squeezed direction. Wigner resolution is the reciprocal of action.
 \end{abstract}
 
 \author{Brian S. Mulloy\orcidlink{0000-0002-1803-3172}}
@@ -56,7 +56,7 @@ Some tasks require a phase-space density that can be read as a classical probabi
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{figures/zurek_cells.pdf}
-\caption{\textbf{Zurek cells} (schematic, 1D). At $\theta = 0$ the squeezed cell aligns with $x$, with $\delta_\parallel = \Delta x$ and $\delta_\perp = \delta p = \hbar/\Delta x$. At $\theta = \pi/2$ it aligns with $p$, with $\delta_\parallel = \Delta p$ and $\delta_\perp = \delta x = \hbar/\Delta p$. The short axes $\delta x$ and $\delta p$ are the sub-Planck interference scales identified by Zurek.}
+\caption{\textbf{Zurek cells} (schematic, 1D). At $\theta = 0$ the squeezed cell aligns with $x$, with $\delta_\parallel = \Delta x$ and $\delta_\perp = \delta p = \hbar/\Delta x$. At $\theta = \pi/2$ it aligns with $p$, with $\delta_\parallel = \Delta p$ and $\delta_\perp = \delta x = \hbar/\Delta p$. The minor axes $\delta x$ and $\delta p$ are the sub-Planck interference scales identified by Zurek.}
 \label{fig:zurek_cells}
 \end{figure}
 
@@ -70,7 +70,7 @@ floored at the quantum of action by Heisenberg. De Gosson identifies the smalles
 a = \pi\,\delta_\parallel\,\delta_\perp = h/2,
 \label{eq:squeezed_cell}
 \end{equation}
-parameterized by orientation $\theta$, with semi-axes tied by $\delta_\parallel\,\delta_\perp = \hbar$. Gromov's non-squeezing theorem~\cite{gromov1985} forbids compression of any squeezed cell below this minimum action.
+parameterized by orientation $\theta$, with semi-axes tied by $\delta_\parallel\,\delta_\perp = \hbar$. The minor axis is squeezed and the major axis is anti-squeezed, their product fixed at one quantum of action. Gromov's non-squeezing theorem~\cite{gromov1985} forbids compression of any squeezed cell below this minimum action.
 
 As $\theta$ varies, the squeezed cell rotates within the extended cell and changes aspect ratio. Its action stays at $h/2$. Its semi-axes track the support of the extended cell along $\theta$,
 \begin{equation}
@@ -81,7 +81,7 @@ As $\theta$ varies, the squeezed cell rotates within the extended cell and chang
 \delta_\perp(\theta) = \hbar / \delta_\parallel(\theta).
 \label{eq:delta_perp}
 \end{equation}
-The angle $\theta$ is the rotated quadrature direction of continuous-variable tomography~\cite{vogelrisken1989,lvovsky2009}. At the principal-axis orientations $\theta = 0$ and $\theta = \pi/2$ (Fig.~\ref{fig:zurek_cells}), the short axes are Zurek's sub-Planck interference scales~\cite{zurek2001},
+The angle $\theta$ is the rotated quadrature direction of continuous-variable tomography~\cite{vogelrisken1989,lvovsky2009}. At the principal-axis orientations $\theta = 0$ and $\theta = \pi/2$ (Fig.~\ref{fig:zurek_cells}), the minor axes are Zurek's sub-Planck interference scales~\cite{zurek2001},
 \begin{equation}
 \delta x = \frac{\hbar}{\Delta p}, \qquad \delta p = \frac{\hbar}{\Delta x}.
 \label{eq:zurek}
@@ -97,7 +97,7 @@ The Wigner function of the state,
 W(x,p) = \frac{1}{\pi\hbar}\int \psi^*(x+y)\,\psi(x-y)\,e^{2ipy/\hbar}\,dy,
 \label{eq:wigner}
 \end{equation}
-oscillates at the conjugate scale~\cite{wigner1932}. Sampling it at a finer scale would demand more action than the state carries. The limit $\delta_\parallel \to 0$ forces $\delta_\perp \to \infty$ by the conjugate identity, and the state cannot be located more finely than its own squeezed cell.
+oscillates at the squeezed scale~\cite{wigner1932}. Sampling it at a finer scale would demand more action than the state carries. Squeezing further would force the anti-squeezed axis past the state's reach, and the state cannot be located more finely than its own squeezed cell.
 
 Looking at the state at this scale means weighting it by the squeezed coherent state of the same extent. The Wigner function of that squeezed coherent state at orientation $\theta$ is
 \begin{equation}
@@ -109,7 +109,7 @@ with $x_\theta = x\cos\theta + p\sin\theta$ and $P = -x\sin\theta + p\cos\theta$
 P_\theta(x,p) = (W * K_\theta)(x,p),
 \label{eq:Ptheta}
 \end{equation}
-non-negative everywhere because the Wigner function of any state, weighted by the Wigner function of any state, is pointwise non-negative~\cite{degosson2005bullsci,degosson2013qblobs}. There are no free parameters. The weight carries action $h/2$ in any direction. The state's action sets the resolution at which it is everywhere positive, and that resolution is the reciprocal of the state's conjugate extent.
+non-negative everywhere because the Wigner function of any state, weighted by the Wigner function of any state, is pointwise non-negative~\cite{degosson2005bullsci,degosson2013qblobs}. There are no free parameters. The weight carries action $h/2$ in any direction. The state's action sets the resolution at which it is everywhere positive, and that resolution is the reciprocal of the state's anti-squeezed extent.
 
 % ===============================================================================
 %  DEMONSTRATION
@@ -137,7 +137,7 @@ Figures~\ref{fig:eigen} and~\ref{fig:cats} show $P_{\pi/2}$ for eight states wit
 
 \begin{table}[t]
 \centering
-\caption{Established non-negative phase-space methods and the regime in which each works correctly. In each case the operative parameter, correctly set, gives a resolution of $\delta x \sim \hbar/\Delta p$, the conjugate scale set by the state's action. Derivations are in the Supplemental Material.}
+\caption{Established non-negative phase-space methods and the regime in which each works correctly. In each case the operative parameter, correctly set, gives a resolution of $\delta x \sim \hbar/\Delta p$, the squeezed scale set by the state's action. Derivations are in the Supplemental Material.}
 \label{tab:effective_resolution}
 \begin{ruledtabular}
 \begin{tabular}{@{}p{0.45\columnwidth}p{0.5\columnwidth}@{}}
@@ -153,7 +153,7 @@ Cahill--Glauber $W^{(s)}$~\cite{cahillglauber1969} & Ordering $s$ matched to cov
 \end{ruledtabular}
 \end{table}
 
-Methods from unrelated traditions reach the same effective resolution (Table~\ref{tab:effective_resolution}). At the parameter setting where each method works correctly, the resolved scale is $\delta x \sim \hbar/\Delta p$, the reciprocal of the conjugate extent of the state. At vacuum saturation the extent $\Delta x$ and the conjugate scale $\hbar/\Delta p$ coincide, and the reciprocal nature is invisible. As the state's action grows, the reciprocal opens, and resolution and extent move in opposite directions. The product of resolution and conjugate extent stays at $\hbar$, the action of one squeezed cell.
+Methods from unrelated traditions reach the same effective resolution (Table~\ref{tab:effective_resolution}). At the parameter setting where each method works correctly, the resolved scale is $\delta x \sim \hbar/\Delta p$, the reciprocal of the anti-squeezed extent of the state. At vacuum saturation the extent $\Delta x$ and the squeezed scale $\hbar/\Delta p$ coincide, and the reciprocal nature is invisible. As the state's action grows, the reciprocal opens, and squeezed scale and anti-squeezed extent move in opposite directions. Their product stays at $\hbar$, the action of one squeezed cell.
 
 Two prior approaches reach a non-negative density from adjacent directions. Dragoman~\cite{dragoman2005} weights the Wigner function of the state by the Wigner function of a measuring apparatus, an external scale chosen by the experimenter. Cordero, de Gosson, D\"orfler, and Nicola~\cite{cordero2018} study Zurek's diamond cat state in the Born--Jordan portrait and find that the interference fringes are damped, a property of the portrait rather than of the state. The squeezed cell of action $h/2$ used here is intrinsic to the state itself, and Zurek's $\delta x$ and $\delta p$ are its principal-axis cases. Further comparison is in the Supplemental Material.
 
