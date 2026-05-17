@@ -93,35 +93,35 @@ where $\theta$ is the rotated quadrature direction of continuous-variable tomogr
 \end{equation}
 The smallest cell the state can locally carry, the spacing of the peaks in its Wigner function, and the boundary at which $W$ changes sign-character are all the same length, set by the action of the state.
 
-% ===============================================================================
-%  THE BOUNDARY AND THE KERNEL
-% ===============================================================================
-
-The Wigner function of the state,
-\begin{equation}
-W(x,p) = \frac{1}{\pi\hbar}\int \psi^*(x+y)\,\psi(x-y)\,e^{2ipy/\hbar}\,dy,
-\label{eq:wigner}
-\end{equation}
-has peaks spaced by the squeezed scale and dips below zero between consecutive peaks for any state with $A \gg h/2$. The boundary separates these two features. The dips have structure on the squeezed scale. Resolve finer and they are visible. Resolve coarser and the peak structure remains while the dips are erased.
-
-The kernel that resolves at the boundary is the operational form of the boundary itself. It is the Wigner function of the squeezed coherent state matched to the state's covariance,
-\begin{equation}
-K_\theta(x,p) = \frac{1}{\pi\hbar}\exp\!\left(-\frac{x_\theta^2}{\delta_\parallel^2} - \frac{P^2}{\delta_\perp^2}\right),
-\label{eq:Gtheta}
-\end{equation}
-with $x_\theta = x\cos\theta + p\sin\theta$ and $P = -x\sin\theta + p\cos\theta$, of action area $h/2$. The state seen at this resolution is
-\begin{equation}
-P_\theta(x,p) = (W * K_\theta)(x,p).
-\label{eq:Ptheta}
-\end{equation}
-This is non-negative everywhere. The convolution of two Wigner functions equals the trace inner product of the corresponding density operators~\cite{degosson2005bullsci,degosson2013qblobs}, which is positive for any pair of states. The non-negativity is a standard fact of the de Gosson and quantum-optics literature. What is new is the kernel's uniqueness. Its covariance is fixed by the state, its action is fixed at $h/2$, and its orientation $\theta$ ranges over the inscribed family. This uniqueness is inherited from the boundary having no free parameters either.
-
-The resolution of $P_\theta$ is the full width at half maximum of $K_\theta$ along its minor axis. This is the smallest length scale on which $P_\theta$ varies appreciably. At principal-axis orientation $\theta = \pi/2$ the minor axis is along position with $\delta_\perp = \hbar/\Delta p$, giving
-\begin{equation}
-\Delta x_{\text{res}} = 2\sqrt{\ln 2}\,\hbar/\Delta p,
-\label{eq:resolution}
-\end{equation}
-the reciprocal of the state's momentum extent up to a numerical factor of order unity. The peaks of $W$ along $x$ appear in $P_\theta$ at the same locations, with the same spacing $\pi\hbar/\Delta p$, and in the same count. What does not appear is the dip below zero between consecutive peaks. That structure lies on the fine side of the boundary.
+    % ===============================================================================
+    %  THE BOUNDARY AND THE KERNEL
+    % ===============================================================================
+    
+    The Wigner function of the state,
+    \begin{equation}
+    W(x,p) = \frac{1}{\pi\hbar}\int \psi^*(x+y)\,\psi(x-y)\,e^{2ipy/\hbar}\,dy,
+    \label{eq:wigner}
+    \end{equation}
+    has peaks spaced by the squeezed scale and dips below zero between consecutive peaks for any state with $A \gg h/2$. The boundary separates these two features. The dips have structure on the squeezed scale. Resolve finer and they are visible. Resolve coarser and the peak structure remains while the dips are erased.
+    
+    The kernel that resolves at the boundary is the operational form of the boundary itself. It is the Wigner function of the squeezed coherent state matched to the state's covariance,
+    \begin{equation}
+    K_\theta(x,p) = \frac{1}{\pi\hbar}\exp\!\left(-\frac{x_\theta^2}{\delta_\parallel^2} - \frac{p_\theta^2}{\delta_\perp^2}\right),
+    \label{eq:Gtheta}
+    \end{equation}
+    with $x_\theta = x\cos\theta + p\sin\theta$ and $p_\theta = -x\sin\theta + p\cos\theta$, of action area $h/2$. The state seen at this resolution is
+    \begin{equation}
+    P_\theta(x,p) = (W * K_\theta)(x,p).
+    \label{eq:Ptheta}
+    \end{equation}
+    This is non-negative everywhere. The convolution of two Wigner functions equals the trace inner product of the corresponding density operators~\cite{degosson2005bullsci,degosson2013qblobs}, which is positive for any pair of states. The non-negativity is a standard fact of the de Gosson and quantum-optics literature. What is new is the kernel's uniqueness. Its covariance is fixed by the state, its action is fixed at $h/2$, and its orientation $\theta$ ranges over the inscribed family. This uniqueness is inherited from the boundary having no free parameters either.
+    
+    The resolution of $P_\theta$ is the full width at half maximum of $K_\theta$ along its minor axis. This is the smallest length scale on which $P_\theta$ varies appreciably. At principal-axis orientation $\theta = \pi/2$ the minor axis is along position with $\delta_\perp = \hbar/\Delta p$, giving
+    \begin{equation}
+    \Delta x_{\text{res}} = 2\sqrt{\ln 2}\,\hbar/\Delta p,
+    \label{eq:resolution}
+    \end{equation}
+    the reciprocal of the state's momentum extent up to a numerical factor of order unity. The peaks of $W$ along $x$ appear in $P_\theta$ at the same locations, with the same spacing $\pi\hbar/\Delta p$, and in the same count. What does not appear is the dip below zero between consecutive peaks. That structure lies on the fine side of the boundary.
 
 % ===============================================================================
 %  DEMONSTRATION
